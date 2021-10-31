@@ -21,7 +21,6 @@ namespace Heracles.Web
         {
             services.AddInfrastructure(Configuration);
 
-            services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddControllersWithViews();
         }
 
@@ -31,7 +30,6 @@ namespace Heracles.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseMigrationsEndPoint();
             }
             else
             {
@@ -39,6 +37,9 @@ namespace Heracles.Web
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.AddInfrastructure(env);
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
