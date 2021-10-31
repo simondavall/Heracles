@@ -1,8 +1,6 @@
 using Heracles.Infrastructure;
-using Heracles.Infrastructure.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,9 +22,6 @@ namespace Heracles.Web
             services.AddInfrastructure(Configuration);
 
             services.AddDatabaseDeveloperPageExceptionFilter();
-
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<AppIdentityDbContext>();
             services.AddControllersWithViews();
         }
 
