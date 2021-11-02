@@ -1,4 +1,6 @@
-﻿using Heracles.Infrastructure.Identity;
+﻿using Heracles.Domain.Interfaces;
+using Heracles.Infrastructure.Data;
+using Heracles.Infrastructure.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -15,7 +17,10 @@ namespace Heracles.Infrastructure
         {
             services = AddDatabaseContexts(services, configuration);
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppIdentityDbContext>();
 
             return services;
@@ -23,9 +28,24 @@ namespace Heracles.Infrastructure
 
         internal static IServiceCollection AddDatabaseContexts(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<AppIdentityDbContext>(options =>
-                options.UseSqlServer(
-                    configuration.GetConnectionString("HeraclesAuth")));
+            if (configuration.GetValue<bool>("UseInMemoryDatabase"))
+            {
+                services.AddDbContext<GpxDbContext>(options =>
+                    options.UseInMemoryDatabase("HeraclesDb"));
+
+                services.AddDbContext<AppIdentityDbContext>(options =>
+                    options.UseInMemoryDatabase("HeraclesAuthDb"));
+            }
+            else
+            {
+                services.AddDbContext<GpxDbContext>(options =>
+                    options.UseSqlServer(
+                        configuration.GetConnectionString("HeraclesDb")));
+
+                services.AddDbContext<AppIdentityDbContext>(options =>
+                    options.UseSqlServer(
+                        configuration.GetConnectionString("HeraclesAuthDb")));
+            }
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
