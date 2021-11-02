@@ -1,93 +1,63 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Heracles.Application.GpxTrackAggregate;
-using Heracles.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Heracles.Infrastructure.Data
 {
     public class GpxDbContextSeed
     {
-        public static async Task SeedAsync(GpxDbContext dbContext)
+        public static async Task SeedAsync(IServiceProvider services)
         {
-            var gpxTrack = new GpxTrack
-            {
-                Name = "Testing Track",
-                Time = DateTime.Now,
-                Distance = 0,
-                Duration = TimeSpan.Zero,
-                ActivityType = ActivityType.Unknown,
-                Elevation = 0,
-                Calories = 0,
-                Pace = TimeSpan.Zero,
-                Speed = 0,
-                TrackSegments = new List<GpxTrackSegment>
-                {
-                    new GpxTrackSegment
-                    {
-                        Distance = 0,
-                        Duration = TimeSpan.Zero,
-                        Elevation = 0,
-                        Calories = 0,
-                        TrackPoints = new List<GpxTrackPoint>
-                        {
-                            new GpxTrackPoint
-                            {
-                                Latitude = 0,
-                                Longitude = 0,
-                                Time = DateTime.Now
-                            },
-                            new GpxTrackPoint
-                            {
-                                Latitude = 0,
-                                Longitude = 0,
-                                Time = DateTime.Now
-                            },
-                            new GpxTrackPoint
-                            {
-                                Latitude = 0,
-                                Longitude = 0,
-                                Time = DateTime.Now
-                            }
-                        }
+            var dbContext = services.GetRequiredService<GpxDbContext>();
+            await RunMigrationsIfNeeded(dbContext);
+            await SeedExampleDataIfNoDataExists(dbContext);
+        }
 
-                    }, 
-                    new GpxTrackSegment
+        private static async Task SeedExampleDataIfNoDataExists(GpxDbContext dbContext)
+        {
+            if (!await dbContext.Tracks.AnyAsync())
+            {
+                var gpxTrack = new GpxTrack
+                {
+                    Name = "Testing Track",
+                    TrackSegments = new List<GpxTrackSegment>
                     {
-                        Distance = 0,
-                        Duration = TimeSpan.Zero,
-                        Elevation = 0,
-                        Calories = 0,
-                        TrackPoints = new List<GpxTrackPoint>
+                        new GpxTrackSegment
                         {
-                            new GpxTrackPoint
+                            TrackPoints = new List<GpxTrackPoint>
                             {
-                                Latitude = 0,
-                                Longitude = 0,
-                                Time = DateTime.Now
-                            },
-                            new GpxTrackPoint
+                                new GpxTrackPoint(),
+                                new GpxTrackPoint(),
+                                new GpxTrackPoint()
+                            }
+                        },
+                        new GpxTrackSegment
+                        {
+                            TrackPoints = new List<GpxTrackPoint>
                             {
-                                Latitude = 0,
-                                Longitude = 0,
-                                Time = DateTime.Now
-                            },
-                            new GpxTrackPoint
-                            {
-                                Latitude = 0,
-                                Longitude = 0,
-                                Time = DateTime.Now
+                                new GpxTrackPoint(),
+                                new GpxTrackPoint(),
+                                new GpxTrackPoint()
                             }
                         }
                     }
-                }
-            };
-             
-            await dbContext.AddAsync(gpxTrack, CancellationToken.None);
-            await dbContext.SaveChangesAsync(CancellationToken.None);
+                };
+
+                await dbContext.AddAsync(gpxTrack, CancellationToken.None);
+                await dbContext.SaveChangesAsync(CancellationToken.None);
+            }
+        }
+
+        private static async Task RunMigrationsIfNeeded(GpxDbContext dbContext)
+        {
+            if (dbContext.Database.IsSqlServer())
+            {
+                await dbContext.Database.MigrateAsync();
+            }
         }
     }
 }

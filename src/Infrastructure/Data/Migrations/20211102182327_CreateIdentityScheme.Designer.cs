@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Heracles.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(GpxDbContext))]
-    [Migration("20211101211615_CreateGpxScheme")]
-    partial class CreateGpxScheme
+    [Migration("20211102182327_CreateIdentityScheme")]
+    partial class CreateIdentityScheme
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -37,10 +37,10 @@ namespace Heracles.Infrastructure.Data.Migrations
                     b.Property<double>("Distance")
                         .HasColumnType("float");
 
-                    b.Property<TimeSpan?>("Duration")
+                    b.Property<TimeSpan>("Duration")
                         .HasColumnType("time");
 
-                    b.Property<double?>("Elevation")
+                    b.Property<double>("Elevation")
                         .HasColumnType("float");
 
                     b.Property<string>("Name")
@@ -54,7 +54,7 @@ namespace Heracles.Infrastructure.Data.Migrations
                     b.Property<double>("Speed")
                         .HasColumnType("float");
 
-                    b.Property<DateTime?>("Time")
+                    b.Property<DateTime>("Time")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -69,7 +69,7 @@ namespace Heracles.Infrastructure.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double?>("Elevation")
+                    b.Property<double>("Elevation")
                         .HasColumnType("float");
 
                     b.Property<int?>("GpxTrackSegmentId")
@@ -81,11 +81,8 @@ namespace Heracles.Infrastructure.Data.Migrations
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
 
-                    b.Property<DateTime?>("Time")
+                    b.Property<DateTime>("Time")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("TrackSegmentId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -107,14 +104,11 @@ namespace Heracles.Infrastructure.Data.Migrations
                     b.Property<double>("Distance")
                         .HasColumnType("float");
 
-                    b.Property<TimeSpan?>("Duration")
+                    b.Property<TimeSpan>("Duration")
                         .HasColumnType("time");
 
-                    b.Property<double?>("Elevation")
+                    b.Property<double>("Elevation")
                         .HasColumnType("float");
-
-                    b.Property<int>("ExerciseSessionId")
-                        .HasColumnType("int");
 
                     b.Property<int?>("GpxTrackId")
                         .HasColumnType("int");
