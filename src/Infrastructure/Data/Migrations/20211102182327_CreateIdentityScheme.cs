@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Heracles.Infrastructure.Data.Migrations
 {
-    public partial class CreateGpxScheme : Migration
+    public partial class CreateIdentityScheme : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,11 +14,11 @@ namespace Heracles.Infrastructure.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Time = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Time = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Distance = table.Column<double>(type: "float", nullable: false),
-                    Duration = table.Column<TimeSpan>(type: "time", nullable: true),
+                    Duration = table.Column<TimeSpan>(type: "time", nullable: false),
                     ActivityType = table.Column<int>(type: "int", nullable: false),
-                    Elevation = table.Column<double>(type: "float", nullable: true),
+                    Elevation = table.Column<double>(type: "float", nullable: false),
                     Calories = table.Column<int>(type: "int", nullable: false),
                     Pace = table.Column<TimeSpan>(type: "time", nullable: false),
                     Speed = table.Column<double>(type: "float", nullable: false)
@@ -34,10 +34,9 @@ namespace Heracles.Infrastructure.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ExerciseSessionId = table.Column<int>(type: "int", nullable: false),
                     Distance = table.Column<double>(type: "float", nullable: false),
-                    Duration = table.Column<TimeSpan>(type: "time", nullable: true),
-                    Elevation = table.Column<double>(type: "float", nullable: true),
+                    Duration = table.Column<TimeSpan>(type: "time", nullable: false),
+                    Elevation = table.Column<double>(type: "float", nullable: false),
                     Calories = table.Column<int>(type: "int", nullable: false),
                     GpxTrackId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -60,9 +59,8 @@ namespace Heracles.Infrastructure.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Latitude = table.Column<double>(type: "float", nullable: false),
                     Longitude = table.Column<double>(type: "float", nullable: false),
-                    Elevation = table.Column<double>(type: "float", nullable: true),
-                    Time = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    TrackSegmentId = table.Column<int>(type: "int", nullable: false),
+                    Elevation = table.Column<double>(type: "float", nullable: false),
+                    Time = table.Column<DateTime>(type: "datetime2", nullable: false),
                     GpxTrackSegmentId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
