@@ -12,8 +12,22 @@
 		</AssemblyAttribute>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Compile Remove="Gpx\GpsLocation.cs" />
+	  <Compile Remove="Gpx\Gpx.cs" />
+	  <Compile Remove="Gpx\GpxEngine.cs" />
+	  <Compile Remove="Gpx\GpxProperties.cs" />
+	  <Compile Remove="Gpx\GpxReader.cs" />
+	  <Compile Remove="Gpx\GpxWriter.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Gpx\licence.txt" />
+	</ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="5.2.0" />
+    <PackageReference Include="Dlg.Krakow.Gpx" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.11" />
