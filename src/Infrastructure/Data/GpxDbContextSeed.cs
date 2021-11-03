@@ -21,27 +21,27 @@ namespace Heracles.Infrastructure.Data
         {
             if (!await dbContext.Tracks.AnyAsync())
             {
-                var gpxTrack = new GpxTrack
+                var gpxTrack = new TrackAggregate
                 {
                     Name = "Testing Track",
-                    TrackSegments = new List<GpxTrackSegment>
+                    TrackSegments = new List<TrackSegment>
                     {
-                        new GpxTrackSegment
+                        new TrackSegment
                         {
-                            TrackPoints = new List<GpxTrackPoint>
+                            TrackPoints = new List<TrackPoint>
                             {
-                                new GpxTrackPoint(),
-                                new GpxTrackPoint(),
-                                new GpxTrackPoint()
+                                new TrackPoint(),
+                                new TrackPoint(),
+                                new TrackPoint()
                             }
                         },
-                        new GpxTrackSegment
+                        new TrackSegment
                         {
-                            TrackPoints = new List<GpxTrackPoint>
+                            TrackPoints = new List<TrackPoint>
                             {
-                                new GpxTrackPoint(),
-                                new GpxTrackPoint(),
-                                new GpxTrackPoint()
+                                new TrackPoint(),
+                                new TrackPoint(),
+                                new TrackPoint()
                             }
                         }
                     }
