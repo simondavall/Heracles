@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Heracles.Infrastructure.Data.Migrations
 {
-    public partial class CreateIdentityScheme : Migration
+    public partial class CreateGpxDbScheme : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,8 +11,7 @@ namespace Heracles.Infrastructure.Data.Migrations
                 name: "Tracks",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Time = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Distance = table.Column<double>(type: "float", nullable: false),
@@ -32,20 +31,19 @@ namespace Heracles.Infrastructure.Data.Migrations
                 name: "TrackSegments",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Distance = table.Column<double>(type: "float", nullable: false),
                     Duration = table.Column<TimeSpan>(type: "time", nullable: false),
                     Elevation = table.Column<double>(type: "float", nullable: false),
                     Calories = table.Column<int>(type: "int", nullable: false),
-                    TrackAggregateId = table.Column<int>(type: "int", nullable: true)
+                    TrackId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TrackSegments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TrackSegments_Tracks_TrackAggregateId",
-                        column: x => x.TrackAggregateId,
+                        name: "FK_TrackSegments_Tracks_TrackId",
+                        column: x => x.TrackId,
                         principalTable: "Tracks",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -61,7 +59,7 @@ namespace Heracles.Infrastructure.Data.Migrations
                     Longitude = table.Column<double>(type: "float", nullable: false),
                     Elevation = table.Column<double>(type: "float", nullable: false),
                     Time = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TrackSegmentId = table.Column<int>(type: "int", nullable: true)
+                    TrackSegmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -80,9 +78,9 @@ namespace Heracles.Infrastructure.Data.Migrations
                 column: "TrackSegmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TrackSegments_TrackAggregateId",
+                name: "IX_TrackSegments_TrackId",
                 table: "TrackSegments",
-                column: "TrackAggregateId");
+                column: "TrackId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

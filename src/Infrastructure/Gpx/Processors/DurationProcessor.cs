@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Heracles.Application.GpxTrackAggregate;
+using Heracles.Application.TrackAggregate;
 
 namespace Heracles.Infrastructure.Gpx.Processors
 {

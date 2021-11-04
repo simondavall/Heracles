@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using Heracles.Domain;
 using Heracles.Domain.Interfaces;
 
-namespace Heracles.Application.GpxTrackAggregate
+namespace Heracles.Application.TrackAggregate
 {
-    public class TrackAggregate : BaseEntity, IAggregateRoot
+    public class Track : BaseEntity<Guid>, IAggregateRoot
     {
+        public Track()
+        {
+            Id = Guid.NewGuid();
+        }
+
         public string Name { get; set; }
         public DateTime Time { get; set; } = DateTime.UtcNow;
         public double Distance { get; set; }
@@ -18,7 +23,5 @@ namespace Heracles.Application.GpxTrackAggregate
         public double Speed { get; set; }
 
         public ICollection<TrackSegment> TrackSegments { get; set; }
-
-        
     }
 }

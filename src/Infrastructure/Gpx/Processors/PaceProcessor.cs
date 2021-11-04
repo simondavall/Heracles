@@ -1,11 +1,11 @@
 ﻿using System;
-using Heracles.Application.GpxTrackAggregate;
+using Heracles.Application.TrackAggregate;
 
 namespace Heracles.Infrastructure.Gpx.Processors
 {
     public static class PaceProcessor
     {
-        public static TimeSpan GetAveragePace(TrackAggregate trackAggregate)
+        public static TimeSpan GetAveragePace(Track trackAggregate)
         {
             var duration = trackAggregate.Duration;
             if (duration == TimeSpan.Zero)

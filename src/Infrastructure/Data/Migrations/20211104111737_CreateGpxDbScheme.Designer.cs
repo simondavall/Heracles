@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Heracles.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(GpxDbContext))]
-    [Migration("20211102200603_CreateIdentityScheme")]
-    partial class CreateIdentityScheme
+    [Migration("20211104111737_CreateGpxDbScheme")]
+    partial class CreateGpxDbScheme
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,12 +21,11 @@ namespace Heracles.Infrastructure.Data.Migrations
                 .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Heracles.Application.GpxTrackAggregate.TrackAggregate", b =>
+            modelBuilder.Entity("Heracles.Application.TrackAggregate.Track", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("ActivityType")
                         .HasColumnType("int");
@@ -62,7 +61,7 @@ namespace Heracles.Infrastructure.Data.Migrations
                     b.ToTable("Tracks");
                 });
 
-            modelBuilder.Entity("Heracles.Application.GpxTrackAggregate.TrackPoint", b =>
+            modelBuilder.Entity("Heracles.Application.TrackAggregate.TrackPoint", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -81,8 +80,8 @@ namespace Heracles.Infrastructure.Data.Migrations
                     b.Property<DateTime>("Time")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("TrackSegmentId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("TrackSegmentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -91,12 +90,11 @@ namespace Heracles.Infrastructure.Data.Migrations
                     b.ToTable("TrackPoints");
                 });
 
-            modelBuilder.Entity("Heracles.Application.GpxTrackAggregate.TrackSegment", b =>
+            modelBuilder.Entity("Heracles.Application.TrackAggregate.TrackSegment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Calories")
                         .HasColumnType("int");
@@ -110,36 +108,36 @@ namespace Heracles.Infrastructure.Data.Migrations
                     b.Property<double>("Elevation")
                         .HasColumnType("float");
 
-                    b.Property<int?>("TrackAggregateId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("TrackId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TrackAggregateId");
+                    b.HasIndex("TrackId");
 
                     b.ToTable("TrackSegments");
                 });
 
-            modelBuilder.Entity("Heracles.Application.GpxTrackAggregate.TrackPoint", b =>
+            modelBuilder.Entity("Heracles.Application.TrackAggregate.TrackPoint", b =>
                 {
-                    b.HasOne("Heracles.Application.GpxTrackAggregate.TrackSegment", null)
+                    b.HasOne("Heracles.Application.TrackAggregate.TrackSegment", null)
                         .WithMany("TrackPoints")
                         .HasForeignKey("TrackSegmentId");
                 });
 
-            modelBuilder.Entity("Heracles.Application.GpxTrackAggregate.TrackSegment", b =>
+            modelBuilder.Entity("Heracles.Application.TrackAggregate.TrackSegment", b =>
                 {
-                    b.HasOne("Heracles.Application.GpxTrackAggregate.TrackAggregate", null)
+                    b.HasOne("Heracles.Application.TrackAggregate.Track", null)
                         .WithMany("TrackSegments")
-                        .HasForeignKey("TrackAggregateId");
+                        .HasForeignKey("TrackId");
                 });
 
-            modelBuilder.Entity("Heracles.Application.GpxTrackAggregate.TrackAggregate", b =>
+            modelBuilder.Entity("Heracles.Application.TrackAggregate.Track", b =>
                 {
                     b.Navigation("TrackSegments");
                 });
 
-            modelBuilder.Entity("Heracles.Application.GpxTrackAggregate.TrackSegment", b =>
+            modelBuilder.Entity("Heracles.Application.TrackAggregate.TrackSegment", b =>
                 {
                     b.Navigation("TrackPoints");
                 });
