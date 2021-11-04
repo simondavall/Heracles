@@ -38,14 +38,14 @@ namespace Heracles.Infrastructure.Data.Migrations
                     Duration = table.Column<TimeSpan>(type: "time", nullable: false),
                     Elevation = table.Column<double>(type: "float", nullable: false),
                     Calories = table.Column<int>(type: "int", nullable: false),
-                    GpxTrackId = table.Column<int>(type: "int", nullable: true)
+                    TrackAggregateId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TrackSegments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TrackSegments_Tracks_GpxTrackId",
-                        column: x => x.GpxTrackId,
+                        name: "FK_TrackSegments_Tracks_TrackAggregateId",
+                        column: x => x.TrackAggregateId,
                         principalTable: "Tracks",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -61,28 +61,28 @@ namespace Heracles.Infrastructure.Data.Migrations
                     Longitude = table.Column<double>(type: "float", nullable: false),
                     Elevation = table.Column<double>(type: "float", nullable: false),
                     Time = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    GpxTrackSegmentId = table.Column<int>(type: "int", nullable: true)
+                    TrackSegmentId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TrackPoints", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TrackPoints_TrackSegments_GpxTrackSegmentId",
-                        column: x => x.GpxTrackSegmentId,
+                        name: "FK_TrackPoints_TrackSegments_TrackSegmentId",
+                        column: x => x.TrackSegmentId,
                         principalTable: "TrackSegments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_TrackPoints_GpxTrackSegmentId",
+                name: "IX_TrackPoints_TrackSegmentId",
                 table: "TrackPoints",
-                column: "GpxTrackSegmentId");
+                column: "TrackSegmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TrackSegments_GpxTrackId",
+                name: "IX_TrackSegments_TrackAggregateId",
                 table: "TrackSegments",
-                column: "GpxTrackId");
+                column: "TrackAggregateId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

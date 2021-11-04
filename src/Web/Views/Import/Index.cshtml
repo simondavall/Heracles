@@ -1,0 +1,44 @@
+﻿@model ImportViewModel
+@{
+    ViewBag.Title = "Import";
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+    <h2>@ViewBag.Message</h2>
+</hgroup>
+
+@using (Html.BeginForm("Upload", "Import", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <input type="file" name="FileUpload" multiple />
+    <input type="submit" name="Submit" id="Submit" value="Upload" />
+}
+@if(Model.ImportExecuted)
+{
+    <div class="row">
+        <div class="col-md-6">
+            <div class="h4">Successfully imported: @Model.FormatDisplay(Model.FilesImported)</div>
+            @if (Model.FilesFailed.Count > 0)
+            {
+            <div id="accordian" class="panel">
+                <div class="panel-heading h5">Failed to load: @Model.FormatDisplay(Model.FilesFailed.Count)</div>
+                <ul class="panel-body">
+                    @foreach (var failedFile in @Model.FilesFailed)
+                    {
+                        <li>
+                            <h3 class="filter-list-title">File: @failedFile.Filename</h3>
+                            <ul>
+                                <li>
+                                    <div style="font-size: 1.4em">
+                                        Error Message : [@failedFile.ErrorMessage]
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                </ul>
+            </div>
+            }
+        </div>
+    </div>
+}

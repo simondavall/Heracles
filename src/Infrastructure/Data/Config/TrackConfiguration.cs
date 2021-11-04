@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Heracles.Infrastructure.Data.Config
 {
-    public class TrackConfiguration : IEntityTypeConfiguration<GpxTrack>
+    public class TrackConfiguration : IEntityTypeConfiguration<TrackAggregate>
     {
-        public void Configure(EntityTypeBuilder<GpxTrack> builder)
+        public void Configure(EntityTypeBuilder<TrackAggregate> builder)
         {
             builder.Property(p => p.Name)
                 .HasMaxLength(100)

@@ -1,5 +1,7 @@
-﻿using Heracles.Domain.Interfaces;
+﻿using Heracles.Application.Interfaces;
+using Heracles.Domain.Interfaces;
 using Heracles.Infrastructure.Data;
+using Heracles.Infrastructure.Gpx;
 using Heracles.Infrastructure.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,17 +15,17 @@ namespace Heracles.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services = AddDatabaseContexts(services, configuration);
 
-            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+            services.AddScoped<ITrackRepository, TrackRepository>();
+
+            services.AddTransient<IGpxService, GpxService>();
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppIdentityDbContext>();
-
-            return services;
         }
 
         internal static IServiceCollection AddDatabaseContexts(IServiceCollection services, IConfiguration configuration)

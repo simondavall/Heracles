@@ -31,9 +31,9 @@ namespace Heracles.Infrastructure.Data
 
         }
 
-        public DbSet<GpxTrack> Tracks { get; set; }
-        public DbSet<GpxTrackSegment> TrackSegments { get; set; }
-        public DbSet<GpxTrackPoint> TrackPoints { get; set; }
+        public DbSet<TrackAggregate> Tracks { get; set; }
+        public DbSet<TrackSegment> TrackSegments { get; set; }
+        public DbSet<TrackPoint> TrackPoints { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
