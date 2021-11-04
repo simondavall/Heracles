@@ -1,5 +1,4 @@
-﻿using Heracles.Application.GpxTrackAggregate;
-using Heracles.Application.Interfaces;
+﻿using Heracles.Application.Interfaces;
 using Heracles.Domain.Interfaces;
 using Heracles.Infrastructure.Data;
 using Heracles.Infrastructure.Gpx;
@@ -20,7 +19,8 @@ namespace Heracles.Infrastructure
         {
             services = AddDatabaseContexts(services, configuration);
 
-            services.AddScoped<IRepository<TrackAggregate>, EfRepository<TrackAggregate>>();
+            services.AddScoped<ITrackRepository, TrackRepository>();
+
             services.AddTransient<IGpxService, GpxService>();
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)

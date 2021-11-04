@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Dlg.Krakow.Gpx;
 using Heracles.Application.GpxTrackAggregate;
 using Heracles.Application.Interfaces;
-using Heracles.Domain.Interfaces;
 using Heracles.Infrastructure.Gpx.Processors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -13,19 +12,18 @@ namespace Heracles.Infrastructure.Gpx
 {
     public class GpxService : IGpxService
     {
-        private readonly IRepository<TrackAggregate> _gpxRepository;
         private readonly ILogger<GpxService> _logger;
 
-        public GpxService(IRepository<TrackAggregate> gpxRepository, ILogger<GpxService> logger)
+        public GpxService(ILogger<GpxService> logger)
         {
-            _gpxRepository = gpxRepository;
             _logger = logger;
         }
 
-        public async Task<TrackAggregate> LoadLoadContentsOfGpxFile(IFormFile file)
+        public async Task<Track> LoadLoadContentsOfGpxFile(IFormFile file)
         {
             try
             {
+                // TODO Convert this to async/await
                 var gpxTrack = GpxEngine.GetGpxTrackFromFile(file);
                 if (gpxTrack != null)
                 {
@@ -35,16 +33,16 @@ namespace Heracles.Infrastructure.Gpx
             }
             catch (Exception e)
             {
-                //todo throw custom exception. Declare exception in App/Domain. Put e as inner exception.
+                //TODO throw custom exception. Declare exception in App/Domain. Put e as inner exception.
                 _logger.LogError(e, $"GpxService Failed to create TrackAggregate for file {file.FileName} with message: {e.Message}");
             }
 
             return null;
         }
 
-        private static TrackAggregate CreateTrackAggregate(GpxTrack track)
+        private static Track CreateTrackAggregate(GpxTrack track)
         {
-            var trackAggregate = new TrackAggregate()
+            var trackAggregate = new Track()
             {
                 Name = track.Name,
                 Time = track.Time ?? DateTime.Now
