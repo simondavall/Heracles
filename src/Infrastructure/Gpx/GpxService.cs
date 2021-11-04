@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dlg.Krakow.Gpx;
-using Heracles.Application.GpxTrackAggregate;
 using Heracles.Application.Interfaces;
+using Heracles.Application.TrackAggregate;
 using Heracles.Infrastructure.Gpx.Processors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -40,41 +40,43 @@ namespace Heracles.Infrastructure.Gpx
             return null;
         }
 
-        private static Track CreateTrackAggregate(GpxTrack track)
+        private static Track CreateTrackAggregate(GpxTrack gpxTrack)
         {
-            var trackAggregate = new Track()
+            var track = new Track()
             {
-                Name = track.Name,
-                Time = track.Time ?? DateTime.Now
+                Name = gpxTrack.Name,
+                Time = gpxTrack.Time ?? DateTime.Now
             };
 
             ICollection<TrackSegment> trackSegments = new List<TrackSegment>();
 
-            foreach (var gpxTrackSegment in track.Segments)
+            foreach (var gpxTrackSegment in gpxTrack.Segments)
             {
-                trackSegments.Add(CreateTrackSegment(gpxTrackSegment));
+                trackSegments.Add(CreateTrackSegment(gpxTrackSegment, track.Id));
             }
 
-            trackAggregate.Elevation = ElevationProcessor.SessionElevation(trackSegments);
-            trackAggregate.Duration = DurationProcessor.SessionDuration(trackSegments);
-            trackAggregate.Distance = DistanceProcessor.SessionDistance(trackSegments);
-            trackAggregate.Calories = CaloriesProcessor.GetCaloriesBurned(trackAggregate);
-            trackAggregate.Pace = PaceProcessor.GetAveragePace(trackAggregate);
-            trackAggregate.ActivityType = ActivityProcessor.GetActivityType(trackAggregate);
-            trackAggregate.Speed = SpeedProcessor.GetAverageSpeed(trackAggregate);
-            trackAggregate.TrackSegments = trackSegments;
+            track.Elevation = ElevationProcessor.SessionElevation(trackSegments);
+            track.Duration = DurationProcessor.SessionDuration(trackSegments);
+            track.Distance = DistanceProcessor.SessionDistance(trackSegments);
+            track.Calories = CaloriesProcessor.GetCaloriesBurned(track);
+            track.Pace = PaceProcessor.GetAveragePace(track);
+            track.ActivityType = ActivityProcessor.GetActivityType(track);
+            track.Speed = SpeedProcessor.GetAverageSpeed(track);
+            track.TrackSegments = trackSegments;
 
-            return trackAggregate;
+            return track;
         }
 
-        private static TrackSegment CreateTrackSegment(GpxTrackSegment gpxTrackSegment)
+        private static TrackSegment CreateTrackSegment(GpxTrackSegment gpxTrackSegment, Guid trackId)
         {
             var trackSegment = new TrackSegment();
             var trackPoints = new List<TrackPoint>();
             foreach (var point in gpxTrackSegment.TrackPoints)
             {
-                trackPoints.Add(CreateTrackPoint(point));
+                trackPoints.Add(CreateTrackPoint(point, trackSegment.Id));
             }
+
+            trackSegment.TrackId = trackId;
             trackSegment.TrackPoints = trackPoints;
             trackSegment.Elevation = ElevationProcessor.SegmentElevation(trackPoints);
             trackSegment.Duration = DurationProcessor.SegmentDuration(trackPoints);
@@ -83,14 +85,15 @@ namespace Heracles.Infrastructure.Gpx
             return trackSegment;
         }
 
-        private static TrackPoint CreateTrackPoint(GpxTrackPoint gpxTrackPoint)
+        private static TrackPoint CreateTrackPoint(GpxPoint gpxTrackPoint, Guid trackSegmentId)
         {
             var trackPoint = new TrackPoint
             {
                 Time = gpxTrackPoint.Time ?? DateTime.Now,
                 Elevation = gpxTrackPoint.Elevation ?? 0,
                 Latitude = gpxTrackPoint.Latitude,
-                Longitude = gpxTrackPoint.Longitude
+                Longitude = gpxTrackPoint.Longitude,
+                TrackSegmentId = trackSegmentId
             };
             return trackPoint;
         }

@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Heracles.Application.GpxTrackAggregate;
+using Heracles.Application.TrackAggregate;
 using Heracles.Domain;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,7 +31,7 @@ namespace Heracles.Infrastructure.Data
 
         }
 
-        public DbSet<TrackAggregate> Tracks { get; set; }
+        public DbSet<Track> Tracks { get; set; }
         public DbSet<TrackSegment> TrackSegments { get; set; }
         public DbSet<TrackPoint> TrackPoints { get; set; }
 

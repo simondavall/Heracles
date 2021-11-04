@@ -1,4 +1,4 @@
-﻿namespace Heracles.Application.GpxTrackAggregate
+﻿namespace Heracles.Application.TrackAggregate
 {
     public enum ActivityType
     {

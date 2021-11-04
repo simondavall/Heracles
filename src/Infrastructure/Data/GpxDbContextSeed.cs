@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Heracles.Application.GpxTrackAggregate;
+using Heracles.Application.TrackAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,7 +21,7 @@ namespace Heracles.Infrastructure.Data
         {
             if (!await dbContext.Tracks.AnyAsync())
             {
-                var gpxTrack = new TrackAggregate
+                var gpxTrack = new Track
                 {
                     Name = "Testing Track",
                     TrackSegments = new List<TrackSegment>

@@ -1,10 +1,10 @@
-﻿using Heracles.Application.GpxTrackAggregate;
+﻿using Heracles.Application.TrackAggregate;
 
 namespace Heracles.Infrastructure.Gpx.Processors
 {
     public static class ActivityProcessor
     {
-        public static ActivityType GetActivityType(TrackAggregate trackAggregate)
+        public static ActivityType GetActivityType(Track trackAggregate)
         {
             if (trackAggregate != null && !string.IsNullOrWhiteSpace(trackAggregate.Name))
             {

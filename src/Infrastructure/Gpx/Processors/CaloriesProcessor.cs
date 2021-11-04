@@ -1,11 +1,11 @@
 ﻿using System;
-using Heracles.Application.GpxTrackAggregate;
+using Heracles.Application.TrackAggregate;
 
 namespace Heracles.Infrastructure.Gpx.Processors
 {
     public static class CaloriesProcessor
     {
-        internal static int GetCaloriesBurned(TrackAggregate trackAggregate)
+        internal static int GetCaloriesBurned(Track trackAggregate)
         {
             // met is the measure of calorie burn rate for a given activity
             double met = 11; // default set as met for running at 6.7mph (9 min miles)

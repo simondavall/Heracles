@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Heracles.Application.GpxTrackAggregate;
+﻿using Heracles.Application.TrackAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Heracles.Infrastructure.Data.Config
 {
-    public class TrackConfiguration : IEntityTypeConfiguration<TrackAggregate>
+    public class TrackConfiguration : IEntityTypeConfiguration<Track>
     {
-        public void Configure(EntityTypeBuilder<TrackAggregate> builder)
+        public void Configure(EntityTypeBuilder<Track> builder)
         {
             builder.Property(p => p.Name)
                 .HasMaxLength(100)

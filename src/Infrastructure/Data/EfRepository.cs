@@ -16,16 +16,17 @@ namespace Heracles.Infrastructure.Data
     /// https://blogs.msdn.microsoft.com/pfxteam/2012/04/13/should-i-expose-synchronous-wrappers-for-asynchronous-methods/
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class EfRepository<T> : IAsyncRepository<T> where T : BaseEntity, IAggregateRoot
+    /// <typeparam name="TId"></typeparam>
+    public abstract class EfRepository<T, TId> : IAsyncRepository<T, TId> where T : BaseEntity<TId>, IAggregateRoot
     {
         protected readonly GpxDbContext DbContext;
 
-        public EfRepository(GpxDbContext dbContext)
+        protected EfRepository(GpxDbContext dbContext)
         {
             DbContext = dbContext;
         }
 
-        public virtual async Task<T> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        public virtual async Task<T> GetByIdAsync(TId id, CancellationToken cancellationToken = default)
         {
             var keyValues = new object[] { id };
             return await DbContext.Set<T>().FindAsync(keyValues, cancellationToken);
