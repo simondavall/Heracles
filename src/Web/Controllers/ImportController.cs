@@ -82,7 +82,7 @@ namespace Heracles.Web.Controllers
         {
             try
             {
-                var trackAggregate = await _gpxService.LoadLoadContentsOfGpxFile(file);
+                var trackAggregate = await _gpxService.LoadContentsOfGpxFile(file);
                 if (trackAggregate != null)
                 {
                     if (!_existingTracks.Contains(trackAggregate.Name))

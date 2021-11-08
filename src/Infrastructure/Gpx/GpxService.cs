@@ -19,7 +19,7 @@ namespace Heracles.Infrastructure.Gpx
             _logger = logger;
         }
 
-        public async Task<Track> LoadLoadContentsOfGpxFile(IFormFile file)
+        public async Task<Track> LoadContentsOfGpxFile(IFormFile file)
         {
             try
             {
@@ -48,16 +48,16 @@ namespace Heracles.Infrastructure.Gpx
                 Time = gpxTrack.Time ?? DateTime.Now
             };
 
-            ICollection<TrackSegment> trackSegments = new List<TrackSegment>();
+            IList<TrackSegment> trackSegments = new List<TrackSegment>();
 
             foreach (var gpxTrackSegment in gpxTrack.Segments)
             {
                 trackSegments.Add(CreateTrackSegment(gpxTrackSegment, track.Id));
             }
 
-            track.Elevation = ElevationProcessor.SessionElevation(trackSegments);
-            track.Duration = DurationProcessor.SessionDuration(trackSegments);
-            track.Distance = DistanceProcessor.SessionDistance(trackSegments);
+            track.Elevation = ElevationProcessor.TrackElevation(trackSegments);
+            track.Duration = DurationProcessor.TrackDuration(trackSegments);
+            track.Distance = DistanceProcessor.TrackDistance(trackSegments);
             track.Calories = CaloriesProcessor.GetCaloriesBurned(track);
             track.Pace = PaceProcessor.GetAveragePace(track);
             track.ActivityType = ActivityProcessor.GetActivityType(track);
