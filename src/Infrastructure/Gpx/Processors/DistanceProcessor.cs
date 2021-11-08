@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Heracles.Application.TrackAggregate;
 
 namespace Heracles.Infrastructure.Gpx.Processors
 {
     public static class DistanceProcessor
     {
-        internal static double SegmentDistance(IList<TrackPoint> trackPoints)
+        internal static double SegmentDistance(IEnumerable<TrackPoint> trackPoints)
         {
+            if (trackPoints is null)
+            {
+                return 0;
+            }
+
             double distance = 0;
             TrackPoint previousTrackPoint = null;
 
@@ -27,16 +33,15 @@ namespace Heracles.Infrastructure.Gpx.Processors
             return distance;
         }
 
-        internal static double SessionDistance(ICollection<TrackSegment> trackSegments)
+        internal static double TrackDistance(IEnumerable<TrackSegment> trackSegments)
         {
-            double distance = 0;
-            if (trackSegments != null && trackSegments.Count > 0)
+            if (trackSegments is null)
             {
-                foreach (var trackSegment in trackSegments)
-                {
-                    distance += trackSegment.Distance;
-                }
+                return 0;
             }
+
+            var distance = trackSegments.Sum(trackSegment => trackSegment.Distance);
+
             return Math.Round(distance, 2);
         }
 

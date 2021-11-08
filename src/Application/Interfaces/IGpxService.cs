@@ -6,6 +6,6 @@ namespace Heracles.Application.Interfaces
 {
     public interface IGpxService
     {
-        Task<Track> LoadLoadContentsOfGpxFile(IFormFile file);
+        Task<Track> LoadContentsOfGpxFile(IFormFile file);
     }
 }

@@ -9,6 +9,11 @@ namespace Heracles.Infrastructure.Gpx.Processors
     {
         internal static double SegmentElevation(IEnumerable<TrackPoint> trackPoints)
         {
+            if (trackPoints is null)
+            {
+                return 0;
+            }
+
             double elevation = 0;
             TrackPoint previousTrackPoint = null;
 
@@ -23,11 +28,10 @@ namespace Heracles.Infrastructure.Gpx.Processors
         }
 
 
-        internal static double SessionElevation(ICollection<TrackSegment> trackSegments)
+        internal static double TrackElevation(IList<TrackSegment> trackSegments)
         {
-            double elevation = 0;
             if (trackSegments is not {Count: > 0}) 
-                return elevation;
+                return 0d;
 
             return trackSegments.Sum(trackSegment => Round(trackSegment.Elevation, 4));
         }

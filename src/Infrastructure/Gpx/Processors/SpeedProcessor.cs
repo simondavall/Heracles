@@ -5,14 +5,13 @@ namespace Heracles.Infrastructure.Gpx.Processors
 {
     public static class SpeedProcessor
     {
-        public static double GetAverageSpeed(Track trackAggregate)
+        public static double GetAverageSpeed(Track track)
         {
-            var duration = trackAggregate.Duration;
-            if (duration == TimeSpan.Zero)
+            if (track.Duration == TimeSpan.Zero || track.Distance <= 0)
             {
                 return 0; // do not set average speed if no duration.
             }
-            return trackAggregate.Distance / duration.TotalHours;
+            return track.Distance / track.Duration.TotalHours;
         }
     }
 }
