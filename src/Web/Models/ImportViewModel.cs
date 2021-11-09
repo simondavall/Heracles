@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Heracles.Application.Services.Import;
 
 namespace Heracles.Web.Models
 {
@@ -6,22 +7,16 @@ namespace Heracles.Web.Models
     {
         public ImportViewModel()
         {
-            FilesFailed = new List<FailedFile>();
+            FilesFailed = new List<FileResult>();
         }
-        public int FilesImported { get; set; }
-        public ICollection<FailedFile> FilesFailed { get; set; }
+        public int FilesImported { get; init; }
+        public IList<FileResult> FilesFailed { get; init; }
 
-        public string FormatDisplay(int numberOfFiles)
+        public string DisplayFilesImported(int numberOfFiles)
         {
             return numberOfFiles == 1 ? "1 file" : numberOfFiles + " files";
         }
 
-        public bool ImportExecuted { get; set; }
-    }
-
-    public class FailedFile
-    {
-        public string Filename { get; set; }
-        public string ErrorMessage { get; set; }
+        public bool ImportExecuted { get; init; }
     }
 }

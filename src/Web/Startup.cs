@@ -1,3 +1,4 @@
+using Heracles.Application;
 using Heracles.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,6 +21,7 @@ namespace Heracles.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddInfrastructure(Configuration);
+            services.AddApplication();
 
             services.AddControllersWithViews();
         }

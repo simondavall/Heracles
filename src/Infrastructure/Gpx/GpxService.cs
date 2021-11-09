@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Dlg.Krakow.Gpx;
 using Heracles.Application.Interfaces;
 using Heracles.Application.TrackAggregate;
@@ -19,7 +18,7 @@ namespace Heracles.Infrastructure.Gpx
             _logger = logger;
         }
 
-        public async Task<Track> LoadContentsOfGpxFile(IFormFile file)
+        public Track LoadContentsOfGpxFile(IFormFile file)
         {
             try
             {
@@ -35,6 +34,7 @@ namespace Heracles.Infrastructure.Gpx
             {
                 //TODO throw custom exception. Declare exception in App/Domain. Put e as inner exception.
                 _logger.LogError(e, $"GpxService Failed to create TrackAggregate for file {file.FileName} with message: {e.Message}");
+                throw;
             }
 
             return null;
