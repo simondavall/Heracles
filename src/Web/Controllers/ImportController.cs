@@ -36,7 +36,6 @@ namespace Heracles.Web.Controllers
             return View(new ImportViewModel());
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Upload()
         {
@@ -53,7 +52,7 @@ namespace Heracles.Web.Controllers
                     if (!file.FileName.EndsWith(".gpx")) 
                         continue;
 
-                    var trackAggregate = await GetTracksAsync(file, importViewModel);
+                    var trackAggregate = GetTracks(file, importViewModel);
                     if (trackAggregate != null)
                     {
                         trackAggregates.Add(trackAggregate);
@@ -78,11 +77,11 @@ namespace Heracles.Web.Controllers
             return View("Index", importViewModel);
         }
 
-        private async Task<Track> GetTracksAsync(IFormFile file, ImportViewModel importViewModel)
+        private Track GetTracks(IFormFile file, ImportViewModel importViewModel)
         {
             try
             {
-                var trackAggregate = await _gpxService.LoadContentsOfGpxFile(file);
+                var trackAggregate = _gpxService.LoadContentsOfGpxFile(file);
                 if (trackAggregate != null)
                 {
                     if (!_existingTracks.Contains(trackAggregate.Name))
@@ -112,7 +111,7 @@ namespace Heracles.Web.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError($"Failed to import file {file.FileName} with message: {e.Message}");
+                _logger.LogError(e, $"Failed to import file {file.FileName} with message: {e.Message}");
                 importViewModel.FilesFailed.Add(new FailedFile
                 {
                     Filename = file.FileName,
