@@ -37,7 +37,7 @@ namespace Heracles.Application.UnitTests.Services
         public void BeforeEachTest()
         {
             _mockExistingTracks = new Mock<IExistingTracks>();
-            _mockFormFile.Setup(x => x.Name).Returns(_goodFilename);
+            _mockFormFile.Setup(x => x.FileName).Returns(_goodFilename);
             _mockGpxService.Setup(x => x.LoadContentsOfGpxFile(It.IsAny<IFormFile>()))
                 .Returns(GetNewTrack());
             _sut = new ImportService(_mockGpxService.Object, _mockTrackRepository.Object, _mockLogger.Object);
@@ -62,7 +62,7 @@ namespace Heracles.Application.UnitTests.Services
         public async Task ImportTracksFromGpxFiles_FileNotGpxExtension_ReturnsOneFailedImport()
         {
             const string badFilename = "Filename.xxx"; 
-            _mockFormFile.Setup(x => x.Name).Returns(badFilename);
+            _mockFormFile.Setup(x => x.FileName).Returns(badFilename);
 
             var result = await _sut.ImportTracksFromGpxFilesAsync(new FormFileCollection { _mockFormFile.Object });
 

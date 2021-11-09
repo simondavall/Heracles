@@ -33,7 +33,7 @@ namespace Heracles.Application.Services.Import
 
             foreach (var file in files)
             {
-                if (!file.Name.EndsWith(".gpx"))
+                if (!file.FileName.EndsWith(".gpx"))
                 {
                     FailedFile(result, file, ImportServiceStrings.IncorrectFileExtension);
                     continue;
@@ -66,7 +66,7 @@ namespace Heracles.Application.Services.Import
                     continue;
                 }
 
-                result.ImportedFiles.Add(new FileResult(file.Name, ImportServiceStrings.ImportSuccess));
+                result.ImportedFiles.Add(new FileResult(file.FileName, ImportServiceStrings.ImportSuccess));
             }
 
             return result;
@@ -74,7 +74,7 @@ namespace Heracles.Application.Services.Import
 
         private static void FailedFile(ImportFilesResult result, IFormFile file, string errorMessage)
         {
-            result.FailedFiles.Add(new FileResult(file.Name, errorMessage));
+            result.FailedFiles.Add(new FileResult(file.FileName, errorMessage));
         }
 
         private void ValidateTrackData(Track track)

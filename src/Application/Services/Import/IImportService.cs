@@ -5,6 +5,6 @@ namespace Heracles.Application.Services.Import
 {
     public interface IImportService
     {
-        Task<ImportFilesResult> ImportTracksFromGpxFilesAsync(IFormFileCollection files, IExistingTracks existingTracks);
+        Task<ImportFilesResult> ImportTracksFromGpxFilesAsync(IFormFileCollection files, IExistingTracks existingTracks = null);
     }
 }
