@@ -139,6 +139,10 @@ body {
         width: 700px;
     }
 
+.identityFeatures {
+    padding : 50px
+}
+
 .leftContentColumn {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
