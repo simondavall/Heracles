@@ -1,5 +1,6 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
+/* ReSharper disable CssBrowserCompatibility */
 
 a.navbar-brand {
   white-space: normal;
@@ -43,7 +44,8 @@ html {
 }
 
 .box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+    box-shadow: 0 .25rem .75rem #000000;
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
 button.accept-policy {
@@ -68,4 +70,135 @@ body {
   width: 100%;
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
+}
+
+/* Custome site styles start here*/
+
+.activity #activityType {
+    float: left;
+    margin-right: 15px;
+}
+
+.activity #chartSection {
+    border-bottom: 1px solid #e9e9e9;
+}
+
+.activity .statsBar {
+    background: rgb(246,246,246); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(246,246,246,1) 0%, rgba(255,255,255,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(246,246,246,1)), color-stop(100%,rgba(255,255,255,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(246,246,246,1) 0%,rgba(255,255,255,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(246,246,246,1) 0%,rgba(255,255,255,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(246,246,246,1) 0%,rgba(255,255,255,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(246,246,246,1) 0%,rgba(255,255,255,1) 100%); /* W3C */
+    border-bottom: 1px solid #e9e9e9;
+}
+
+.bodyContainer {
+    background-color: #ffffff;
+    background-repeat: repeat-y;
+    background-position: center;
+    background-size: 960px;
+    z-index: 0;
+    position: relative;
+    min-height: 550px;
+    margin: 80px 0 0 0;
+    z-index: 1;
+    -webkit-box-shadow: 0 0 20px 1px #ccc;
+    box-shadow: 0 0 20px 1px #ccc;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+    .bodyContainer.subNavTrue {
+        padding: 0;
+    }
+
+.bodyWrapper .leftContentColumn {
+    float: left;
+    width: 260px;
+    margin-right: 0;
+    border-right: 1px solid #e9e9e9;
+    -webkit-border-top-left-radius: 3px;
+    border-top-left-radius: 3px;
+    -webkit-border-bottom-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.chartItem {
+    height: 130px;
+}
+
+.bodyWrapper .mainContentColumn {
+    float: left;
+    width: 100%;
+}
+
+    .bodyWrapper .mainContentColumn.leftColVisible {
+        width: 700px;
+    }
+
+.leftContentColumn {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.mainColumnPadding {
+    padding: 10px 20px 20px;
+}
+
+.micro-text {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.sizeConstraint {
+    width: 960px;
+    margin: auto;
+    height: 100%;
+    position: relative;
+}
+
+.statsBar {
+    border-top: 1px solid #efefef;
+    border-bottom: 1px solid #efefef;
+    height: auto;
+}
+
+.userLayout .bodyContainer.subNavTrue .leftContentColumn,
+.userLayout .bodyContainer.subNavTrue .mainContentColumn {
+    padding: 0;
+}
+
+.userNavContainer {
+    width: 100%;
+    height: 80px;
+    position: relative;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #e7e6e6;
+    background-color: #eee;
+    /*background-image: -webkit-gradient(linear, center top, center bottom, color-stop(0%, #f5f5f5), color-stop(50%, #efefef));*/
+    background-image: -webkit-linear-gradient(top, #f5f5f5 0%, #efefef 50%);
+    background-image: -moz-linear-gradient(top, #f5f5f5 0%, #efefef 50%);
+    background-image: -ms-linear-gradient(top, #f5f5f5 0%, #efefef 50%);
+    background-image: -o-linear-gradient(top, #f5f5f5 0%, #efefef 50%);
+    background-image: linear-gradient(to bottom, #f5f5f5 0%, #efefef 50%);
+    -moz-border-top-right-radius: 3px;
+    -webkit-border-top-right-radius: 3px;
+    -border-top-right-radius: 3px;
+    -moz-border-top-left-radius: 3px;
+    -webkit-border-top-left-radius: 3px;
+    -border-top-left-radius: 3px;
+}
+
+@media only screen and (max-device-width : 1024px) {
+    .bodyContainer {
+        margin: 0;
+    }
+
+    .sizeConstraint {
+        padding: 0;
+    }
 }
