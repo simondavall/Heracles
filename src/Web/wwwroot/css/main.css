@@ -18,9 +18,9 @@
     top: 0;
     left: 0;
     z-index: 2;
-    height: 54px;
-    background-color: #31a4d9;
-    border-bottom: 1px solid #259dd5;
+    height: 57px;
+    background-color: #343a40 !important;
+    border-bottom: 1px solid #dee2e6 !important;
     -webkit-font-smoothing: antialiased;
     font-weight: 500;
     display: table-row;
