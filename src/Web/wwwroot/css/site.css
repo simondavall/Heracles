@@ -158,6 +158,10 @@ body {
     color: #aaa;
 }
 
+.nav-link {
+    height: 40px;
+}
+
 .sizeConstraint {
     width: 960px;
     margin: auto;
