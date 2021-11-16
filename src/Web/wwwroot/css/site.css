@@ -115,7 +115,7 @@ body {
     -webkit-border-radius: 3px;
     border-radius: 3px;
 }
-
+/*todo - do i need subNavTrue?*/
     .bodyContainer.subNavTrue {
         padding: 0;
     }
@@ -223,7 +223,7 @@ body {
     .userNavItem.selected {
         background-color: #fff;
         border-bottom: 1px solid #fff;
-
+        background-position: center -160px;
     }
 
     .userNavItem:hover {
@@ -232,10 +232,6 @@ body {
 
     .userNavItem:hover p {
         color: #888;
-    }
-
-    .userNavItem.selected {
-        background-position: center -160px;
     }
 
     .userNavItem.dashboard {
