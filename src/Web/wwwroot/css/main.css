@@ -1,5 +1,51 @@
 ﻿/* ReSharper disable CssBrowserCompatibility */
 
+img {
+    border: 0;
+}
+
+h1 {
+    font-size: 36px;
+    font-weight: bold;
+    color: #444;
+    line-height: 100%;
+}
+
+h2 {
+    font-size: 24px;
+    line-height: 100%;
+    font-weight: bold;
+    color: #444;
+}
+
+h3 {
+    font-size: 18px;
+    line-height: 100%;
+    font-weight: normal;
+    color: #888;
+    text-transform: uppercase;
+}
+
+h4 {
+    color: #444;
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: bold;
+}
+
+h5 {
+    color: #333;
+}
+
+h1 .light-weight,
+h2 .light-weight,
+h3 .light-weight,
+h4 .light-weight,
+h5 .light-weight {
+    font-weight: 200;
+}
+
+
 #pageWrapper {
     position: absolute;
     top: 0;
