@@ -94,6 +94,10 @@ body {
     border-bottom: 1px solid #e9e9e9;
 }
 
+.avatar img {
+    width: 100%;
+}
+
 .avatarContainer {
     position: relative;
     float: left;
@@ -166,6 +170,17 @@ body {
 .nav-link {
     height: 40px;
 }
+
+.profileBoxSmall {
+    width: 230px;
+    margin: 0 20px 0 0;
+    float: left;
+}
+
+    .profileBoxSmall .username {
+        position: relative;
+        text-overflow: ellipsis;
+    }
 
 .sizeConstraint {
     width: 960px;
