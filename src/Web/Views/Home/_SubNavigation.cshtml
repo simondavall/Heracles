@@ -1,0 +1,37 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="userNavContainer clearfix">
+    <a href="#">
+        <div class="userNavItem reports ">
+            <p>REPORTS</p>
+        </div>
+    </a>
+    <div class="userNavBorder left "></div>
+    <div class="userNavBorder right selected"></div>
+    <a href="/">
+        <div class="userNavItem dashboard selected">
+            <p>DASHBOARD</p>
+        </div>
+    </a>
+    <div class="userNavBorder left selected"></div>
+    <div class="userNavItem" id="userProfile">
+        <div id="imgContainer" class="profileBoxSmall">
+            <div class="avatarContainer">
+                <a class="avatar" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                    <img src="~/images/profile-med.jpg" title="Mr Brightside"/>
+                </a>
+            </div>
+        </div>
+        <div id="userNameContainer">
+            <div id="userNameText">
+                <p class="userName">Mr Brightside</p>
+                <p class="activeSince">Active since Sep, 2009</p>
+            </div>
+        </div>
+    </div>
+</div>
+
