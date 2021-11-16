@@ -20,7 +20,15 @@ namespace Heracles.Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var model = new IndexViewModel
+            {
+                SubNavigationViewModel = new SubNavigationViewModel()
+                {
+                    ActiveSince = "Active since Sep, 2009",
+                    Username = "Simon Da Vall"
+                }
+            };
+            return View(model);
         }
 
         public IActionResult Privacy()

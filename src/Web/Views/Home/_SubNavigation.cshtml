@@ -1,8 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model SubNavigationViewModel
 
 <div class="userNavContainer clearfix">
     <a href="#">
@@ -22,14 +18,14 @@
         <div id="imgContainer" class="profileBoxSmall">
             <div class="avatarContainer">
                 <a class="avatar" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
-                    <img src="~/images/profile-med.jpg" title="Mr Brightside"/>
+                    <img src="~/images/profile-med.jpg" title="@Model.Username"/>
                 </a>
             </div>
         </div>
         <div id="userNameContainer">
             <div id="userNameText">
-                <p class="userName">Mr Brightside</p>
-                <p class="activeSince">Active since Sep, 2009</p>
+                <p class="userName">@Model.Username</p>
+                <p class="activeSince">@Model.ActiveSince</p>
             </div>
         </div>
     </div>

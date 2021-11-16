@@ -1,9 +1,10 @@
-﻿@{
+﻿@model IndexViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="subNavcontainer clearfix">
-    <partial name="_SubNavigation"/>
+    <partial name="_SubNavigation" model="@Model.SubNavigationViewModel"/>
 </div>
 <div class="leftContentColumn">
     <div class="clearfix">
