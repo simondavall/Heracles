@@ -3,7 +3,12 @@
 }
 
 <div class="identityFeatures">
+
     @RenderBody()
 
-    @{ @if (IsSectionDefined("Scripts")) { IgnoreSection("Scripts"); } }
 </div>
+
+@if (IsSectionDefined("Scripts"))
+{
+    DefineSection("Scripts", () => RenderSectionAsync("Scripts", false));
+}
