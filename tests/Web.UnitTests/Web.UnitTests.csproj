@@ -13,4 +13,8 @@
     <PackageReference Include="NUnit" Version="3.13.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Web\Web.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,14 @@
+﻿@using System.Globalization
+@model ActivitiesByMonthViewModel
+
+<div class="component accordion" data-date="@Model.DataDate">
+    <span class=""></span>
+    <span class="expanded">+</span>
+    @Model.Month <span class="yearSpan" style="">'@Model.Year</span>
+    <span class="activityCount">@Model.ActivityCount</span>
+</div>
+<div class="component accordionContent">
+    <ul class="nav nav-pills flex-column secondaryNav">
+    </ul>
+</div>
+<div class="monthDivider"></div>
