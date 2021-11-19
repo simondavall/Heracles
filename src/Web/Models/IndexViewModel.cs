@@ -2,7 +2,8 @@
 {
     public class IndexViewModel
     {
-        public SubNavigationViewModel SubNavigationViewModel { get; set; }
         public ActivityListViewModel ActivityListViewModel { get; set; }
+        public ActivityTitleViewModel ActivityTitleViewModel { get; set; }
+        public SubNavigationViewModel SubNavigationViewModel { get; set; }
     }
 }

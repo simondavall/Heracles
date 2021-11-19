@@ -1,4 +1,5 @@
-﻿using Heracles.Application.TrackAggregate;
+﻿using Heracles.Application.Enums;
+using Heracles.Application.TrackAggregate;
 
 namespace Heracles.Infrastructure.Gpx.Processors
 {

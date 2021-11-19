@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Heracles.Application.Enums;
 using Heracles.Domain;
 using Heracles.Domain.Interfaces;
 

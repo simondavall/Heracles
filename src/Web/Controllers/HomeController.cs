@@ -5,7 +5,9 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Heracles.Application.Extensions;
 using Heracles.Application.Interfaces;
+using Heracles.Application.TrackAggregate;
 
 namespace Heracles.Web.Controllers
 {
@@ -22,6 +24,8 @@ namespace Heracles.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var track = await _activityService.GetMostRecentActivity();
+
             var model = new IndexViewModel
             {
                 SubNavigationViewModel = new SubNavigationViewModel()
@@ -29,7 +33,8 @@ namespace Heracles.Web.Controllers
                     ActiveSince = "Active since Sep, 2009",
                     Username = "Simon Da Vall"
                 },
-                ActivityListViewModel = await GetActivityListViewModel()
+                ActivityListViewModel = await GetActivityListViewModel(),
+                ActivityTitleViewModel = GetActivityTitleViewModel(track)
             };
 
             return View(model);
@@ -58,6 +63,17 @@ namespace Heracles.Web.Controllers
                 }).ToList();
 
             return new ActivityListViewModel { ActivityListMonths = activitiesSummary };
+        }
+
+        private ActivityTitleViewModel GetActivityTitleViewModel(Track track)
+        {
+            var model = new ActivityTitleViewModel()
+            {
+                Image = track.ActivityType.GetImagePath(),
+                Title = $"{track.Time.DayOfWeek} {track.ActivityType.GetTitleText()}",
+                Date = track.Time.ToString("MMM dd, yyyy - HH:mm")
+            };
+            return model;
         }
     }
 }
