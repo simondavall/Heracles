@@ -7,6 +7,7 @@ using Heracles.Application.Entities;
 using Heracles.Application.Extensions;
 using Heracles.Application.Interfaces;
 using Heracles.Application.Specifications;
+using Heracles.Application.TrackAggregate;
 
 namespace Heracles.Application.Services
 {
@@ -52,6 +53,11 @@ namespace Heracles.Application.Services
         public async Task<IList<ActivityListMonth>> GetActivitiesSummaryByMonths()
         {
             return await _trackRepository.GetTrackSummaryByMonths();
+        }
+
+        public async Task<Track> GetMostRecentActivity()
+        {
+            return await _trackRepository.GetMostRecentTrack();
         }
     }
 }

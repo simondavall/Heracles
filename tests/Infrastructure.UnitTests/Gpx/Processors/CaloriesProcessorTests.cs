@@ -1,5 +1,6 @@
 ﻿using System;
 using FluentAssertions;
+using Heracles.Application.Enums;
 using Heracles.Application.TrackAggregate;
 using Heracles.Infrastructure.Gpx.Processors;
 using NUnit.Framework;

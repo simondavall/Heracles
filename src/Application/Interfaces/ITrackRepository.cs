@@ -12,6 +12,7 @@ namespace Heracles.Application.Interfaces
     public interface ITrackRepository : IAsyncRepository<Track, Guid>
     {
         Task<IList<string>> GetExistingTracksAsync();
+        Task<Track> GetMostRecentTrack();
         Task<IList<ActivityListMonth>> GetTrackSummaryByMonths();
         Task SaveImportedFilesAsync(ImportFilesResult importFilesResult, CancellationToken cancellationToken);
     }

@@ -57,6 +57,23 @@ namespace Heracles.Infrastructure.Data
             return await DbContext.Tracks.Select(x => x.Name).ToListAsync();
         }
 
+        public async Task<Track> GetMostRecentTrack()
+        {
+            var track = await DbContext.Tracks.OrderByDescending(x => x.Time).FirstOrDefaultAsync();
+            if (track is null)
+            {
+                //TODO Create default Track
+                return default;
+            }
+            track.TrackSegments = await DbContext.TrackSegments.Where(x => x.TrackId == track.Id).ToListAsync();
+            foreach (var segment in track.TrackSegments)
+            {
+                segment.TrackPoints = await DbContext.TrackPoints.Where(x => x.TrackSegmentId == segment.Id).ToListAsync();
+            }
+
+            return track;
+        }
+
         public async Task<IList<ActivityListMonth>> GetTrackSummaryByMonths()
         {
             var result = await DbContext.Tracks
