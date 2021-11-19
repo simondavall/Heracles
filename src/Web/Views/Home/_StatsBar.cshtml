@@ -1,0 +1,28 @@
+﻿@model StatsBarViewModel
+
+
+<div class="container">
+    <div class="row statsBar">
+        <div id="totalDistance" class="col-3 statsItem">
+            <h5>@Model.DistanceTitle</h5>
+            <h1><span class="value">@Model.DistanceValue</span>
+            </h1>
+        </div>
+        <div id="totalDuration" class="col-3 statsItem">
+            <h5>@Model.DurationTitle</h5>
+            <h1><span class="value">@Model.DurationValue</span></h1>
+        </div>
+        <div id="averagePace" class="col-3 statsItem">
+            <h5>@Model.PaceTitle</h5>
+            <h1><span class="value">@Model.PaceValue</span>
+            </h1>
+        </div>
+        <div id="totalCalories" class="col-3 statsItem">
+            <h5>@Model.CaloriesTitle</h5>
+            <h1><span class="value">@Model.CaloriesValue</span>
+            </h1>
+        </div>
+    </div>
+</div>
+
+
