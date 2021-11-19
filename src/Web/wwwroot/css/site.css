@@ -83,18 +83,6 @@ body {
     border-bottom: 1px solid #e9e9e9;
 }
 
-.activity .statsBar {
-    background: rgb(246,246,246); /* Old browsers */
-    background: -moz-linear-gradient(top, rgba(246,246,246,1) 0%, rgba(255,255,255,1) 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(246,246,246,1)), color-stop(100%,rgba(255,255,255,1))); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, rgba(246,246,246,1) 0%,rgba(255,255,255,1) 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, rgba(246,246,246,1) 0%,rgba(255,255,255,1) 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, rgba(246,246,246,1) 0%,rgba(255,255,255,1) 100%); /* IE10+ */
-    background: linear-gradient(to bottom, rgba(246,246,246,1) 0%,rgba(255,255,255,1) 100%); /* W3C */
-    border-bottom: 1px solid #e9e9e9;
-}
-
-
 #activityHistoryMenu > .accordion {
     width: auto;
     background-color: transparent;
@@ -286,6 +274,85 @@ body {
     border-bottom: 1px solid #efefef;
     height: auto;
 }
+
+    .activity .statsBar {
+        background: rgb(246,246,246); /* Old browsers */
+        background: -moz-linear-gradient(top, rgba(246,246,246,1) 0%, rgba(255,255,255,1) 100%); /* FF3.6+ */
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(246,246,246,1)), color-stop(100%,rgba(255,255,255,1))); /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(top, rgba(246,246,246,1) 0%,rgba(255,255,255,1) 100%); /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(top, rgba(246,246,246,1) 0%,rgba(255,255,255,1) 100%); /* Opera 11.10+ */
+        background: -ms-linear-gradient(top, rgba(246,246,246,1) 0%,rgba(255,255,255,1) 100%); /* IE10+ */
+        background: linear-gradient(to bottom, rgba(246,246,246,1) 0%,rgba(255,255,255,1) 100%); /* W3C */
+        border-bottom: 1px solid #e9e9e9;
+    }
+
+.statsItem {
+    border-right: 1px solid #efefef;
+    background-position: 0 30px;
+    background-repeat: no-repeat;
+    padding: 0 0 9px 5px;
+    min-height: 77px !important;
+    margin-left: 2%;
+    max-width: 23%;
+}
+
+    .statsItem:first-child {
+        background-position: 3px 30px;
+        padding-left: 8px;
+    }
+
+    .statsItem:last-child {
+        border: none;
+    }
+
+    .statsItem h5 {
+        text-transform: uppercase;
+        font-size: 11px;
+        margin-top: 9px;
+        font-weight: bold;
+    }
+
+    .statsItem h1 .value {
+        float: right;
+        padding: 5px 16px 0 0;
+        font-weight: normal;
+        font-size: 32px;
+    }
+
+    .statsItem#totalDistance,
+    .statsItem#Distance,
+    .statsItem#TOTAL_DISTANCE {
+        background-image: url('../images/distance.png');
+    }
+
+    .statsItem#totalCalories,
+    .statsItem#Calories,
+    .statsItem#TOTAL_CALORIES {
+        background-image: url('../images/calories-burned.png');
+    }
+
+    .statsItem#totalActivities,
+    .statsItem#TOTAL_ACTIVITIES {
+        background-image: url('../images/activities.png');
+    }
+
+    .statsItem#totalDuration,
+    .statsItem#Duration {
+        background-image: url('../images/duration.png');
+    }
+
+    .statsItem#averagePace,
+    .statsItem#averageSpeed {
+        background-image: url('../images/pace_speed.png');
+    }
+
+    .statsItem#totalClimb {
+        background-image: url('../images/elevation.png');
+    }
+
+    .statsItem#heartRate {
+        background-image: url('../images/heart_rate.png');
+    }
 
 .userHeader {
     padding-left: 20px;

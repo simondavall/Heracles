@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Heracles.Application.Extensions;
@@ -34,7 +35,8 @@ namespace Heracles.Web.Controllers
                     Username = "Simon Da Vall"
                 },
                 ActivityListViewModel = await GetActivityListViewModel(),
-                ActivityTitleViewModel = GetActivityTitleViewModel(track)
+                ActivityTitleViewModel = GetActivityTitleViewModel(track),
+                StatsBarViewModel = GetStatsBarViewModel(track)
             };
 
             return View(model);
@@ -72,6 +74,22 @@ namespace Heracles.Web.Controllers
                 Image = track.ActivityType.GetImagePath(),
                 Title = $"{track.Time.DayOfWeek} {track.ActivityType.GetTitleText()}",
                 Date = track.Time.ToString("MMM dd, yyyy - HH:mm")
+            };
+            return model;
+        }
+
+        private StatsBarViewModel GetStatsBarViewModel(Track track)
+        {
+            var model = new StatsBarViewModel
+            {
+                DistanceTitle = "km",
+                DistanceValue = track.Distance.ToString(CultureInfo.InvariantCulture),
+                DurationTitle = "Duration",
+                DurationValue = track.Duration.ToFormattedString(),
+                PaceTitle = "Average Pace",
+                PaceValue = track.Pace.ToFormattedString(),
+                CaloriesTitle = "Calories Burned",
+                CaloriesValue = track.Calories.ToString()
             };
             return model;
         }
