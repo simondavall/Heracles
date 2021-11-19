@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EFCore.BulkExtensions;
+using Heracles.Application.Entities;
 using Heracles.Application.Interfaces;
 using Heracles.Application.Services.Import;
 using Heracles.Application.TrackAggregate;
@@ -54,6 +55,16 @@ namespace Heracles.Infrastructure.Data
         public async Task<IList<string>> GetExistingTracksAsync()
         {
             return await DbContext.Tracks.Select(x => x.Name).ToListAsync();
+        }
+
+        public async Task<IList<ActivityListMonth>> GetTrackSummaryByMonths()
+        {
+            var result = await DbContext.Tracks
+                .GroupBy(x => x.Time.Year*100 + x.Time.Month)
+                .Select(g => new ActivityListMonth { ActivityYearMonth = g.Key, Count = g.Count()} )
+                .OrderByDescending(g=>g.ActivityYearMonth).ToListAsync();
+
+            return result;
         }
 
         private static DbConnection GetConnection(DbConnection connection)
