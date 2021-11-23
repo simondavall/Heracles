@@ -1,0 +1,67 @@
+﻿@model MapAreaViewModel
+
+<script type="text/javascript">
+    var activityInfoCallbacks = [];
+    var siteRoot = "https://localhost:5001";
+</script>
+
+<script type="text/javascript">
+    var isLive = false;
+
+    activityInfoCallbacks.push(function (activityInfo) {
+        if (activityInfo == null) {
+            return;
+        }
+
+        var init = false;
+        if (!mapController.model.map) {
+            // map doesn't exist yet, create
+            init = true;
+            var options = {
+                mapStyle: 'mapbox://styles/mapbox/outdoors-v11'
+            };
+            
+            mapController.initialize({
+                'mapDiv': 'map_canvas',
+                'snapToRoads': false,
+                'editMode': false,
+                'points': activityInfo.points,
+                'distanceUnits': 'km',
+                'isLive': isLive
+            });
+        } else {
+            var bounds = mapController.model.map.getBounds();
+            // otherwise, just pass in new points
+            mapController.mapSetup({
+                'points': activityInfo.points,
+                'bounds': bounds
+            });
+        }
+    });
+</script>
+
+<div id="map_area">
+    <div id="mapping_tool">
+        <script src='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.js'></script>
+        <link href='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.css' rel='stylesheet' />
+        <script src="~/js/map.js"></script>
+        <div id="map_canvas"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        refreshActivityPointData();
+    });
+
+    function refreshActivityPointData() {
+        $.getJSON("api/Activity/GetActivityInfo",
+            {trackId: "@Model.TrackId"},
+            function (activityInfo) {
+                if (typeof (mapController) !== 'undefined') mapController.clear();
+                $.each(activityInfoCallbacks, function (callbackIndex, callback) {
+                    callback(activityInfo);
+                });
+            });
+    }
+</script>

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
 using Heracles.Application.Entities;
 using Heracles.Application.Extensions;
@@ -14,10 +13,23 @@ namespace Heracles.Application.Services
     public class ActivityService : IActivityService
     {
         private readonly ITrackRepository _trackRepository;
+        private readonly IPointService _pointService;
 
-        public ActivityService(ITrackRepository trackRepository)
+        public ActivityService(ITrackRepository trackRepository, IPointService pointService)
         {
             _trackRepository = trackRepository;
+            _pointService = pointService;
+        }
+
+        public async Task<ActivityInfo> GetActivityInfoAsync(Guid trackId)
+        {
+            var track = await _trackRepository.GetTrackAsync(trackId);
+            var activityInfo = new ActivityInfo
+            {
+                Points = _pointService.GetPoints(track)
+            };
+
+            return activityInfo;
         }
 
         public async Task<List<ActivityListItem>> GetActivitiesByDate(DateTime startDate)

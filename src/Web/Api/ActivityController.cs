@@ -33,6 +33,17 @@ namespace Heracles.Web.Api
             return FormatToJson(activities);
         }
 
+        [HttpGet]
+        public async Task<ActivityInfo> GetActivityInfo(string trackId)
+        {
+            if (!Guid.TryParse(trackId, out var trackGuid))
+            {
+                throw new ArgumentException("trackId must be a valid Guid.");
+            }
+
+            return await _trackService.GetActivityInfoAsync(trackGuid);
+        }
+
         private static string FormatToJson(IReadOnlyList<ActivityListItem> activities)
         {
             var jArray = JArray.FromObject(activities,

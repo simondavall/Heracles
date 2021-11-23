@@ -11,11 +11,12 @@ namespace Heracles.Application.TrackAggregate
             Id = Guid.NewGuid();
         }
 
+        public int Seq { get; set; }
         public double Distance { get; set; }
         public TimeSpan Duration { get; set; } = TimeSpan.Zero;
         public double Elevation { get; set; }
         public int Calories { get; set; }
-        public ICollection<TrackPoint> TrackPoints { get; set; }
+        public IList<TrackPoint> TrackPoints { get; set; }
         public Guid TrackId { get; set; }
     }
 }
