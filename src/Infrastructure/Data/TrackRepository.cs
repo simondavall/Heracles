@@ -52,6 +52,23 @@ namespace Heracles.Infrastructure.Data
             }
         }
 
+        public async Task<Track> GetTrackAsync(Guid trackId)
+        {
+            var track = await DbContext.Tracks.Where(x => x.Id == trackId).FirstOrDefaultAsync();
+            if (track is null)
+            {
+                //TODO Create default Track
+                return default;
+            }
+            track.TrackSegments = await DbContext.TrackSegments.Where(x => x.TrackId == track.Id).OrderBy(x=>x.Seq).ToListAsync();
+            foreach (var segment in track.TrackSegments)
+            {
+                segment.TrackPoints = await DbContext.TrackPoints.Where(x => x.TrackSegmentId == segment.Id).OrderBy(x=>x.Seq).ToListAsync();
+            }
+
+            return track;
+        }
+
         public async Task<IList<string>> GetExistingTracksAsync()
         {
             return await DbContext.Tracks.Select(x => x.Name).ToListAsync();
@@ -65,10 +82,10 @@ namespace Heracles.Infrastructure.Data
                 //TODO Create default Track
                 return default;
             }
-            track.TrackSegments = await DbContext.TrackSegments.Where(x => x.TrackId == track.Id).ToListAsync();
+            track.TrackSegments = await DbContext.TrackSegments.Where(x => x.TrackId == track.Id).OrderBy(x => x.Seq).ToListAsync();
             foreach (var segment in track.TrackSegments)
             {
-                segment.TrackPoints = await DbContext.TrackPoints.Where(x => x.TrackSegmentId == segment.Id).ToListAsync();
+                segment.TrackPoints = await DbContext.TrackPoints.Where(x => x.TrackSegmentId == segment.Id).OrderBy(x => x.Seq).ToListAsync();
             }
 
             return track;

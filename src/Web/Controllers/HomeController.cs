@@ -36,7 +36,8 @@ namespace Heracles.Web.Controllers
                 },
                 ActivityListViewModel = await GetActivityListViewModel(),
                 ActivityTitleViewModel = GetActivityTitleViewModel(track),
-                StatsBarViewModel = GetStatsBarViewModel(track)
+                StatsBarViewModel = GetStatsBarViewModel(track),
+                MapAreaViewModel = new MapAreaViewModel { TrackId = track.Id }
             };
 
             return View(model);
@@ -83,7 +84,7 @@ namespace Heracles.Web.Controllers
             var model = new StatsBarViewModel
             {
                 DistanceTitle = "km",
-                DistanceValue = track.Distance.ToString(CultureInfo.InvariantCulture),
+                DistanceValue = track.Distance.ToString("0.00", CultureInfo.InvariantCulture),
                 DurationTitle = "Duration",
                 DurationValue = track.Duration.ToFormattedString(),
                 PaceTitle = "Average Pace",

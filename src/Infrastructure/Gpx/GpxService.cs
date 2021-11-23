@@ -49,10 +49,11 @@ namespace Heracles.Infrastructure.Gpx
             };
 
             IList<TrackSegment> trackSegments = new List<TrackSegment>();
-
+            var segmentSequenceIndex = 0;
             foreach (var gpxTrackSegment in gpxTrack.Segments)
             {
-                trackSegments.Add(CreateTrackSegment(gpxTrackSegment, track.Id));
+                trackSegments.Add(CreateTrackSegment(gpxTrackSegment, track.Id, segmentSequenceIndex));
+                segmentSequenceIndex++;
             }
 
             track.Elevation = ElevationProcessor.TrackElevation(trackSegments);
@@ -67,13 +68,15 @@ namespace Heracles.Infrastructure.Gpx
             return track;
         }
 
-        private static TrackSegment CreateTrackSegment(GpxTrackSegment gpxTrackSegment, Guid trackId)
+        private static TrackSegment CreateTrackSegment(GpxTrackSegment gpxTrackSegment, Guid trackId, int sequenceIndex)
         {
-            var trackSegment = new TrackSegment();
+            var trackSegment = new TrackSegment { Seq = sequenceIndex };
             var trackPoints = new List<TrackPoint>();
+            var pointSequenceIndex = 0;
             foreach (var point in gpxTrackSegment.TrackPoints)
             {
-                trackPoints.Add(CreateTrackPoint(point, trackSegment.Id));
+                trackPoints.Add(CreateTrackPoint(point, trackSegment.Id, pointSequenceIndex));
+                pointSequenceIndex++;
             }
 
             trackSegment.TrackId = trackId;
@@ -85,10 +88,11 @@ namespace Heracles.Infrastructure.Gpx
             return trackSegment;
         }
 
-        private static TrackPoint CreateTrackPoint(GpxPoint gpxTrackPoint, Guid trackSegmentId)
+        private static TrackPoint CreateTrackPoint(GpxPoint gpxTrackPoint, Guid trackSegmentId, int sequenceIndex)
         {
             var trackPoint = new TrackPoint
-            {
+            {   
+                Seq = sequenceIndex,
                 Time = gpxTrackPoint.Time ?? DateTime.Now,
                 Elevation = gpxTrackPoint.Elevation ?? 0,
                 Latitude = gpxTrackPoint.Latitude,

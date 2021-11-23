@@ -24,6 +24,7 @@ namespace Heracles.Infrastructure.Data
                 var gpxTrack = new Track
                 {
                     Name = "Testing Track",
+                    Time = DateTime.UtcNow.AddMonths(-1),
                     TrackSegments = new List<TrackSegment>
                     {
                         new TrackSegment

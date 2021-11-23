@@ -23,6 +23,6 @@ namespace Heracles.Application.TrackAggregate
         public TimeSpan Pace { get; set; } = TimeSpan.Zero;
         public double Speed { get; set; }
 
-        public ICollection<TrackSegment> TrackSegments { get; set; }
+        public IList<TrackSegment> TrackSegments { get; set; }
     }
 }
