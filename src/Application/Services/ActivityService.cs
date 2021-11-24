@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using Heracles.Application.Entities;
 using Heracles.Application.Extensions;
@@ -37,7 +38,7 @@ namespace Heracles.Application.Services
             return activityInfo;
         }
 
-        public async Task<List<ActivityListItem>> GetActivitiesByDate(DateTime startDate)
+        public async Task<List<ActivityListItem>> GetActivitiesByDate(DateTime startDate, Guid? trackId = null)
         {
             var firstOfMonth = new DateTime(startDate.Year, startDate.Month, 1);
             var firstOfNextMonth = firstOfMonth.AddMonths(1);
@@ -59,7 +60,8 @@ namespace Heracles.Application.Services
                     MonthNum = track.Time.Month.ToString("D2"),
                     Type = "CARDIO",
                     Username = "Unknown",
-                    Year = track.Time.Year.ToString()
+                    Year = track.Time.Year.ToString(),
+                    IsSelected = trackId == track.Id
                 };
                 activitiesList.Add(activityListItem);
             }
@@ -67,9 +69,23 @@ namespace Heracles.Application.Services
             return activitiesList;
         }
 
-        public async Task<IList<ActivityListMonth>> GetActivitiesSummaryByMonths()
+        public async Task<IList<ActivityListMonth>> GetActivitiesSummaryByMonths(Track track)
         {
-            return await _trackRepository.GetTrackSummaryByMonths();
+            var activityMonthlySummary = await _trackRepository.GetTrackSummaryByMonths();
+            var activities = await GetActivitiesByDate(track.Time, track.Id);
+
+            var selectedYearMonth = track.Time.Year * 100 + track.Time.Month;
+
+            foreach (var summaryItem in activityMonthlySummary)
+            {
+                if (summaryItem.ActivityYearMonth == selectedYearMonth)
+                {
+                    summaryItem.Activities = activities;
+                    break;
+                }
+            }
+
+            return activityMonthlySummary;
         }
 
         public async Task<Track> GetMostRecentActivity()

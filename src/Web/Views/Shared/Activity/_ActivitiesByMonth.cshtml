@@ -1,5 +1,4 @@
-﻿@using System.Globalization
-@model ActivitiesByMonthViewModel
+﻿@model ActivitiesByMonthViewModel
 
 <div class="component accordion" data-date="@Model.DataDate">
     <span class=""></span>
@@ -9,6 +8,21 @@
 </div>
 <div class="component accordionContent">
     <ul class="nav nav-pills flex-column secondaryNav">
+        @if (Model.Activities is not null)
+        {
+            @foreach (var activity in @Model.Activities)
+            {
+                var selected = activity.IsSelected ? "selected" : " ";
+                var monthDay = $"{activity.MonthNum}/{activity.DayOfMonth}";
+                <li class="nav-item @selected">
+                    <a class="nav-link" asp-controller="Activity" asp-action="Index" asp-route-id="@activity.ActivityId">
+                        <span class="startDate">@monthDay</span>
+                        <span class="unitDistance">@activity.Distance km.</span>
+                        @activity.MainText
+                    </a>
+                </li>
+            }
+        }
     </ul>
 </div>
 <div class="monthDivider"></div>

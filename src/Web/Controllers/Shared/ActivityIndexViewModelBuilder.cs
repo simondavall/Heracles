@@ -27,25 +27,28 @@ namespace Heracles.Web.Controllers.Shared
                     ActiveSince = "Active since Sep, 2009",
                     Username = "Simon Da Vall"
                 },
-                ActivityListViewModel = await GetActivityListViewModel(),
+                ActivityListViewModel = await GetActivityListViewModel(track),
                 ActivityTitleViewModel = GetActivityTitleViewModel(track),
                 StatsBarViewModel = GetStatsBarViewModel(track),
                 MapAreaViewModel = new MapAreaViewModel { TrackId = track.Id, SiteRoot = siteRoot }
             };
         }
 
-        private async Task<ActivityListViewModel> GetActivityListViewModel()
+        private async Task<ActivityListViewModel> GetActivityListViewModel(Track track)
         {
-            var monthlyActivitySummary = await _activityService.GetActivitiesSummaryByMonths();
+            var monthlyActivitySummary = await _activityService.GetActivitiesSummaryByMonths(track);
+
+            var selectedMonthIndex = monthlyActivitySummary.TakeWhile(summary => summary.Activities is null).Count();
 
             var activitiesSummary = monthlyActivitySummary.Select(x =>
                 new ActivitiesByMonthViewModel
                 {
                     ActivityCount = x.Count,
-                    ActivityDate = new DateTime(x.ActivityYearMonth / 100, x.ActivityYearMonth % 100, 1)
+                    ActivityDate = new DateTime(x.ActivityYearMonth / 100, x.ActivityYearMonth % 100, 1),
+                    Activities = x.Activities
                 }).ToList();
 
-            return new ActivityListViewModel { ActivityListMonths = activitiesSummary };
+            return new ActivityListViewModel { ActivityListMonths = activitiesSummary,  ActiveMonthTab = selectedMonthIndex, SelectedActivityId = track.Id.ToString() };
         }
 
         private ActivityTitleViewModel GetActivityTitleViewModel(Track track)
