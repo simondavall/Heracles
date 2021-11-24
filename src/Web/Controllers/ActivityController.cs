@@ -27,7 +27,7 @@ namespace Heracles.Web.Controllers
         {
             if (!Guid.TryParse(id, out var trackId))
             {
-                RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home");
             }
 
             var track = await _activityService.GetActivity(trackId);
