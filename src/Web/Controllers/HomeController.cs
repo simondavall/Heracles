@@ -26,7 +26,7 @@ namespace Heracles.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var track = await _activityService.GetMostRecentActivity();
-
+            var siteRoot = $"{Request.Scheme}://{Request.Host}";
             var model = new IndexViewModel
             {
                 SubNavigationViewModel = new SubNavigationViewModel()
@@ -37,7 +37,7 @@ namespace Heracles.Web.Controllers
                 ActivityListViewModel = await GetActivityListViewModel(),
                 ActivityTitleViewModel = GetActivityTitleViewModel(track),
                 StatsBarViewModel = GetStatsBarViewModel(track),
-                MapAreaViewModel = new MapAreaViewModel { TrackId = track.Id }
+                MapAreaViewModel = new MapAreaViewModel { TrackId = track.Id, SiteRoot = siteRoot }
             };
 
             return View(model);
