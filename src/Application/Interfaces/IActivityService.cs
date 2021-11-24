@@ -8,6 +8,7 @@ namespace Heracles.Application.Interfaces
 {
     public interface IActivityService
     {
+        Task<Track> GetActivity(Guid trackId);
         Task<ActivityInfo> GetActivityInfoAsync(Guid trackId);
         Task<List<ActivityListItem>> GetActivitiesByDate(DateTime startDate);
         Task<IList<ActivityListMonth>> GetActivitiesSummaryByMonths();

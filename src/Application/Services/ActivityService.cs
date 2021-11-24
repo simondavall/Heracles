@@ -21,6 +21,11 @@ namespace Heracles.Application.Services
             _pointService = pointService;
         }
 
+        public async Task<Track> GetActivity(Guid trackId)
+        {
+            return await _trackRepository.GetTrackAsync(trackId);
+        }
+
         public async Task<ActivityInfo> GetActivityInfoAsync(Guid trackId)
         {
             var track = await _trackRepository.GetTrackAsync(trackId);
