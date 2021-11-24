@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using Heracles.Application.Entities;
 
 namespace Heracles.Web.Models
 {
@@ -14,5 +16,7 @@ namespace Heracles.Web.Models
 
         public string DataDate => new DateTime(ActivityDate.Year, ActivityDate.Month, 1).ToString("MMM-dd-yyyy",
             CultureInfo.InvariantCulture);
+
+        public IEnumerable<ActivityListItem> Activities { get; set; }
     }
 }

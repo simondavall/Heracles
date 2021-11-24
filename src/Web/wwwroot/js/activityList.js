@@ -31,7 +31,7 @@
             var activityPath = activities[i].type === "CARDIO" ? "activity" : "strengthtrainingactivity"
                 , url = `/${activityPath}/${activities[i].activity_id}`
                 , extraText = ""
-                , selectedId = window.location.pathname.split("?")[0].split("/").pop()
+                , selectedId = $("#selectedActivity").val()
                 , selected = selectedId === activities[i].activity_id ? "selected" : ""
                 , strengthClass = activities[i].type === "STRENGTH_TRAINING" ? "strengthTraining" : "";
 
