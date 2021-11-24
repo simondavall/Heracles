@@ -55,7 +55,7 @@
     });
 
     function refreshActivityPointData() {
-        $.getJSON("api/Activity/GetActivityInfo",
+        $.getJSON("/api/Activity/GetActivityInfo",
             {trackId: "@Model.TrackId"},
             function (activityInfo) {
                 if (typeof (mapController) !== 'undefined') mapController.clear();

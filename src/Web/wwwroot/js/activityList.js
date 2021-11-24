@@ -8,7 +8,7 @@
         }
 
         $.ajax({
-            url: `api/activity/activityListByDate?${data}`,
+            url: `/api/activity/activityListByDate?${data}`,
             complete:
                 function(json) { //for some reason the stripes status code isn't working so success never gets called, but complete does
                     if (json.status === 200) {
@@ -29,7 +29,7 @@
 
         for (var i in activities) {
             var activityPath = activities[i].type === "CARDIO" ? "activity" : "strengthtrainingactivity"
-                , url = `/user/${activities[i].username}/${activityPath}/${activities[i].activity_id}`
+                , url = `/${activityPath}/${activities[i].activity_id}`
                 , extraText = ""
                 , selectedId = window.location.pathname.split("?")[0].split("/").pop()
                 , selected = selectedId === activities[i].activity_id ? "selected" : ""
