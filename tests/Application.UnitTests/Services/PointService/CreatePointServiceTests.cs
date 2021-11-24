@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using Heracles.Application.Entities.Points;
-using Heracles.Application.Services.Points;
+using Heracles.Application.Interfaces;
 using Heracles.Application.TrackAggregate;
 using NUnit.Framework;
 

@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Heracles.Application.Entities.Points;
-using Heracles.Application.Services.Points;
+using Heracles.Application.Interfaces;
 using Heracles.Application.TrackAggregate;
 using NUnit.Framework;
 
