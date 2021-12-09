@@ -346,6 +346,10 @@ body {
         background-image: url('../images/pace_speed.png');
     }
 
+    .statsItem#rank {
+        background-image: url('../images/rank.png');
+    }
+
     .statsItem#totalClimb {
         background-image: url('../images/elevation.png');
     }

@@ -29,7 +29,7 @@ namespace Heracles.Web.Controllers.Shared
                 },
                 ActivityListViewModel = await GetActivityListViewModel(track),
                 ActivityTitleViewModel = GetActivityTitleViewModel(track),
-                StatsBarViewModel = GetStatsBarViewModel(track),
+                StatsBarViewModel = await GetStatsBarViewModel(track),
                 MapAreaViewModel = new MapAreaViewModel { TrackId = track.Id, SiteRoot = siteRoot }
             };
         }
@@ -62,8 +62,9 @@ namespace Heracles.Web.Controllers.Shared
             return model;
         }
 
-        private StatsBarViewModel GetStatsBarViewModel(Track track)
+        private async Task<StatsBarViewModel> GetStatsBarViewModel(Track track)
         {
+            var (rank, count) = await _activityService.GetActivityRank(track);
             var model = new StatsBarViewModel
             {
                 DistanceTitle = "km",
@@ -72,6 +73,9 @@ namespace Heracles.Web.Controllers.Shared
                 DurationValue = track.Duration.ToFormattedString(),
                 PaceTitle = "Average Pace",
                 PaceValue = track.Pace.ToFormattedString(),
+                RankTitle = "Rank",
+                RankValue = rank.ToString(),
+                RankCount = count.ToString(),
                 CaloriesTitle = "Calories Burned",
                 CaloriesValue = track.Calories.ToString()
             };

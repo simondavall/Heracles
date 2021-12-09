@@ -92,5 +92,11 @@ namespace Heracles.Application.Services
         {
             return await _trackRepository.GetMostRecentTrack();
         }
+
+        public async Task<(int rank, int count)> GetActivityRank(Track track)
+        {
+            var (upperBounds, lowerBounds) = ActivityRanking.GetRankBounds(track);
+            return await _trackRepository.GetTrackRank(track, upperBounds, lowerBounds);
+        }
     }
 }
