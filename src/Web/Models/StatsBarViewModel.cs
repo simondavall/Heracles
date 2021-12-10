@@ -8,6 +8,9 @@
         public string DurationValue { get; set; }
         public string PaceTitle { get; set; }
         public string PaceValue { get; set; }
+        public string RankTitle { get; set; }
+        public string RankValue { get; set; }
+        public string RankCount { get; set; }
         public string CaloriesTitle { get; set; }
         public string CaloriesValue { get; set; }
     }

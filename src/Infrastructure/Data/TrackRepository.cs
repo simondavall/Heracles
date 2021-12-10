@@ -91,6 +91,16 @@ namespace Heracles.Infrastructure.Data
             return track;
         }
 
+        public async Task<(int rank, int count)> GetTrackRank(Track track, double upperBounds, double lowerBounds)
+        {
+            var tracksInRange = await DbContext.Tracks
+                .Where(x => x.Distance >= lowerBounds & x.Distance <= upperBounds & x.ActivityType == track.ActivityType)
+                .ToArrayAsync();
+            var rank = tracksInRange.Count(x => x.Pace < track.Pace);
+
+            return (rank, tracksInRange.Length);
+        }
+
         public async Task<IList<ActivityListMonth>> GetTrackSummaryByMonths()
         {
             var result = await DbContext.Tracks

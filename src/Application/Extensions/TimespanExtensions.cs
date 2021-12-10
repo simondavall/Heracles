@@ -8,7 +8,7 @@ namespace Heracles.Application.Extensions
         {
             if (span.TotalHours >= 1)
             {
-                return $"{span.TotalHours:00}:{span.Minutes:00}:{span.Seconds:00}";
+                return $"{span.TotalHours:#0}:{span.Minutes:00}:{span.Seconds:00}";
             }
 
             return $"{span.Minutes:#0}:{span.Seconds:00}";
