@@ -3,10 +3,9 @@
     ViewBag.Title = "Import";
 }
 
-<hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>@ViewBag.Message</h2>
-</hgroup>
+<div class="subNavcontainer clearfix">
+    <partial name="_SubNavigation" model="@Model.SubNavigationViewModel"/>
+</div>
 
 <div asp-validation-summary="All" class="text-danger"></div>
 
@@ -28,14 +27,7 @@
                     @foreach (var failedFile in @Model.FilesFailed)
                     {
                         <li>
-                            <h3 class="filter-list-title">File: @failedFile.Filename</h3>
-                            <ul>
-                                <li>
-                                    <div style="font-size: 1.4em">
-                                        Error Message : [@failedFile.Reason]
-                                    </div>
-                                </li>
-                            </ul>
+                            <h3 class="filter-list-title">File: @failedFile.Filename [@failedFile.Reason]</h3>
                         </li>
                     }
                 </ul>

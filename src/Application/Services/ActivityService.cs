@@ -71,7 +71,7 @@ namespace Heracles.Application.Services
 
         public async Task<IList<ActivityListMonth>> GetActivitiesSummaryByMonths(Track track)
         {
-            var activityMonthlySummary = await _trackRepository.GetTrackSummaryByMonths();
+            var activityMonthlySummary = await _trackRepository.GetTrackSummaryByMonthsAsync();
             var activities = await GetActivitiesByDate(track.Time, track.Id);
 
             var selectedYearMonth = track.Time.Year * 100 + track.Time.Month;
@@ -90,13 +90,13 @@ namespace Heracles.Application.Services
 
         public async Task<Track> GetMostRecentActivity()
         {
-            return await _trackRepository.GetMostRecentTrack();
+            return await _trackRepository.GetMostRecentTrackAsync();
         }
 
         public async Task<(int rank, int count)> GetActivityRank(Track track)
         {
             var (upperBounds, lowerBounds) = ActivityRanking.GetRankBounds(track);
-            return await _trackRepository.GetTrackRank(track, upperBounds, lowerBounds);
+            return await _trackRepository.GetTrackRankAsync(track, upperBounds, lowerBounds);
         }
     }
 }

@@ -441,6 +441,10 @@ body {
         background-image: url('../images/sub_nav_dashboard_sprite.png');
     }
 
+    .userNavItem.import {
+        background-image: url('../images/sub_nav_import_sprite.png');
+    }
+
     .userNavItem.reports {
         background-image: url('../images/sub_nav_reports_sprite.png');
     }

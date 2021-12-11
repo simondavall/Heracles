@@ -1,15 +1,23 @@
-﻿@model SubNavigationViewModel
+﻿@using Heracles.Application.Enums
+@model SubNavigationViewModel
 
 <div class="userNavContainer clearfix">
+    <a asp-controller="Import" asp-action="Index">
+        <div class="userNavItem import @Model.TabSelected[(int)SubNavTab.Import]">
+            <p>IMPORT</p>
+        </div>
+    </a>
+    <div class="userNavBorder left "></div>
+    <div class="userNavBorder right @Model.TabSelected[(int)SubNavTab.Reports]"></div>
     <a href="#">
-        <div class="userNavItem reports ">
+        <div class="userNavItem reports @Model.TabSelected[(int)SubNavTab.Reports]">
             <p>REPORTS</p>
         </div>
     </a>
     <div class="userNavBorder left "></div>
-    <div class="userNavBorder right selected"></div>
+    <div class="userNavBorder right @Model.TabSelected[(int)SubNavTab.Dashboard]"></div>
     <a href="/">
-        <div class="userNavItem dashboard selected">
+        <div class="userNavItem dashboard  @Model.TabSelected[(int)SubNavTab.Dashboard]">
             <p>DASHBOARD</p>
         </div>
     </a>

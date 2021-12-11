@@ -74,7 +74,7 @@ namespace Heracles.Infrastructure.Data
             return await DbContext.Tracks.Select(x => x.Name).ToListAsync();
         }
 
-        public async Task<Track> GetMostRecentTrack()
+        public async Task<Track> GetMostRecentTrackAsync()
         {
             var track = await DbContext.Tracks.OrderByDescending(x => x.Time).FirstOrDefaultAsync();
             if (track is null)
@@ -91,7 +91,7 @@ namespace Heracles.Infrastructure.Data
             return track;
         }
 
-        public async Task<(int rank, int count)> GetTrackRank(Track track, double upperBounds, double lowerBounds)
+        public async Task<(int rank, int count)> GetTrackRankAsync(Track track, double upperBounds, double lowerBounds)
         {
             var tracksInRange = await DbContext.Tracks
                 .Where(x => x.Distance >= lowerBounds & x.Distance <= upperBounds & x.ActivityType == track.ActivityType)
@@ -101,7 +101,7 @@ namespace Heracles.Infrastructure.Data
             return (rank, tracksInRange.Length);
         }
 
-        public async Task<IList<ActivityListMonth>> GetTrackSummaryByMonths()
+        public async Task<IList<ActivityListMonth>> GetTrackSummaryByMonthsAsync()
         {
             var result = await DbContext.Tracks
                 .GroupBy(x => x.Time.Year*100 + x.Time.Month)

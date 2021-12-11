@@ -13,9 +13,9 @@ namespace Heracles.Application.Interfaces
     {
         Task<Track> GetTrackAsync(Guid trackId);
         Task<IList<string>> GetExistingTracksAsync();
-        Task<Track> GetMostRecentTrack();
-        Task<(int rank, int count)> GetTrackRank(Track track, double upperBounds, double lowerBounds);
-        Task<IList<ActivityListMonth>> GetTrackSummaryByMonths();
+        Task<Track> GetMostRecentTrackAsync();
+        Task<(int rank, int count)> GetTrackRankAsync(Track track, double upperBounds, double lowerBounds);
+        Task<IList<ActivityListMonth>> GetTrackSummaryByMonthsAsync();
         Task SaveImportedFilesAsync(ImportFilesResult importFilesResult, CancellationToken cancellationToken);
     }
 }

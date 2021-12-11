@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Heracles.Application.Enums;
 using Heracles.Application.Interfaces;
 using Heracles.Web.Controllers.Shared;
 using Heracles.Web.Models;
@@ -33,7 +34,7 @@ namespace Heracles.Web.Controllers
             var track = await _activityService.GetActivity(trackId);
             var siteRoot = $"{Request.Scheme}://{Request.Host}";
             var model = await  _activityViewModelBuilder.GetIndexViewModel(track, siteRoot);
-
+            model.SubNavigationViewModel.SetSelectedTab(SubNavTab.Dashboard);
             return View(model);
         }
     }
