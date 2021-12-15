@@ -32,6 +32,7 @@ namespace Heracles.Web.Controllers
             return View(model);
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Upload()
         {
