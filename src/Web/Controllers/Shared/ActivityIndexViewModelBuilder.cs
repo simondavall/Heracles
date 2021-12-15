@@ -22,11 +22,7 @@ namespace Heracles.Web.Controllers.Shared
         {
             return new IndexViewModel
             {
-                SubNavigationViewModel = new SubNavigationViewModel()
-                {
-                    ActiveSince = "Active since Sep, 2009",
-                    Username = "Simon Da Vall"
-                },
+                SubNavigationViewModel = GetSubNavViewModel(),
                 ActivityListViewModel = await GetActivityListViewModel(track),
                 ActivityTitleViewModel = GetActivityTitleViewModel(track),
                 StatsBarViewModel = await GetStatsBarViewModel(track),
@@ -80,6 +76,15 @@ namespace Heracles.Web.Controllers.Shared
                 CaloriesValue = track.Calories.ToString()
             };
             return model;
+        }
+
+        private SubNavigationViewModel GetSubNavViewModel()
+        {
+            return new SubNavigationViewModel()
+            {
+                ActiveSince = "Active since Sep, 2009",
+                Username = "Simon Da Vall"
+            };
         }
     }
 }
