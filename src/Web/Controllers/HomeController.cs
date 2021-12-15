@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Heracles.Application.Enums;
 using Heracles.Application.Extensions;
 using Heracles.Application.Interfaces;
 using Heracles.Application.TrackAggregate;
@@ -31,7 +32,7 @@ namespace Heracles.Web.Controllers
             var track = await _activityService.GetMostRecentActivity();
             var siteRoot = $"{Request.Scheme}://{Request.Host}";
             var model = await _activityViewModelBuilder.GetIndexViewModel(track, siteRoot);
-
+            model.SubNavigationViewModel.SetSelectedTab(SubNavTab.Dashboard);
             return View(model);
         }
 

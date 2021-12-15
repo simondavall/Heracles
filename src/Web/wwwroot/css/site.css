@@ -202,8 +202,20 @@ body {
         width: 700px;
     }
 
+.error-file {
+    margin-bottom: 4px;
+}
+
 .identityFeatures {
-    padding : 50px
+    padding: 50px;
+}
+
+.importedfiles .failedfiles {
+    margin-bottom: 20px;
+}
+
+.importedfiles .successfiles {
+    margin-bottom: 20px;
 }
 
 .leftContentColumn {
@@ -439,6 +451,10 @@ body {
 
     .userNavItem.dashboard {
         background-image: url('../images/sub_nav_dashboard_sprite.png');
+    }
+
+    .userNavItem.import {
+        background-image: url('../images/sub_nav_import_sprite.png');
     }
 
     .userNavItem.reports {

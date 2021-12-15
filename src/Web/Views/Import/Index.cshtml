@@ -3,44 +3,70 @@
     ViewBag.Title = "Import";
 }
 
-<hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>@ViewBag.Message</h2>
-</hgroup>
+<div class="subNavcontainer clearfix">
+    <partial name="_SubNavigation" model="@Model.SubNavigationViewModel"/>
+</div>
 
 <div asp-validation-summary="All" class="text-danger"></div>
 
-@using (Html.BeginForm("Upload", "Import", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    <input type="file" name="FileUpload" multiple />
-    <input type="submit" name="Submit" id="Submit" value="Upload" />
-}
-@if(Model.ImportExecuted)
-{
-    <div class="row">
-        <div class="col-md-6">
-            <div class="h4">Successfully imported: @Model.DisplayFilesImported(Model.FilesImported)</div>
-            @if (Model.FilesFailed.Count > 0)
-            {
-            <div id="accordian" class="panel">
-                <div class="panel-heading h5">Failed to load: @Model.DisplayFilesImported(Model.FilesFailed.Count)</div>
-                <ul class="panel-body">
-                    @foreach (var failedFile in @Model.FilesFailed)
-                    {
-                        <li>
-                            <h3 class="filter-list-title">File: @failedFile.Filename</h3>
-                            <ul>
-                                <li>
-                                    <div style="font-size: 1.4em">
-                                        Error Message : [@failedFile.Reason]
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
-                    }
-                </ul>
+<div class="container">
+    <div class="columnContent clearfix">
+        @using (Html.BeginForm("Upload", "Import", FormMethod.Post,  new { id="uploadForm", enctype = "multipart/form-data"}))
+        {
+            <div class="mainColumnPadding">
+                <div class="multipleMapImport">
+                    <div class="mappingImportContainer">
+                        <div class="header">
+                            Import multiple activities
+                        </div>
+                        <div class="info">
+                            <label for="trackFiles" id="trackFileLabel">
+                                You can upload multiple activities at once.
+                                Please select the GPX files you would like to import.
+                            </label>
+                        </div>
+                        <div class="uploader" id="uniform-trackFiles">
+                            <input id="trackFiles" size="30" type="file" name="trackFiles" accept=".gpx,.tcx,.fit" onchange="uploadMultipleTrackFiles()" multiple="multiple" style="opacity: 0;">
+                            <span class="filename">No file selected</span>
+                            <span class="action">Choose File</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            }
-        </div>
+        }
+        @if (Model.ImportExecuted)
+        {
+            <div class="importedfiles">
+                @if (Model.FilesImported > 0)
+                {
+                    <div id="successFilesHeader" class="successfiles" style="display: block;">
+                        Successfully uploaded @Model.FormatSuccessFormatSuccessfullyImported()
+                    </div>
+                }
+                @if (Model.FilesFailed.Count > 0)
+                {
+                    <div id="errorFilesHeader" class="failedfiles" style="display: block;">
+                        Could not upload the following @Model.FormatDisplay(Model.FilesFailed.Count):
+                        <div id="errorFiles">
+                            @foreach (var failedFile in @Model.FilesFailed)
+                            {
+                                <p class="error-file">@failedFile.Filename - [@failedFile.Reason]</p>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
     </div>
-}
+    <script type="text/javascript">
+        function uploadMultipleTrackFiles() {
+                $('#errorFilesPastMaxHeader').hide();
+                $('#errorFilesPastMax').html("");
+                $('#errorFilesHeader').hide();
+                $('#errorFiles').html("");
+                $('#successFilesHeader').hide();
+                $('#successFiles').html("");
+                $("#uploadForm").submit();
+            }
+        </script>
+</div>

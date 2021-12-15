@@ -9,14 +9,25 @@ namespace Heracles.Web.Models
         {
             FilesFailed = new List<FileResult>();
         }
-        public int FilesImported { get; init; }
-        public IList<FileResult> FilesFailed { get; init; }
-
-        public string DisplayFilesImported(int numberOfFiles)
+        public int FilesImported { get; set; }
+        public IList<FileResult> FilesFailed { get; set; }
+        public SubNavigationViewModel SubNavigationViewModel { get; set; }
+        public bool ImportExecuted { get; set; }
+        public string FormatDisplay(int numberOfFiles)
         {
             return numberOfFiles == 1 ? "1 file" : numberOfFiles + " files";
         }
 
-        public bool ImportExecuted { get; init; }
+        public string FormatSuccessFormatSuccessfullyImported()
+        {
+            if (TotalFilesImported > 1)
+            {
+                return FilesImported + "/" + TotalFilesImported + " files";
+            }
+
+            return FilesImported + "/" + TotalFilesImported + " file";
+        }
+
+        private int TotalFilesImported => FilesImported + FilesFailed.Count;
     }
 }

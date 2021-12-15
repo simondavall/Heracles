@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Heracles.Application.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Heracles.Application.Interfaces;
@@ -27,9 +28,11 @@ namespace Heracles.Web.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return View(new ImportViewModel());
+            var model = BuildImportViewModel();
+            return View(model);
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Upload()
         {
@@ -43,17 +46,28 @@ namespace Heracles.Web.Controllers
             {
                 _logger.LogError(e, $"Failed to save track details to db with message: {e.Message}");
                 ModelState.AddModelError(string.Empty, ImportServiceStrings.FailedToSaveImportedFiles);
-                return View("Index", new ImportViewModel());
+                return View("Index", BuildImportViewModel());
             }
+            var model = BuildImportViewModel();
+            model.FilesFailed = importFilesResult.FailedFiles;
+            model.FilesImported = importFilesResult.ImportedFiles.Count;
+            model.ImportExecuted = true;
 
-            var importViewModel = new ImportViewModel
+            return View("Index", model);
+        }
+
+        private ImportViewModel BuildImportViewModel()
+        {
+            var model = new ImportViewModel
             {
-                FilesFailed = importFilesResult.FailedFiles,
-                FilesImported = importFilesResult.ImportedFiles.Count,
-                ImportExecuted = true
+                SubNavigationViewModel = new SubNavigationViewModel()
+                {
+                    ActiveSince = "Active since Sep, 2009",
+                    Username = "Simon Da Vall"
+                }
             };
-
-            return View("Index", importViewModel);
+            model.SubNavigationViewModel.SetSelectedTab(SubNavTab.Import);
+            return model;
         }
     }
 }
