@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Heracles.Application.Extensions;
 using Heracles.Application.Interfaces;
 using Heracles.Application.TrackAggregate;
+using Heracles.Infrastructure.Identity;
 using Heracles.Web.Models;
 
 namespace Heracles.Web.Controllers.Shared
@@ -18,11 +19,11 @@ namespace Heracles.Web.Controllers.Shared
             _activityService = activityService;
         }
 
-        public async Task<IndexViewModel> GetIndexViewModel(Track track, string siteRoot)
+        public async Task<IndexViewModel> GetIndexViewModel(Track track, string siteRoot, ApplicationUser user)
         {
             return new IndexViewModel
             {
-                SubNavigationViewModel = GetSubNavViewModel(),
+                SubNavigationViewModel = await GetSubNavViewModel(user),
                 ActivityListViewModel = await GetActivityListViewModel(track),
                 ActivityTitleViewModel = GetActivityTitleViewModel(track),
                 StatsBarViewModel = await GetStatsBarViewModel(track),
@@ -78,13 +79,18 @@ namespace Heracles.Web.Controllers.Shared
             return model;
         }
 
-        private SubNavigationViewModel GetSubNavViewModel()
+        private async Task<SubNavigationViewModel> GetSubNavViewModel(ApplicationUser user)
         {
-            return new SubNavigationViewModel()
+            var firstEverActivity = await _activityService.GetFirstEverActivityAsync();
+            var dateOfEarliestActivity = firstEverActivity?.Time ?? DateTime.UtcNow;
+
+            var subNav = new SubNavigationViewModel
             {
-                ActiveSince = "Active since Sep, 2009",
-                Username = "Simon Da Vall"
+                ActiveSince = $"Active since {dateOfEarliestActivity:MMM, yyyy}",
+                Username = user is null ? "Not Logged In" : user.DisplayName
             };
+
+            return subNav;
         }
     }
 }

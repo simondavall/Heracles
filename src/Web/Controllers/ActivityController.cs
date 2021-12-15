@@ -2,22 +2,27 @@
 using System.Threading.Tasks;
 using Heracles.Application.Enums;
 using Heracles.Application.Interfaces;
+using Heracles.Infrastructure.Identity;
 using Heracles.Web.Controllers.Shared;
-using Heracles.Web.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Heracles.Web.Controllers
 {
+    [Authorize]
     public class ActivityController : Controller
     {
         private readonly IActivityService _activityService;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<ActivityController> _logger;
         private readonly ActivityIndexViewModelBuilder _activityViewModelBuilder;
 
-        public ActivityController(IActivityService activityService, ILogger<ActivityController> logger)
+        public ActivityController(IActivityService activityService, UserManager<ApplicationUser> userManager, ILogger<ActivityController> logger)
         {
             _activityService = activityService;
+            _userManager = userManager;
             _activityViewModelBuilder = new ActivityIndexViewModelBuilder(activityService);
             _logger = logger;
         }
@@ -33,8 +38,11 @@ namespace Heracles.Web.Controllers
 
             var track = await _activityService.GetActivity(trackId);
             var siteRoot = $"{Request.Scheme}://{Request.Host}";
-            var model = await  _activityViewModelBuilder.GetIndexViewModel(track, siteRoot);
+            var user = await _userManager.GetUserAsync(User);
+
+            var model = await  _activityViewModelBuilder.GetIndexViewModel(track, siteRoot, user);
             model.SubNavigationViewModel.SetSelectedTab(SubNavTab.Dashboard);
+
             return View(model);
         }
     }

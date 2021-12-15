@@ -74,6 +74,11 @@ namespace Heracles.Infrastructure.Data
             return await DbContext.Tracks.Select(x => x.Name).ToListAsync();
         }
 
+        public async Task<Track> GetFirstEverActivityAsync()
+        {
+            return await DbContext.Tracks.OrderBy(x => x.Time).FirstOrDefaultAsync();
+        }
+
         public async Task<Track> GetMostRecentTrackAsync()
         {
             var track = await DbContext.Tracks.OrderByDescending(x => x.Time).FirstOrDefaultAsync();

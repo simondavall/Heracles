@@ -8,10 +8,12 @@ using Heracles.Application.Interfaces;
 using Heracles.Application.Resources;
 using Heracles.Application.Services.Import;
 using Heracles.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace Heracles.Web.Controllers
 {
+    [Authorize]
     public class ImportController : Controller
     {
         private readonly ILogger<ImportController> _logger;

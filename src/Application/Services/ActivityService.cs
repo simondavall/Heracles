@@ -88,6 +88,11 @@ namespace Heracles.Application.Services
             return activityMonthlySummary;
         }
 
+        public async Task<Track> GetFirstEverActivityAsync()
+        {
+            return await _trackRepository.GetFirstEverActivityAsync();
+        }
+
         public async Task<Track> GetMostRecentActivity()
         {
             return await _trackRepository.GetMostRecentTrackAsync();
