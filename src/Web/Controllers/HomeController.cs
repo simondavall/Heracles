@@ -1,28 +1,29 @@
 ﻿using Heracles.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
 using Heracles.Application.Enums;
-using Heracles.Application.Extensions;
 using Heracles.Application.Interfaces;
-using Heracles.Application.TrackAggregate;
+using Heracles.Infrastructure.Identity;
 using Heracles.Web.Controllers.Shared;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Heracles.Web.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly IActivityService _activityService;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<HomeController> _logger;
         private readonly ActivityIndexViewModelBuilder _activityViewModelBuilder;
 
-        public HomeController(IActivityService activityService, ILogger<HomeController> logger)
+        public HomeController(IActivityService activityService, UserManager<ApplicationUser> userManager, ILogger<HomeController> logger)
         {
             _activityService = activityService;
+            _userManager = userManager;
             _activityViewModelBuilder = new ActivityIndexViewModelBuilder(activityService);
             _logger = logger;
         }
@@ -31,8 +32,11 @@ namespace Heracles.Web.Controllers
         {
             var track = await _activityService.GetMostRecentActivity();
             var siteRoot = $"{Request.Scheme}://{Request.Host}";
-            var model = await _activityViewModelBuilder.GetIndexViewModel(track, siteRoot);
+            var user = await _userManager.GetUserAsync(User);
+
+            var model = await _activityViewModelBuilder.GetIndexViewModel(track, siteRoot, user);
             model.SubNavigationViewModel.SetSelectedTab(SubNavTab.Dashboard);
+
             return View(model);
         }
 
