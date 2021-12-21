@@ -39,5 +39,17 @@ namespace Heracles.Web.Api
             };
             return jResult.ToString(Formatting.None);
         }
+
+        [HttpGet]
+        public void InitializeProgress(string processId)
+        {
+            _logger.LogDebug($"Called InitializeProgress with processId: {processId}");
+            if (!Guid.TryParse(processId, out var processGuid))
+            {
+                throw new ArgumentException("processId must be a valid Guid.");
+            }
+
+            _progressService.InitializeProgress(processGuid);
+        }
     }
 }
