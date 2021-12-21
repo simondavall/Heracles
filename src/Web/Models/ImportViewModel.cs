@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Heracles.Application.Services.Import;
 
 namespace Heracles.Web.Models
@@ -13,6 +14,7 @@ namespace Heracles.Web.Models
         public IList<FileResult> FilesFailed { get; set; }
         public SubNavigationViewModel SubNavigationViewModel { get; set; }
         public bool ImportExecuted { get; set; }
+        public Guid ProcessId { get; set; }
         public string FormatDisplay(int numberOfFiles)
         {
             return numberOfFiles == 1 ? "1 file" : numberOfFiles + " files";

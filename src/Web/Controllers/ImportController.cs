@@ -30,27 +30,34 @@ namespace Heracles.Web.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var model = BuildImportViewModel();
+            var model = BuildImportViewModel(Guid.NewGuid());
             return View(model);
         }
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<IActionResult> Upload()
+        public async Task<IActionResult> Upload(string processId)
         {
+            if (!Guid.TryParse(processId, out var processGuid))
+            {
+                _logger.LogError($"Upload did not contain a valid Guid for processId");
+                throw new ArgumentException("ProcessId must be a valid Guid.", nameof(processId));
+            }
+            
             var importFilesResult = await _importService.ImportTracksFromGpxFilesAsync(Request.Form.Files);
 
             try
             {
-                await _trackRepository.SaveImportedFilesAsync(importFilesResult, CancellationToken.None);
+                //await _trackRepository.SaveImportedFilesAsync(importFilesResult, CancellationToken.None);
+                await _trackRepository.SaveImportedFilesAsync(importFilesResult, processGuid, CancellationToken.None);
             }
             catch (Exception e)
             {
                 _logger.LogError(e, $"Failed to save track details to db with message: {e.Message}");
                 ModelState.AddModelError(string.Empty, ImportServiceStrings.FailedToSaveImportedFiles);
-                return View("Index", BuildImportViewModel());
+                return View("Index", BuildImportViewModel(processGuid));
             }
-            var model = BuildImportViewModel();
+            var model = BuildImportViewModel(processGuid);
             model.FilesFailed = importFilesResult.FailedFiles;
             model.FilesImported = importFilesResult.ImportedFiles.Count;
             model.ImportExecuted = true;
@@ -58,7 +65,7 @@ namespace Heracles.Web.Controllers
             return View("Index", model);
         }
 
-        private ImportViewModel BuildImportViewModel()
+        private ImportViewModel BuildImportViewModel(Guid processId)
         {
             var model = new ImportViewModel
             {
@@ -68,6 +75,7 @@ namespace Heracles.Web.Controllers
                     Username = "Simon Da Vall"
                 }
             };
+            model.ProcessId = processId;
             model.SubNavigationViewModel.SetSelectedTab(SubNavTab.Import);
             return model;
         }

@@ -13,6 +13,7 @@ namespace Heracles.Application
             services.AddScoped<IImportService, ImportService>();
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<IPointService, PointService>();
+            services.AddSingleton<IImportProgressService, ImportProgressService>();
         }
     }
 }
