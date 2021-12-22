@@ -233,6 +233,10 @@ body {
     color: #aaa;
 }
 
+.multipleMapImport div.uploader:after {
+    content: 'Click to upload. (You can select multiple files up to a total of 25MB)';
+}
+
 .nav-link {
     height: 40px;
 }
@@ -273,6 +277,11 @@ body {
         position: relative;
         text-overflow: ellipsis;
     }
+
+.progressbar {
+    padding-left: 15px;
+    padding-right: 15px;
+}
 
 .sizeConstraint {
     width: 960px;

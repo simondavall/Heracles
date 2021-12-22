@@ -13,7 +13,7 @@ namespace Heracles.Application.UnitTests.ExtensionTests
             var timespan = new TimeSpan(2, 2, 2);
             var result = timespan.ToFormattedString();
 
-            result.Should().Be("02:02:02");
+            result.Should().Be("2:02:02");
         }
 
         [Test]

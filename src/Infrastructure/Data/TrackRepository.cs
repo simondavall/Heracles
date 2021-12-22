@@ -6,8 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using EFCore.BulkExtensions;
 using Heracles.Application.Entities;
+using Heracles.Application.Enums;
 using Heracles.Application.Interfaces;
 using Heracles.Application.Services.Import;
+using Heracles.Application.Services.Import.Progress;
 using Heracles.Application.TrackAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,13 +19,15 @@ namespace Heracles.Infrastructure.Data
     public class TrackRepository : EfRepository<Track, Guid>, ITrackRepository
     {
         private readonly IServiceProvider _services;
+        private readonly IImportProgressService _progressService;
 
-        public TrackRepository(GpxDbContext dbContext, IServiceProvider services) : base(dbContext)
+        public TrackRepository(GpxDbContext dbContext, IServiceProvider services, IImportProgressService progressService) : base(dbContext)
         {
             _services = services;
+            _progressService = progressService;
         }
 
-        public async Task SaveImportedFilesAsync(ImportFilesResult importFilesResult, CancellationToken cancellationToken)
+        public async Task SaveImportedFilesAsync(ImportFilesResult importFilesResult, TrackImportProgress trackProgress, CancellationToken cancellationToken)
         {
             await using (var dbContext = _services.GetRequiredService<GpxDbContext>())
             {
@@ -37,14 +41,23 @@ namespace Heracles.Infrastructure.Data
                             UnderlyingTransaction = GetTransaction
                         };
 
-                        await dbContext.BulkInsertAsync(importFilesResult.Tracks, bulkConfig, cancellationToken: cancellationToken);
-                        await dbContext.BulkInsertAsync(importFilesResult.TrackSegments, bulkConfig, cancellationToken: cancellationToken);
-                        await dbContext.BulkInsertAsync(importFilesResult.TrackPoints, bulkConfig, cancellationToken: cancellationToken);
+                        trackProgress.SetTrackingProgressMethod(TrackImportMethod.TrackImport);
+                        await dbContext.BulkInsertAsync(importFilesResult.Tracks, bulkConfig, trackProgress.TrackProgressMethod, cancellationToken: cancellationToken);
+
+                        trackProgress.SetTrackingProgressMethod(TrackImportMethod.SegmentImport);
+                        await dbContext.BulkInsertAsync(importFilesResult.TrackSegments, bulkConfig, trackProgress.TrackProgressMethod, cancellationToken: cancellationToken);
+
+                        trackProgress.SetTrackingProgressMethod(TrackImportMethod.PointsImport);
+                        await dbContext.BulkInsertAsync(importFilesResult.TrackPoints, bulkConfig, trackProgress.TrackProgressMethod, cancellationToken: cancellationToken);
                     }
                     catch (Exception e)
                     {
                         await transaction.RollbackAsync(cancellationToken);
                         throw;
+                    }
+                    finally
+                    {
+                        _progressService.ProgressComplete(trackProgress.ProcessId);
                     }
 
                     await transaction.CommitAsync(cancellationToken);

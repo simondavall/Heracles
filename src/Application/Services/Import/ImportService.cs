@@ -4,6 +4,7 @@ using Ardalis.GuardClauses;
 using Heracles.Application.Exceptions;
 using Heracles.Application.Interfaces;
 using Heracles.Application.Resources;
+using Heracles.Application.Services.Import.Progress;
 using Heracles.Application.TrackAggregate;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -24,15 +25,20 @@ namespace Heracles.Application.Services.Import
             _logger = logger;
         }
 
-        public async Task<ImportFilesResult> ImportTracksFromGpxFilesAsync(IFormFileCollection files, IExistingTracks existingTracks = null)
+        public async Task<ImportFilesResult> ImportTracksFromGpxFilesAsync(IFormFileCollection files, IExistingTracks existingTracks = null, Action<decimal> progress = null)
         {
             Guard.Against.Null(files, nameof(files));
             var result = new ImportFilesResult();
 
             _existingTracks = existingTracks ?? await ExistingTracks.CreateAsync(_trackRepository);
 
+            var fileIndex = 0;
+
             foreach (var file in files)
             {
+                fileIndex++;
+                progress?.Invoke(ProgressHelper.GetProgress(fileIndex, files.Count)); // round to 4 decimal places
+
                 if (!file.FileName.EndsWith(".gpx"))
                 {
                     FailedFile(result, file, ImportServiceStrings.IncorrectFileExtension);
@@ -42,6 +48,12 @@ namespace Heracles.Application.Services.Import
                 try
                 {
                     var track = _gpxService.LoadContentsOfGpxFile(file);
+
+                    if (_existingTracks.TrackExists(track.Name))
+                    {
+                        FailedFile(result, file, ImportServiceStrings.DuplicateTrackRecord);
+                        continue;
+                    }
 
                     ValidateTrackData(track);
 
@@ -82,11 +94,6 @@ namespace Heracles.Application.Services.Import
             if (track is null)
             {
                 throw new ImportServiceException(ImportServiceStrings.FileCouldNotBeProcessed);
-            }
-
-            if (_existingTracks.TrackExists(track.Name))
-            {
-                throw new ImportServiceException(ImportServiceStrings.DuplicateTrackRecord);
             }
 
             if (track.TrackSegments is null || track.TrackSegments.Count == 0)

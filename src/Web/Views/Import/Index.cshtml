@@ -13,6 +13,7 @@
     <div class="columnContent clearfix">
         @using (Html.BeginForm("Upload", "Import", FormMethod.Post,  new { id="uploadForm", enctype = "multipart/form-data"}))
         {
+            <input id="processId" name="processId" type="hidden" value="@Model.ProcessId">
             <div class="mainColumnPadding">
                 <div class="multipleMapImport">
                     <div class="mappingImportContainer">
@@ -32,6 +33,9 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="row progressbar" id="progress" style="display:none">
+                <div class="progress-bar"></div>
             </div>
         }
         @if (Model.ImportExecuted)
@@ -60,13 +64,40 @@
     </div>
     <script type="text/javascript">
         function uploadMultipleTrackFiles() {
-                $('#errorFilesPastMaxHeader').hide();
-                $('#errorFilesPastMax').html("");
-                $('#errorFilesHeader').hide();
-                $('#errorFiles').html("");
-                $('#successFilesHeader').hide();
-                $('#successFiles').html("");
-                $("#uploadForm").submit();
-            }
-        </script>
+            $('#errorFilesPastMaxHeader').hide();
+            $('#errorFilesPastMax').html("");
+            $('#errorFilesHeader').hide();
+            $('#errorFiles').html("");
+            $('#successFilesHeader').hide();
+            $('#successFiles').html("");
+            $("#uploadForm").submit();
+
+            initializeProgress();
+            $("#progress").show();
+            setTimeout(updateProgress, 2000);
+        }
+
+        function initializeProgress() {
+            $.get('/api/Import/InitializeProgress', {processId: "@Model.ProcessId"});
+        }
+
+        function updateProgress() {
+            $.getJSON("/api/Import/UpdateProgress",
+                {processId: "@Model.ProcessId"},
+                function (data) {
+                    var progressVal = parseInt(data.value * 110, 10);
+                    $('#progress .progress-bar').css('width', progressVal + '%');
+                    if (progressVal >= 100) {
+                        setTimeout(hideProgressBar, 1000);
+                    }
+                    else {
+                        setTimeout(updateProgress, 50);
+                    }
+                });
+        }
+
+        function hideProgressBar() {
+            $('#progress').hide();
+        }    
+    </script>
 </div>
