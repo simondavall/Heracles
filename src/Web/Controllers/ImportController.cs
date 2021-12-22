@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Heracles.Application.Interfaces;
 using Heracles.Application.Resources;
 using Heracles.Application.Services.Import;
+using Heracles.Application.Services.Import.Progress;
 using Heracles.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 
@@ -18,12 +19,14 @@ namespace Heracles.Web.Controllers
     {
         private readonly ILogger<ImportController> _logger;
         private readonly ITrackRepository _trackRepository;
+        private readonly IImportProgressService _progressService;
         private readonly IImportService _importService;
 
-        public ImportController(IImportService importService, ITrackRepository trackRepository, ILogger<ImportController> logger)
+        public ImportController(IImportService importService, ITrackRepository trackRepository, IImportProgressService progressService,  ILogger<ImportController> logger)
         {
             _importService = importService;
             _trackRepository = trackRepository;
+            _progressService = progressService;
             _logger = logger;
         }
 
@@ -43,13 +46,14 @@ namespace Heracles.Web.Controllers
                 _logger.LogError($"Upload did not contain a valid Guid for processId");
                 throw new ArgumentException("ProcessId must be a valid Guid.", nameof(processId));
             }
-            
-            var importFilesResult = await _importService.ImportTracksFromGpxFilesAsync(Request.Form.Files);
+
+            var trackProgress = new TrackImportProgress(_progressService, processGuid);
+            var importFilesResult = await _importService.ImportTracksFromGpxFilesAsync(Request.Form.Files, progress:trackProgress.TrackProgressMethod);
 
             try
             {
-                //await _trackRepository.SaveImportedFilesAsync(importFilesResult, CancellationToken.None);
-                await _trackRepository.SaveImportedFilesAsync(importFilesResult, processGuid, CancellationToken.None);
+                trackProgress.UpdateWithProcessedFileData(importFilesResult);
+                await _trackRepository.SaveImportedFilesAsync(importFilesResult, trackProgress, CancellationToken.None);
             }
             catch (Exception e)
             {

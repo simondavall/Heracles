@@ -1,6 +1,7 @@
 ﻿using Heracles.Application.Interfaces;
 using Heracles.Application.Services;
 using Heracles.Application.Services.Import;
+using Heracles.Application.Services.Import.Progress;
 using Heracles.Application.Services.Points;
 using Microsoft.Extensions.DependencyInjection;
 

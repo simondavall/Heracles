@@ -74,7 +74,7 @@
 
             initializeProgress();
             $("#progress").show();
-            setTimeout(updateProgress, 100);
+            setTimeout(updateProgress, 2000);
         }
 
         function initializeProgress() {
@@ -85,13 +85,13 @@
             $.getJSON("/api/Import/UpdateProgress",
                 {processId: "@Model.ProcessId"},
                 function (data) {
-                    var progressVal = parseInt(data.value * 100, 10);
+                    var progressVal = parseInt(data.value * 110, 10);
                     $('#progress .progress-bar').css('width', progressVal + '%');
                     if (progressVal >= 100) {
                         setTimeout(hideProgressBar, 1000);
                     }
                     else {
-                        setTimeout(updateProgress, 100);
+                        setTimeout(updateProgress, 50);
                     }
                 });
         }

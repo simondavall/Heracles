@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Heracles.Application.Interfaces;
 
-namespace Heracles.Application.Services.Import
+namespace Heracles.Application.Services.Import.Progress
 {
     public class ImportProgressService : IImportProgressService
     {
@@ -10,15 +10,16 @@ namespace Heracles.Application.Services.Import
         
         public decimal GetImportProgress(Guid processId)
         {
-            const int processComplete = 1;
+            const decimal processComplete = 1;
             return _importProgress.ContainsKey(processId) ? _importProgress[processId] : processComplete;
         }
 
         public void InitializeProgress(Guid processId)
         {
+            const decimal initialValue = 0;
             if (!_importProgress.ContainsKey(processId))
             {
-                _importProgress.Add(processId, 0);
+                _importProgress.Add(processId, initialValue);
             }
         }
 

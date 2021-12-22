@@ -6,8 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using EFCore.BulkExtensions;
 using Heracles.Application.Entities;
+using Heracles.Application.Enums;
 using Heracles.Application.Interfaces;
 using Heracles.Application.Services.Import;
+using Heracles.Application.Services.Import.Progress;
 using Heracles.Application.TrackAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +20,6 @@ namespace Heracles.Infrastructure.Data
     {
         private readonly IServiceProvider _services;
         private readonly IImportProgressService _progressService;
-        private Action<decimal> _trackProgressMethod;
 
         public TrackRepository(GpxDbContext dbContext, IServiceProvider services, IImportProgressService progressService) : base(dbContext)
         {
@@ -26,7 +27,7 @@ namespace Heracles.Infrastructure.Data
             _progressService = progressService;
         }
 
-        public async Task SaveImportedFilesAsync(ImportFilesResult importFilesResult, CancellationToken cancellationToken)
+        public async Task SaveImportedFilesAsync(ImportFilesResult importFilesResult, TrackImportProgress trackProgress, CancellationToken cancellationToken)
         {
             await using (var dbContext = _services.GetRequiredService<GpxDbContext>())
             {
@@ -40,51 +41,14 @@ namespace Heracles.Infrastructure.Data
                             UnderlyingTransaction = GetTransaction
                         };
 
-                        await dbContext.BulkInsertAsync(importFilesResult.Tracks, bulkConfig, cancellationToken: cancellationToken);
-                        await dbContext.BulkInsertAsync(importFilesResult.TrackSegments, bulkConfig, cancellationToken: cancellationToken);
-                        await dbContext.BulkInsertAsync(importFilesResult.TrackPoints, bulkConfig, cancellationToken: cancellationToken);
-                    }
-                    catch (Exception e)
-                    {
-                        await transaction.RollbackAsync(cancellationToken);
-                        throw;
-                    }
+                        trackProgress.SetTrackingProgressMethod(TrackImportMethod.TrackImport);
+                        await dbContext.BulkInsertAsync(importFilesResult.Tracks, bulkConfig, trackProgress.TrackProgressMethod, cancellationToken: cancellationToken);
 
-                    await transaction.CommitAsync(cancellationToken);
-                };
-            }
-        }
+                        trackProgress.SetTrackingProgressMethod(TrackImportMethod.SegmentImport);
+                        await dbContext.BulkInsertAsync(importFilesResult.TrackSegments, bulkConfig, trackProgress.TrackProgressMethod, cancellationToken: cancellationToken);
 
-        public async Task SaveImportedFilesAsync(ImportFilesResult importFilesResult, Guid processId, CancellationToken cancellationToken)
-        {
-            await using (var dbContext = _services.GetRequiredService<GpxDbContext>())
-            {
-                await using (var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken))
-                {
-                    try
-                    {
-                        InitializeImportProgress(processId, importFilesResult);
-
-                        var bulkConfig = new BulkConfig()
-                        {
-                            UnderlyingConnection = GetConnection,
-                            UnderlyingTransaction = GetTransaction
-                        };
-
-                        _totalRecordsImported = 0;
-                        _trackProgressMethod = GetTracksProgress;
-                        await dbContext.BulkInsertAsync(importFilesResult.Tracks, bulkConfig, _trackProgressMethod,
-                            cancellationToken: cancellationToken);
-
-                        _totalRecordsImported += importFilesResult.Tracks.Count;
-                        _trackProgressMethod = GetTrackSegmentsProgress;
-                        await dbContext.BulkInsertAsync(importFilesResult.TrackSegments, bulkConfig,
-                            _trackProgressMethod, cancellationToken: cancellationToken);
-
-                        _totalRecordsImported += importFilesResult.TrackSegments.Count;
-                        _trackProgressMethod = GetTrackPointsProgress;
-                        await dbContext.BulkInsertAsync(importFilesResult.TrackPoints, bulkConfig, _trackProgressMethod,
-                            cancellationToken: cancellationToken);
+                        trackProgress.SetTrackingProgressMethod(TrackImportMethod.PointsImport);
+                        await dbContext.BulkInsertAsync(importFilesResult.TrackPoints, bulkConfig, trackProgress.TrackProgressMethod, cancellationToken: cancellationToken);
                     }
                     catch (Exception e)
                     {
@@ -93,46 +57,12 @@ namespace Heracles.Infrastructure.Data
                     }
                     finally
                     {
-                        _progressService.ProgressComplete(processId);
+                        _progressService.ProgressComplete(trackProgress.ProcessId);
                     }
 
                     await transaction.CommitAsync(cancellationToken);
                 };
             }
-        }
-
-        private Guid _processId;
-        private int _totalRecordsImported;
-        private int _totalRecordsToImport;
-        private int _trackCount;
-        private int _trackSegmentCount;
-        private int _trackPointCount;
-        private decimal _percentageComplete;
-
-        private void GetTracksProgress(decimal percentage)
-        {
-            _percentageComplete = percentage * _trackCount / _totalRecordsToImport;
-            _progressService.UpdateProgress(_processId, _percentageComplete);
-        }
-        private void GetTrackSegmentsProgress(decimal percentage)
-        {
-            _percentageComplete = (percentage * _trackSegmentCount + _totalRecordsImported) / _totalRecordsToImport;
-            _progressService.UpdateProgress(_processId, _percentageComplete);
-        }
-        private void GetTrackPointsProgress(decimal percentage)
-        {
-            _percentageComplete = (percentage * _trackPointCount + _totalRecordsImported) / _totalRecordsToImport;
-            _progressService.UpdateProgress(_processId, _percentageComplete);
-        }
-
-        private void InitializeImportProgress(Guid processId, ImportFilesResult importFilesResult)
-        {
-            _processId = processId;
-            _trackCount = importFilesResult.Tracks.Count;
-            _trackSegmentCount = importFilesResult.TrackSegments.Count;
-            _trackPointCount = importFilesResult.TrackPoints.Count;
-            _totalRecordsToImport = _trackCount + _trackSegmentCount + _trackPointCount;
-            _progressService.InitializeProgress(_processId);
         }
 
         public async Task<Track> GetTrackAsync(Guid trackId)
