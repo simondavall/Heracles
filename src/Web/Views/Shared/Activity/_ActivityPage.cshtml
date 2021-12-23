@@ -34,8 +34,24 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn button-passive" data-dismiss="modal">Cancel</button>
-                <a href="/api/activity/delete?id=@Model.MapAreaViewModel.TrackId" type="button" class="btn btn-danger">Delete</a>
+                <button id="deleteButton" onclick="deleteActivity('@Model.MapAreaViewModel.TrackId')" class="btn btn-danger">Delete</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function deleteActivity(trackGuid) {
+        $.get("/api/Activity/Delete",
+            { trackId: "@Model.MapAreaViewModel.TrackId" },
+            function (data, status) {
+                if (status === "success" && data === true) {
+                    document.location.href="/";
+                } else {
+                    $("h5#deleteModalLabel").text("Delete Failed");
+                    $("div.modal-body").text("Filed to delete activity. Please try again later.");
+                    $("button#deleteButton").hide();
+                }
+            });
+    }
+</script>

@@ -65,6 +65,23 @@ namespace Heracles.Infrastructure.Data
             }
         }
 
+        public async Task<bool> DeleteTrackAsync(Guid trackId)
+        {
+            var deleteSucceeded = false;
+            var track = await GetTrackAsync(trackId);
+            if (track != null)
+            {
+                var changes = DbContext.Tracks.Remove(track);
+                if (changes.State == EntityState.Deleted)
+                {
+                    await DbContext.SaveChangesAsync();
+                    deleteSucceeded = true;
+                }
+            }
+
+            return deleteSucceeded;
+        }
+
         public async Task<Track> GetTrackAsync(Guid trackId)
         {
             var track = await DbContext.Tracks.Where(x => x.Id == trackId).FirstOrDefaultAsync();

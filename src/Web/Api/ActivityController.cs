@@ -44,6 +44,17 @@ namespace Heracles.Web.Api
             return await _trackService.GetActivityInfoAsync(trackGuid);
         }
 
+        [HttpGet]
+        public async Task<bool> Delete(string trackId)
+        {
+            if (!Guid.TryParse(trackId, out var trackGuid))
+            {
+                return false;
+            }
+
+            return await _trackService.DeleteActivityAsync(trackGuid);
+        }
+
         private static string FormatToJson(IReadOnlyList<ActivityListItem> activities)
         {
             var jArray = JArray.FromObject(activities,

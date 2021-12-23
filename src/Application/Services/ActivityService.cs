@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
 using Heracles.Application.Entities;
 using Heracles.Application.Extensions;
@@ -20,6 +19,11 @@ namespace Heracles.Application.Services
         {
             _trackRepository = trackRepository;
             _pointService = pointService;
+        }
+
+        public async Task<bool> DeleteActivityAsync(Guid trackId)
+        {
+            return await _trackRepository.DeleteTrackAsync(trackId);
         }
 
         public async Task<Track> GetActivity(Guid trackId)
