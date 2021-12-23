@@ -11,6 +11,7 @@ namespace Heracles.Application.Interfaces
 {
     public interface ITrackRepository : IAsyncRepository<Track, Guid>
     {
+        Task<bool> DeleteTrackAsync(Guid trackId);
         Task<Track> GetTrackAsync(Guid trackId);
         Task<IList<string>> GetExistingTracksAsync();
         Task<Track> GetFirstEverActivityAsync();
