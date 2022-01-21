@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Heracles.Application.Entities;
+using Heracles.Application.Enums;
 using Heracles.Application.Services.Import;
 using Heracles.Application.Services.Import.Progress;
 using Heracles.Application.TrackAggregate;
@@ -16,7 +17,7 @@ namespace Heracles.Application.Interfaces
         Task<IList<string>> GetExistingTracksAsync();
         Task<Track> GetFirstEverActivityAsync();
         Task<Track> GetMostRecentTrackAsync();
-        Task<(int rank, int count)> GetTrackRankAsync(Track track, double upperBounds, double lowerBounds);
+        Task<Track[]> GetTracksInRangeAsync(double upperBounds, double lowerBounds, ActivityType activityType);
         Task<IList<ActivityListMonth>> GetTrackSummaryByMonthsAsync();
         Task SaveImportedFilesAsync(ImportFilesResult importFilesResult, TrackImportProgress trackProgress, CancellationToken cancellationToken);
     }

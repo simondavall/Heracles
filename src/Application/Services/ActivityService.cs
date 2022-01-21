@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+using System.Linq;
 using Heracles.Application.Entities;
 using Heracles.Application.Extensions;
 using Heracles.Application.Interfaces;
@@ -105,7 +106,11 @@ namespace Heracles.Application.Services
         public async Task<(int rank, int count)> GetActivityRank(Track track)
         {
             var (upperBounds, lowerBounds) = ActivityRanking.GetRankBounds(track);
-            return await _trackRepository.GetTrackRankAsync(track, upperBounds, lowerBounds);
+            var tracksInRange = await _trackRepository.GetTracksInRangeAsync(upperBounds, lowerBounds, track.ActivityType);
+
+            var rank = ActivityRanking.GetRank(track, tracksInRange);
+
+            return (rank, tracksInRange.Length);
         }
     }
 }

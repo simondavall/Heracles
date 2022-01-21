@@ -49,7 +49,7 @@ namespace Heracles.Application.Services.Import
                 {
                     var track = _gpxService.LoadContentsOfGpxFile(file);
 
-                    if (_existingTracks.TrackExists(track.Name))
+                    if (_existingTracks.TrackExists(track?.Name))
                     {
                         FailedFile(result, file, ImportServiceStrings.DuplicateTrackRecord);
                         continue;
