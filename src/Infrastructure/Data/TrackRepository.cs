@@ -126,14 +126,11 @@ namespace Heracles.Infrastructure.Data
             return track;
         }
 
-        public async Task<(int rank, int count)> GetTrackRankAsync(Track track, double upperBounds, double lowerBounds)
+        public async Task<Track[]> GetTracksInRangeAsync(double upperBounds, double lowerBounds, ActivityType activityType)
         {
-            var tracksInRange = await DbContext.Tracks
-                .Where(x => x.Distance >= lowerBounds & x.Distance <= upperBounds & x.ActivityType == track.ActivityType)
+            return await DbContext.Tracks
+                .Where(x => x.Distance >= lowerBounds & x.Distance <= upperBounds & x.ActivityType == activityType)
                 .ToArrayAsync();
-            var rank = tracksInRange.Count(x => x.Pace < track.Pace);
-
-            return (rank, tracksInRange.Length);
         }
 
         public async Task<IList<ActivityListMonth>> GetTrackSummaryByMonthsAsync()
