@@ -9,12 +9,12 @@ namespace Heracles.Application.Interfaces
     public interface IActivityService
     {
         Task<bool> DeleteActivityAsync(Guid trackId);
-        Task<Track> GetActivity(Guid trackId);
+        Task<Track> GetActivityAsync(Guid trackId);
         Task<ActivityInfo> GetActivityInfoAsync(Guid trackId);
-        Task<List<ActivityListItem>> GetActivitiesByDate(DateTime startDate, Guid? trackId = null);
-        Task<IList<ActivityListMonth>> GetActivitiesSummaryByMonths(Track track);
+        Task<List<ActivityListItem>> GetActivitiesByDateAsync(DateTime startDate, Guid? trackId = null);
+        Task<IList<ActivityListMonth>> GetActivitiesSummaryByMonthsAsync(Track track);
         Task<Track> GetFirstEverActivityAsync();
-        Task<Track> GetMostRecentActivity();
-        Task<(int rank, int count)> GetActivityRank(Track track);
+        Task<Track> GetMostRecentActivityAsync();
+        Task<(int rank, int count)> GetActivityRankAsync(Track track);
     }
 }

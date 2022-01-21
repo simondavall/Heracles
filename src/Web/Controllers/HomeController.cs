@@ -30,7 +30,7 @@ namespace Heracles.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var track = await _activityService.GetMostRecentActivity();
+            var track = await _activityService.GetMostRecentActivityAsync();
             var siteRoot = $"{Request.Scheme}://{Request.Host}";
             var user = await _userManager.GetUserAsync(User);
 

@@ -24,7 +24,7 @@ namespace Heracles.Web.Api
         [HttpGet]
         public async Task<string> ActivityListByDate(string username, DateTime startDate, DateTime endDate)
         {
-            var activities = await _trackService.GetActivitiesByDate(startDate);
+            var activities = await _trackService.GetActivitiesByDateAsync(startDate);
             if (activities is null || activities.Count == 0)
             {
                 return string.Empty;
