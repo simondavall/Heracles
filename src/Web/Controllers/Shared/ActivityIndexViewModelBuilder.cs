@@ -33,7 +33,7 @@ namespace Heracles.Web.Controllers.Shared
 
         private async Task<ActivityListViewModel> GetActivityListViewModel(Track track)
         {
-            var monthlyActivitySummary = await _activityService.GetActivitiesSummaryByMonths(track);
+            var monthlyActivitySummary = await _activityService.GetActivitiesSummaryByMonthsAsync(track);
 
             var selectedMonthIndex = monthlyActivitySummary.TakeWhile(summary => summary.Activities is null).Count();
 
@@ -61,7 +61,7 @@ namespace Heracles.Web.Controllers.Shared
 
         private async Task<StatsBarViewModel> GetStatsBarViewModel(Track track)
         {
-            var (rank, count) = await _activityService.GetActivityRank(track);
+            var (rank, count) = await _activityService.GetActivityRankAsync(track);
             var model = new StatsBarViewModel
             {
                 DistanceTitle = "km",

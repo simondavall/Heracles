@@ -36,7 +36,7 @@ namespace Heracles.Web.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var track = await _activityService.GetActivity(trackId);
+            var track = await _activityService.GetActivityAsync(trackId);
             var siteRoot = $"{Request.Scheme}://{Request.Host}";
             var user = await _userManager.GetUserAsync(User);
 

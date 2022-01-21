@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
-using System.Linq;
 using Heracles.Application.Entities;
 using Heracles.Application.Extensions;
 using Heracles.Application.Interfaces;
@@ -27,7 +26,7 @@ namespace Heracles.Application.Services
             return await _trackRepository.DeleteTrackAsync(trackId);
         }
 
-        public async Task<Track> GetActivity(Guid trackId)
+        public async Task<Track> GetActivityAsync(Guid trackId)
         {
             return await _trackRepository.GetTrackAsync(trackId);
         }
@@ -43,7 +42,7 @@ namespace Heracles.Application.Services
             return activityInfo;
         }
 
-        public async Task<List<ActivityListItem>> GetActivitiesByDate(DateTime startDate, Guid? trackId = null)
+        public async Task<List<ActivityListItem>> GetActivitiesByDateAsync(DateTime startDate, Guid? trackId = null)
         {
             var firstOfMonth = new DateTime(startDate.Year, startDate.Month, 1);
             var firstOfNextMonth = firstOfMonth.AddMonths(1);
@@ -74,10 +73,10 @@ namespace Heracles.Application.Services
             return activitiesList;
         }
 
-        public async Task<IList<ActivityListMonth>> GetActivitiesSummaryByMonths(Track track)
+        public async Task<IList<ActivityListMonth>> GetActivitiesSummaryByMonthsAsync(Track track)
         {
             var activityMonthlySummary = await _trackRepository.GetTrackSummaryByMonthsAsync();
-            var activities = await GetActivitiesByDate(track.Time, track.Id);
+            var activities = await GetActivitiesByDateAsync(track.Time, track.Id);
 
             var selectedYearMonth = track.Time.Year * 100 + track.Time.Month;
 
@@ -98,12 +97,12 @@ namespace Heracles.Application.Services
             return await _trackRepository.GetFirstEverActivityAsync();
         }
 
-        public async Task<Track> GetMostRecentActivity()
+        public async Task<Track> GetMostRecentActivityAsync()
         {
             return await _trackRepository.GetMostRecentTrackAsync();
         }
 
-        public async Task<(int rank, int count)> GetActivityRank(Track track)
+        public async Task<(int rank, int count)> GetActivityRankAsync(Track track)
         {
             var (upperBounds, lowerBounds) = ActivityRanking.GetRankBounds(track);
             var tracksInRange = await _trackRepository.GetTracksInRangeAsync(upperBounds, lowerBounds, track.ActivityType);

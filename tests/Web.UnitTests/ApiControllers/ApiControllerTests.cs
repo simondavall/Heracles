@@ -26,7 +26,7 @@ namespace Heracles.Web.UnitTests.ApiControllers
         public async Task ActivityListByDate_ReturnsData()
         {
             var activityId = Guid.Parse("fe0bd75d-aaef-4de7-9f8f-9135eb636955");
-            _mockTrackService.Setup(x => x.GetActivitiesByDate(It.IsAny<DateTime>(), null))
+            _mockTrackService.Setup(x => x.GetActivitiesByDateAsync(It.IsAny<DateTime>(), null))
                 .ReturnsAsync(new List<ActivityListItem>()
             {
                 new()
