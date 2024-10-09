@@ -1,0 +1,176 @@
+﻿/* ACCORDION */
+
+.component.accordion {
+    position: relative;
+    width: 100%;
+    height: 28px;
+    line-height: 28px;
+    margin: 0 auto 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    background-color: #eeeeee;
+    position: relative;
+    cursor: pointer;
+    cursor: hand;
+}
+
+.component.accordion:hover {
+    background-color: #cccccc;
+}
+
+.component.accordion:active {
+    background-color: #eeeeee;
+    color: #cccccc;
+}
+
+.component.accordion:focus {
+    border: none;
+    outline: none;
+}
+
+.component.accordion .mainText {
+    position: absolute;
+    margin: 0 0 0 8px;
+    height: 100%;
+    line-height: 28px;
+}
+
+.component.accordion a.mainText {
+    color: #2A5DB0;
+}
+
+.component.accordion a.mainText:hover {
+    color: #31a4d9;
+}
+
+.component.accordion a.mainText:active {
+    color: #19397F;
+}
+
+.component.accordion .bubble {
+    float: right;
+    margin: 5px 10px 0 0;
+    padding: 2px 6px 2px 6px;
+    -moz-border-radius: 14px;
+    border-radius: 14px;
+    background-color: #ffffff;
+}
+
+.component.ui-state-active.accordion .bubble {
+    display: none;
+}
+
+.component.accordion .navStatusArrow {
+    background: url(../images/arrow-left.png) no-repeat 0 0;
+    float: right;
+    margin: 7px 8px 0 0;
+    width: 9px;
+    height: 11px;
+}
+
+.component.ui-state-active.accordion .navStatusArrow,
+.component.open.accordion .navStatusArrow {
+    background: url(../images/arrow-down.png) no-repeat 0 0;
+    float: right;
+    margin: 8px 8px 0 0;
+    width: 11px;
+    height: 9px;
+}
+
+.component.accordionContent {
+    padding: 10px 0;
+    margin: 0;
+}
+
+.secondaryNav > li a {
+    color: #444;
+    font-size: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+}
+
+.secondaryNav > li a:hover {
+    color: #888;
+    background-color: #daf3ff;
+}
+
+.secondaryNav > li a:active {
+    color: #444;
+}
+
+.secondaryNav > li.selected a {
+    background-color: #daf3ff;
+}
+
+.secondaryNav > li > a > .unitDistance {
+    float: right;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 15px;
+    color: #888;
+    min-width: 45px;
+    text-align: right;
+}
+
+.secondaryNav > li > a > .startDate {
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 16px;
+    float: left;
+    margin-right: 8px;
+}
+
+.secondaryNav > li > a > span.icon {
+    font-family: 'runkeeper';
+    color: #666;
+    font-size: 1.3em;
+    margin-right: 7px;
+}
+
+.expanded {
+    margin-right: 10px;
+    font-weight: 100;
+    color: #888;
+    height: 35px;
+    line-height: 35px;
+    font-size: 22px;
+    display: block;
+    float: left;
+}
+
+.button-add {
+    padding: 0 6px 4px 6px;
+    float: right;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    margin: 20px 10px 0 0;
+    position: relative;
+    z-index: 2;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.button-delete {
+    padding: 0 6px 4px 6px;
+    float: right;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    margin: 20px 10px 0 0;
+    position: relative;
+    z-index: 2;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    line-height: 25px;
+    height: 31px;
+}

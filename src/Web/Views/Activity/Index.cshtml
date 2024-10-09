@@ -1,0 +1,10 @@
+﻿@model IndexViewModel
+@{
+    ViewData["Title"] = "Activity Page";
+}
+
+<div class="subNavcontainer clearfix">
+    <partial name="_SubNavigation" model="@Model.SubNavigationViewModel"/>
+</div>
+
+<partial name="Activity/_ActivityPage" />

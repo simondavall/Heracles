@@ -1,0 +1,53 @@
+﻿@model ActivityListViewModel
+<div class="clearfix">
+
+    <a href="#">
+        <div class="button-add">+</div>
+    </a>
+
+    <h3 class="pageHeader history">Activities</h3>
+    <div class="mainColumnPadding">
+        <input type="hidden" id="selectedActivity" value="@Model.SelectedActivityId" />
+        <div id="activityHistoryMenu" role="tablist">
+
+            <script type="text/javascript">
+                $(function () {
+                    $("#activityHistoryMenu").accordion({
+                        clearStyle: true,
+                        heightStyle: "content",
+                        /*animate: "bounceslide",*/
+                        collapsible: true,
+                        header: "> .accordion",
+                        active: @Model.ActiveMonthTab,
+                        activate: function (event, ui) {
+                            if (ui.newHeader.length > 0) {
+                                ActivityListManager.updateView(ui.newHeader);
+                                if (ui.oldHeader.length > 0) {
+                                    ui.oldHeader.removeClass('open');
+                                    ui.oldHeader.find('.expanded').html('+');
+                                }
+                                ui.newHeader.addClass('open');
+                                ui.newHeader.find('.expanded').html('&ndash;');
+                            } else {
+                                if (ui.oldHeader.hasClass('open')) {
+                                    ui.oldHeader.removeClass('open');
+                                    ui.oldHeader.find('.expanded').html('+');
+                                } else {
+                                    ui.oldHeader.addClass('open');
+                                    ui.oldHeader.find('.expanded').html('&ndash;');
+                                }
+                            }
+                        }
+                    });
+                });
+            </script>
+
+            @foreach (var activityMonth in Model.ActivityListMonths)
+            {
+                <partial name="Activity/_ActivitiesByMonth" model="activityMonth"/>
+            }
+
+        </div>
+    </div>
+
+</div>

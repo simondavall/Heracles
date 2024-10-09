@@ -6,4 +6,43 @@
     <RootNamespace>Heracles.Infrastructure</RootNamespace>
   </PropertyGroup>
 
+	<ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>$(AssemblyName).UnitTests</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Gpx\GpsLocation.cs" />
+	  <Compile Remove="Gpx\Gpx.cs" />
+	  <Compile Remove="Gpx\GpxEngine.cs" />
+	  <Compile Remove="Gpx\GpxProperties.cs" />
+	  <Compile Remove="Gpx\GpxReader.cs" />
+	  <Compile Remove="Gpx\GpxWriter.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Gpx\licence.txt" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="5.2.0" />
+    <PackageReference Include="Dlg.Krakow.Gpx" Version="1.0.0" />
+    <PackageReference Include="EFCore.BulkExtensions" Version="5.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.11">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Application\Application.csproj" />
+  </ItemGroup>
+
 </Project>

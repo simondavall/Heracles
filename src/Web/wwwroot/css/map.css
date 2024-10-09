@@ -1,0 +1,597 @@
+﻿
+#map_canvas {
+    width: 100%;
+    height: 400px;
+}
+
+#mapControls {
+    background: url(../images/mapControls-grey.png) repeat-x 0 0;
+    width: 100%;
+    height: 35px;
+    position: relative;
+    z-index: 7;
+    border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+}
+
+.activity #mapControls {
+    -webkit-border-bottom-left-radius: 0;
+    -webkit-border-bottom-right-radius: 0;
+    -moz-border-bottom-left-radius: 0;
+    -moz-border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+#mapControls .mapControlItem .buttonText {
+    position: relative;
+    top: 11px;
+    cursor: pointer;
+    height: 13px;
+}
+
+#mapControls .mapControlItem.instruction .buttonText,
+#mapControls .mapControlItem.instruction:hover .buttonText {
+    cursor: default;
+}
+
+.mapControlItem {
+    background: url(../images/mapControls-grey.png) repeat-x 0 0;
+    height: 35px;
+    padding: 0 10px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+}
+
+    .mapControlItem:hover {
+        background: url(../images/mapControls-grey.png) repeat-x 0 -35px;
+        cursor: pointer;
+    }
+
+    .mapControlItem:active {
+        background: url(../images/mapControls-grey.png) repeat-x 0 -70px;
+    }
+
+    .mapControlItem.selected {
+        background: url(../images/mapControls-blue.png) repeat-x 0 0;
+    }
+
+        .mapControlItem.selected:hover {
+            background: url(../images/mapControls-blue.png) repeat-x 0 -35px;
+        }
+
+        .mapControlItem.selected:active {
+            background: url(../images/mapControls-blue.png) repeat-x 0 -70px;
+        }
+
+    .mapControlItem.left {
+        float: left;
+    }
+
+    .mapControlItem.right {
+        float: right;
+    }
+
+#mapControls .dividerGrey.left {
+    border-left: 1px solid #ccc;
+    width: 0;
+    height: 35px;
+    float: left;
+}
+
+#mapControls .dividerGrey.right {
+    border-right: 1px solid #ccc;
+    width: 0;
+    height: 35px;
+    float: right;
+}
+
+#mapActions {
+    float: right;
+    width: 100%;
+}
+
+#mapEdit.mapControlItem .buttonText {
+    background: url(../images/icon-edit.png) no-repeat 0 1px;
+    padding: 0 0 0 15px;
+}
+
+#mapEdit.mapControlItem:hover .buttonText {
+    background: url(../images/icon-edit.png) no-repeat 0 -38px;
+    padding: 0 0 0 15px;
+}
+
+#mapControls .mapControlItem#showPhotosButton .buttonText {
+    position: relative;
+    top: 4px;
+    width: 33px;
+    height: 28px;
+    background: url(../images/icon-photos.png) no-repeat 0 0;
+}
+
+#mapControls .mapControlItem#showPhotosButton.selected .buttonText {
+    background: url(../images/icon-photos.png) no-repeat 0 -28px;
+}
+
+#mapRoute,
+#mapRace {
+    float: left;
+    position: relative;
+}
+
+    #mapRoute #mapRouteLabel,
+    #mapRace #mapRaceLabel {
+        float: left;
+        position: relative;
+        margin: 0 6px 0 10px;
+        line-height: 35px;
+    }
+
+    #mapRoute #mapRouteName,
+    #mapRace #mapRaceName {
+        float: left;
+        position: relative;
+        top: 0px;
+        margin: 0 6px 0 10px;
+        line-height: 35px;
+    }
+
+    #mapRoute #mapRouteActions,
+    #mapRace #mapRaceActions {
+        float: left;
+        position: relative;
+        top: 10px;
+    }
+
+#map_area {
+    position: relative;
+}
+
+#map_canvas .leaflet-bar a {
+    background-color: #444;
+    opacity: 1;
+    background-image: none;
+    color: #fff;
+    height: 21px;
+    width: 26px;
+    line-height: 18px;
+    -webkit-border-top-right-radius: 0px;
+    border-top-right-radius: 0px;
+    -webkit-border-bottom-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-bottom: 1px solid #666;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    text-indent: 0;
+    text-align: center;
+}
+
+    #map_canvas .leaflet-bar a:hover {
+        background-color: #31a4d9;
+    }
+
+    #map_canvas .leaflet-bar a:active {
+        background-color: #1596D2;
+    }
+
+#map_canvas .leaflet-bar {
+    border: none;
+}
+
+    #map_canvas .leaflet-bar a:last-child {
+        border-bottom: none;
+    }
+
+.tinyMap .mapbox-info-toggle {
+    display: none !important;
+}
+
+#editControlsContainer {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    z-index: 5;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    -o-transition: .2s;
+    -ms-transition: .2s;
+    -moz-transition: .2s;
+    -webkit-transition: .2s;
+    transition: .2s;
+    opacity: .4;
+    background-color: #444;
+}
+
+    #editControlsContainer.simpleControls {
+        width: 100px;
+        right: auto;
+        opacity: 1;
+    }
+
+#map_area .leaflet-container.leaflet-pseudo-fullscreen #editControlsContainer {
+    top: 60px;
+}
+
+#map_area .leaflet-container.leaflet-pseudo-fullscreen .leaflet-control-zoom {
+    margin-top: 0;
+    top: 60px;
+}
+
+#map_area .leaflet-container.leaflet-pseudo-fullscreen .leaflet-control-fullscreen {
+    top: 60px;
+}
+
+#editControlsContainer.simpleControls .mapControlButton:last-child {
+    border-right: none;
+}
+
+#editControlsContainer.mapboxTrue {
+    left: 86px;
+    border-left: 1px solid #666;
+    -moz-border-radius: 0 3px 3px 0;
+    -webkit-border-radius: 0 3px 3px 0;
+    border-radius: 0 3px 3px 0;
+}
+
+#editControlsContainer:hover,
+#editControlsContainer.textInputActive {
+    opacity: 1;
+}
+
+#newControlsContainer,
+#newControlsContainer .mapControlButton {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#newControlsContainer {
+    display: table;
+    width: 100%;
+    height: 42px;
+}
+
+    #newControlsContainer .mapControlButton {
+        cursor: pointer;
+        cursor: hand;
+        color: #fff;
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+        line-height: 0;
+    }
+
+        #newControlsContainer .mapControlButton:not(#locationSearchBar):hover {
+            background-color: #31a4d9;
+        }
+
+        #newControlsContainer .mapControlButton:not(#locationSearchBar):active {
+            background-color: #1596D2;
+        }
+
+        #newControlsContainer .mapControlButton#undoControl,
+        #newControlsContainer .mapControlButton#resetControl,
+        #newControlsContainer .mapControlButton#locationSearchButton,
+        #newControlsContainer .mapControlButton#helpMe {
+            width: 50px;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+
+        #newControlsContainer .mapControlButton#helpMe {
+            font-size: 1.7em;
+            line-height: 42px;
+        }
+
+        #newControlsContainer .mapControlButton#mapStyleChooser {
+            width: 50px;
+            height: 100%;
+            position: relative;
+            margin: 0;
+        }
+
+            #newControlsContainer .mapControlButton#mapStyleChooser #mapStyleOptions {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 50px;
+            }
+
+            #newControlsContainer .mapControlButton#mapStyleChooser.allOptions #mapStyleOptions {
+                background-color: #444;
+            }
+
+            #newControlsContainer .mapControlButton#mapStyleChooser #mapStyleOptions .mapStyleOption {
+                height: 42px;
+                background-position: center center;
+                background-repeat: no-repeat;
+                display: none;
+            }
+
+                #newControlsContainer .mapControlButton#mapStyleChooser #mapStyleOptions .mapStyleOption#spacer {
+                    font-family: 'runkeeper';
+                    text-align: center;
+                    line-height: 42px;
+                    font-size: 12px;
+                    border-right: 1px solid #666;
+                }
+
+                #newControlsContainer .mapControlButton#mapStyleChooser #mapStyleOptions .mapStyleOption:hover {
+                    background-color: #31a4d9;
+                }
+
+                #newControlsContainer .mapControlButton#mapStyleChooser #mapStyleOptions .mapStyleOption#spacer:hover {
+                    border-right: 1px solid #31a4d9;
+                }
+
+                #newControlsContainer .mapControlButton#mapStyleChooser #mapStyleOptions .mapStyleOption:active {
+                    background-color: #1596D2;
+                }
+
+                #newControlsContainer .mapControlButton#mapStyleChooser #mapStyleOptions .mapStyleOption#spacer:active {
+                    border-right: 1px solid #1596D2;
+                }
+
+                #newControlsContainer .mapControlButton#mapStyleChooser #mapStyleOptions .mapStyleOption.selected,
+                #newControlsContainer .mapControlButton#mapStyleChooser.allOptions #mapStyleOptions .mapStyleOption {
+                    display: block;
+                    background-position: center center;
+                }
+
+                #newControlsContainer .mapControlButton#mapStyleChooser #mapStyleOptions .mapStyleOption#street {
+                    background-image: url('../images/mapstyle_street.png');
+                }
+
+                #newControlsContainer .mapControlButton#mapStyleChooser #mapStyleOptions .mapStyleOption#terrain {
+                    background-image: url('../images/mapstyle_terrain.png');
+                }
+
+                #newControlsContainer .mapControlButton#mapStyleChooser #mapStyleOptions .mapStyleOption#satellite {
+                    background-image: url('../images/mapstyle_satellite.png');
+                }
+
+        #newControlsContainer .mapControlButton#locationSearchBar span {
+            display: none;
+        }
+
+        #newControlsContainer .mapControlButton#undoControl {
+            background-image: url('../images/map_control_undo.png');
+        }
+
+        #newControlsContainer .mapControlButton#resetControl {
+            background-image: url('../images/map_control_clear.png');
+        }
+
+        #newControlsContainer .mapControlButton#snapToRoadsControl {
+            width: 165px;
+        }
+
+            #newControlsContainer .mapControlButton#snapToRoadsControl #snapToRoadsSafeBox {
+                text-align: left;
+                line-height: 42px;
+                position: relative;
+                padding-left: 36px;
+                font-size: 14px;
+                position: relative;
+            }
+
+            #newControlsContainer .mapControlButton#snapToRoadsControl .checkbox {
+                position: absolute;
+                top: 50%;
+                left: 8px;
+                margin-top: -10px;
+                border: 1px solid #e9e9e9;
+                width: 20px;
+                height: 20px;
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+
+                #newControlsContainer .mapControlButton#snapToRoadsControl .checkbox span {
+                    display: none;
+                    text-align: center;
+                    line-height: 20px;
+                }
+
+            #newControlsContainer .mapControlButton#snapToRoadsControl.selected {
+                background-color: #31a4d9;
+            }
+
+        #newControlsContainer .mapControlButton.moveType {
+            width: 50px;
+            font-family: 'runkeeper';
+            font-size: 25px;
+            text-align: center;
+        }
+
+            #newControlsContainer .mapControlButton.moveType:not(#locationSearchBar):hover {
+                color: #1596D2;
+                background-color: transparent;
+            }
+
+            #newControlsContainer .mapControlButton.moveType.selected:not(#locationSearchBar) {
+                color: #31a4d9;
+                background-color: transparent;
+            }
+
+        #newControlsContainer .mapControlButton#snapToRoadsControl.selected span {
+            display: block;
+        }
+
+    #newControlsContainer .rightFloat {
+        float: right;
+    }
+
+    #newControlsContainer .rightBorder {
+        border-right: 1px solid #666;
+    }
+
+    #newControlsContainer .leftBorder {
+        border-left: 1px solid #666;
+    }
+
+    #newControlsContainer .mapControlButton#locationSearchBar {
+        padding: 0 8px;
+    }
+
+        #newControlsContainer .mapControlButton#locationSearchBar input[type="text"] {
+            margin: 0;
+            padding: 4px;
+            height: 30px;
+            line-height: 28px;
+            -moz-border-radius: 3px;
+            -webkit-border-radius: 3px;
+            border-radius: 3px;
+            float: none;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+    #newControlsContainer .mapControlButton#locationSearchButton #locationSearchGo {
+        background: url(../../kronos/images/icon-location-25.png) no-repeat 0 0;
+        width: 25px;
+        height: 25px;
+        position: relative;
+        margin: 0 auto;
+    }
+
+.leaflet-top, .leaflet-control-zoom {
+    z-index: 6 !important;
+}
+
+#map_area .leaflet-popup {
+    margin-left: 25px;
+    margin-bottom: 5px;
+}
+
+#map_area .leaflet-popup-content {
+    padding: 0;
+}
+
+#map_area .leaflet-popup-tip-container {
+    display: none;
+}
+
+.leaflet-marker-draggable {
+    cursor: pointer;
+    cursor: hand;
+}
+
+#map_area .leaflet-container.leaflet-pseudo-fullscreen #newControlsContainer .mapControlButton#resetControl,
+#map_area .leaflet-container.leaflet-fullscreen-on #newControlsContainer .mapControlButton#resetControl {
+    display: none !important;
+}
+
+#map_canvas:-webkit-full-screen #newControlsContainer .mapControlButton#resetControl {
+    display: none !important;
+}
+
+#map_canvas:-moz-full-screen #newControlsContainer .mapControlButton#resetControl {
+    display: none !important;
+}
+
+#map_canvas:-ms-full-screen #newControlsContainer .mapControlButton#resetControl {
+    display: none !important;
+}
+
+#map_canvas:-o-full-screen #newControlsContainer .mapControlButton#resetControl {
+    display: none !important;
+}
+
+/*#map_canvas:full-screen #newControlsContainer .mapControlButton#resetControl {
+    display: none !important;
+}*/
+
+#map_area .leaflet-control-fullscreen {
+    position: absolute;
+    top: 10px;
+    left: 36px;
+    width: 50px;
+    height: 42px;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    background-color: #444;
+    margin: 0;
+    border-left: 1px solid #666;
+}
+
+    #map_area .leaflet-control-fullscreen .leaflet-control-fullscreen-button {
+        width: 100%;
+        height: 100%;
+        -moz-border-radius: 0;
+        -webkit-border-radius: 0;
+        border-radius: 0;
+        background-image: url('../images/full_screen_white.png');
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: 20px 20px;
+    }
+
+input.hasDatepicker {
+    cursor: pointer !important;
+}
+
+#map_area .leaflet-container .leaflet-top.leaflet-right {
+    visibility: hidden;
+}
+
+#map_area .mileMarker {
+    width: 40px;
+    height: 40px;
+    background-image: url('../images/map-icons/milemarker.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 40px 40px;
+    padding: 8px 0;
+}
+
+    #map_area .mileMarker .distUnit {
+        font-size: 10px;
+        line-height: 10px;
+        color: #fff;
+        text-align: center;
+    }
+
+    #map_area .mileMarker .number {
+        font-size: 13px;
+        line-height: 13px;
+        color: #fff;
+        text-align: center;
+    }
+
+#map-loading {
+    position: absolute;
+    z-index: 9999;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-color: #e7e6e6;
+}
+
+    #map-loading #gifTable {
+        display: table;
+        width: 100%;
+        height: 100%;
+    }
+
+        #map-loading #gifTable #gifCell {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            background-image: url('../images/runner.gif');
+            background-size: 28px 40px;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }

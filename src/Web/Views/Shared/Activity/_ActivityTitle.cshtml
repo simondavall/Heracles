@@ -1,0 +1,11 @@
+﻿@model ActivityTitleViewModel
+
+
+<div class="userHeader" style="background: url('@Model.Image') no-repeat 20px center; background-size: 40px 40px;">
+    <a data-toggle="modal" data-target="#deleteModal">
+        <div class="button-delete" title="Delete Activity">x</div>
+    </a>
+
+    <h2>@Model.Title</h2>
+    <div class="micro-text activitySubTitle">@Model.Date</div>
+</div>

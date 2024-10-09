@@ -1,0 +1,57 @@
+﻿@model IndexViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="leftContentColumn">
+    <partial name="Activity/_ActivityList" model="@Model.ActivityListViewModel"/>
+</div>
+<div class="mainContentColumn clearfix  leftColVisible">
+    <div class="columnContent clearfix">
+        <div class="activityTitle" >
+            <partial name="Activity/_ActivityTitle" model="@Model.ActivityTitleViewModel"/>
+        </div>
+        <div class="statsBar">
+            <partial name="Activity/_StatsBar" model="@Model.StatsBarViewModel"/>
+        </div>
+        <div id="map_area">
+            <partial name="Activity/_MapArea" model="@Model.MapAreaViewModel"/>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-deleteActivity" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Activity?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this activity? This cannot be undone...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn button-passive" data-dismiss="modal">Cancel</button>
+                <button id="deleteButton" onclick="deleteActivity('@Model.MapAreaViewModel.TrackId')" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function deleteActivity(trackGuid) {
+        $.get("/api/Activity/Delete",
+            { trackId: "@Model.MapAreaViewModel.TrackId" },
+            function (data, status) {
+                if (status === "success" && data === true) {
+                    document.location.href="/";
+                } else {
+                    $("h5#deleteModalLabel").text("Delete Failed");
+                    $("div.modal-body").text("Filed to delete activity. Please try again later.");
+                    $("button#deleteButton").hide();
+                }
+            });
+    }
+</script>

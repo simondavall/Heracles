@@ -1,5 +1,6 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
+/* ReSharper disable CssBrowserCompatibility */
 
 a.navbar-brand {
   white-space: normal;
@@ -43,7 +44,8 @@ html {
 }
 
 .box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+    box-shadow: 0 .25rem .75rem #000000;
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
 button.accept-policy {
@@ -68,4 +70,572 @@ body {
   width: 100%;
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
+}
+
+/* Custome site styles start here*/
+
+.activity #activityType {
+    float: left;
+    margin-right: 15px;
+}
+
+.activity #chartSection {
+    border-bottom: 1px solid #e9e9e9;
+}
+
+#activityHistoryMenu > .accordion {
+    width: auto;
+    background-color: transparent;
+    padding: 0px 12px;
+    font-size: 18px;
+    line-height: 35px;
+    height: 35px;
+    color: #31a4d9;
+    margin: 0;
+}
+
+    #activityHistoryMenu > .accordion:hover{
+        color: #444;
+    }
+
+    #activityHistoryMenu > .accordion:active{
+        color: #31a4d9;
+    }
+
+    #activityHistoryMenu > .accordionContent ul{
+        margin: 0;
+    }
+
+    #activityHistoryMenu .monthDivider {
+        height: 1px;
+        border-bottom: 1px solid #e9e9e9;
+    }
+
+    #activityHistoryMenu .activityCount {
+        float: right;
+        font-size: 80%;
+    }
+
+        #activityHistoryMenu .nav-item {
+            line-height: 1.15;
+        }
+
+.activity .activitySubTitle.micro-text {
+    line-height: 100%;
+    text-transform: uppercase;
+}
+
+.addButton {
+    border: 1px solid #8bd554;
+    background: rgb(151,230,93); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(151,230,93,1) 0%, rgba(139,213,84,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(151,230,93,1)), color-stop(100%,rgba(139,213,84,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(151,230,93,1) 0%,rgba(139,213,84,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(151,230,93,1) 0%,rgba(139,213,84,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(151,230,93,1) 0%,rgba(139,213,84,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(151,230,93,1) 0%,rgba(139,213,84,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#97e65d', endColorstr='#8bd554',GradientType=0 ); /* IE6-9 */
+    text-shadow: 0px 1px 2px #74C13B;
+    filter: dropshadow(color=#74C13B, offx=0, offy=1);
+}
+
+    .addButton:hover {
+        background: #97E65D;
+    }
+
+    .addButton:active {
+        background: #8BD554;
+    }
+
+
+.avatar img {
+    width: 100%;
+}
+
+.avatarContainer {
+    position: relative;
+    float: left;
+}
+
+.bodyContainer {
+    background-color: #ffffff;
+    background-repeat: repeat-y;
+    background-position: center;
+    background-size: 960px;
+    z-index: 0;
+    /*position: relative; commented out to make modal dialog work, if no difference noticed delete this line*/ 
+    min-height: 550px;
+    margin: 80px 0 0 0;
+    z-index: 1;
+    -webkit-box-shadow: 0 0 20px 1px #ccc;
+    box-shadow: 0 0 20px 1px #ccc;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+/*todo - do i need subNavTrue?*/
+    .bodyContainer.subNavTrue {
+        padding: 0;
+    }
+
+.bodyWrapper .leftContentColumn {
+    float: left;
+    width: 260px;
+    margin-right: 0;
+    border-right: 1px solid #e9e9e9;
+    -webkit-border-top-left-radius: 3px;
+    border-top-left-radius: 3px;
+    -webkit-border-bottom-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.button-add {
+    border: 1px solid #8bd554;
+    background: rgb(151,230,93); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(151,230,93,1) 0%, rgba(139,213,84,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(151,230,93,1)), color-stop(100%,rgba(139,213,84,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(151,230,93,1) 0%,rgba(139,213,84,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(151,230,93,1) 0%,rgba(139,213,84,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(151,230,93,1) 0%,rgba(139,213,84,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(151,230,93,1) 0%,rgba(139,213,84,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#97e65d', endColorstr='#8bd554',GradientType=0 ); /* IE6-9 */
+    text-shadow: 0px 1px 2px #74C13B;
+    filter: dropshadow(color=#74C13B, offx=0, offy=1);
+}
+
+    .button-add:hover {
+        background: #97E65D;
+    }
+
+    .button-add:active {
+        background: #8BD554;
+    }
+
+.button-delete {
+    border: 1px solid #d75454;
+    background: rgb(230,92,92); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(230,92,92,1) 0%, rgba(215,84,84,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(230,92,92,1)), color-stop(100%,rgba(215,84,84,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(230,92,92,1) 0%,rgba(215,84,84,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(230,92,92,1) 0%,rgba(215,84,84,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(230,92,92,1) 0%,rgba(215,84,84,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(230,92,92,1) 0%,rgba(215,84,84,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e65c5c', endColorstr='#c95151',GradientType=0 ); /* IE6-9 */
+    text-shadow: 0px 1px 2px #c33d3d;
+    filter: dropshadow(color=#c33d3d, offx=0, offy=1);
+}
+
+    button-delete:hover {
+        background: #e65c5c;
+    }
+
+    button-delete:active {
+        background: #c95151;
+    }
+
+.button-passive {
+    border: 1px solid #e9e9e9;
+    background: rgb(233,233,233); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(242,243,243,1) 0%, rgba(233,233,233,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(242,243,243,1)), color-stop(100%,rgba(233,233,233,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(242,243,243,1) 0%,rgba(233,233,233,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(242,243,243,1) 0%,rgba(233,233,233,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(242,243,243,1) 0%,rgba(233,233,233,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom, rgba(242,243,243,1) 0%,rgba(233,233,233,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f3f3', endColorstr='#e9e9e9',GradientType=0 ); /* IE6-9 */
+    text-shadow: 0px 1px 2px #E1E1E1;
+    filter: dropshadow(color=#E1E1E1, offx=0, offy=1);
+}
+
+    .button-passive:hover {
+        background: #f2f3f3;
+    }
+
+    .button-passive:active {
+        background: #e9e9e9;
+    }
+
+.chartItem {
+    height: 130px;
+}
+
+.bodyWrapper .mainContentColumn {
+    float: left;
+    width: 100%;
+}
+
+    .bodyWrapper .mainContentColumn.leftColVisible {
+        width: 700px;
+    }
+
+.error-file {
+    margin-bottom: 4px;
+}
+
+.identityFeatures {
+    padding: 50px;
+}
+
+.importedfiles .failedfiles {
+    margin-bottom: 20px;
+}
+
+.importedfiles .successfiles {
+    margin-bottom: 20px;
+}
+
+.leftContentColumn {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.mainColumnPadding {
+    padding: 10px 20px 20px;
+}
+
+.micro-text {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.modal-dialog-deleteActivity {
+    margin-top: 10rem;
+}
+
+.multipleMapImport div.uploader:after {
+    content: 'Click to upload. (You can select multiple files up to a total of 25MB)';
+}
+
+.nav-link {
+    height: 40px;
+}
+
+.pageHeader {
+    padding-left: 20px;
+    margin: 0;
+    line-height: 65px;
+    border-bottom: 1px solid #e9e9e9;
+}
+
+    .pageHeader .buttons {
+        float: right;
+        height: 65px;
+    }
+
+    .pageHeader .buttons button {
+        margin: 27px 10px 0;
+    }
+
+    .pageHeader .buttons a {
+        font-size: 13px;
+        margin-right: 10px;
+    }
+
+    .pageHeader img {
+        margin-right: 10px;
+        margin-top: -5px;
+    }
+
+.profileBoxSmall {
+    width: 230px;
+    margin: 0 20px 0 0;
+    float: left;
+}
+
+    .profileBoxSmall .username {
+        position: relative;
+        text-overflow: ellipsis;
+    }
+
+.progressbar {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.sizeConstraint {
+    width: 960px;
+    margin: auto;
+    height: 100%;
+    position: relative;
+}
+
+.statsBar {
+    border-top: 1px solid #efefef;
+    border-bottom: 1px solid #efefef;
+    height: auto;
+}
+
+    .activity .statsBar {
+        background: rgb(246,246,246); /* Old browsers */
+        background: -moz-linear-gradient(top, rgba(246,246,246,1) 0%, rgba(255,255,255,1) 100%); /* FF3.6+ */
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(246,246,246,1)), color-stop(100%,rgba(255,255,255,1))); /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(top, rgba(246,246,246,1) 0%,rgba(255,255,255,1) 100%); /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(top, rgba(246,246,246,1) 0%,rgba(255,255,255,1) 100%); /* Opera 11.10+ */
+        background: -ms-linear-gradient(top, rgba(246,246,246,1) 0%,rgba(255,255,255,1) 100%); /* IE10+ */
+        background: linear-gradient(to bottom, rgba(246,246,246,1) 0%,rgba(255,255,255,1) 100%); /* W3C */
+        border-bottom: 1px solid #e9e9e9;
+    }
+
+.statsItem {
+    border-right: 1px solid #efefef;
+    background-position: 0 30px;
+    background-repeat: no-repeat;
+    padding: 0 0 9px 5px;
+    min-height: 77px !important;
+    margin-left: 2%;
+    max-width: 23%;
+}
+
+    .statsItem:first-child {
+        background-position: 3px 30px;
+        padding-left: 8px;
+    }
+
+    .statsItem:last-child {
+        border: none;
+    }
+
+    .statsItem h5 {
+        text-transform: uppercase;
+        font-size: 11px;
+        margin-top: 9px;
+        font-weight: bold;
+    }
+
+    .statsItem h1 .value {
+        float: right;
+        padding: 5px 16px 0 0;
+        font-weight: normal;
+        font-size: 32px;
+    }
+
+    .statsItem#totalDistance,
+    .statsItem#Distance,
+    .statsItem#TOTAL_DISTANCE {
+        background-image: url('../images/distance.png');
+    }
+
+    .statsItem#totalCalories,
+    .statsItem#Calories,
+    .statsItem#TOTAL_CALORIES {
+        background-image: url('../images/calories-burned.png');
+    }
+
+    .statsItem#totalActivities,
+    .statsItem#TOTAL_ACTIVITIES {
+        background-image: url('../images/activities.png');
+    }
+
+    .statsItem#totalDuration,
+    .statsItem#Duration {
+        background-image: url('../images/duration.png');
+    }
+
+    .statsItem#averagePace,
+    .statsItem#averageSpeed {
+        background-image: url('../images/pace_speed.png');
+    }
+
+    .statsItem#rank {
+        background-image: url('../images/rank.png');
+    }
+
+    .statsItem#totalClimb {
+        background-image: url('../images/elevation.png');
+    }
+
+    .statsItem#heartRate {
+        background-image: url('../images/heart_rate.png');
+    }
+
+.userHeader {
+    padding-left: 20px;
+    margin: 0;
+    line-height: 65px;
+    border-bottom: 1px solid #e9e9e9;
+    position: relative;
+}
+
+    .activity .userHeader {
+        padding-left: 70px;
+        height: 65px;
+    }
+
+        .activity .userHeader h2 {
+            margin: 0;
+            padding-top: 10px;
+            line-height: 125%;
+            text-transform: capitalize;
+            padding-bottom: 2px
+        }
+
+    .userHeader.dashboard {
+        border: none;
+    }
+
+.userLayout .bodyContainer.subNavTrue .leftContentColumn,
+.userLayout .bodyContainer.subNavTrue .mainContentColumn {
+    padding: 0;
+}
+
+.userNavContainer {
+    width: 100%;
+    height: 80px;
+    position: relative;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #e7e6e6;
+    background-color: #eee;
+    /*background-image: -webkit-gradient(linear, center top, center bottom, color-stop(0%, #f5f5f5), color-stop(50%, #efefef));*/
+    background-image: -webkit-linear-gradient(top, #f5f5f5 0%, #efefef 50%);
+    background-image: -moz-linear-gradient(top, #f5f5f5 0%, #efefef 50%);
+    background-image: -ms-linear-gradient(top, #f5f5f5 0%, #efefef 50%);
+    background-image: -o-linear-gradient(top, #f5f5f5 0%, #efefef 50%);
+    background-image: linear-gradient(to bottom, #f5f5f5 0%, #efefef 50%);
+    -moz-border-top-right-radius: 3px;
+    -webkit-border-top-right-radius: 3px;
+    -border-top-right-radius: 3px;
+    -moz-border-top-left-radius: 3px;
+    -webkit-border-top-left-radius: 3px;
+    -border-top-left-radius: 3px;
+}
+
+    .userNavContainer .userNavItem img {
+        -moz-border-top-left-radius: 3px;
+        -webkit-border-top-left-radius: 3px;
+        -border-top-left-radius: 3px;
+    }
+
+.userNavItem {
+    float: right;
+    height: 80px;
+    width: 100px;
+    background-position: center 0px;
+    background-repeat: no-repeat;
+}
+
+    .userNavItem.selected {
+        background-color: #fff;
+        border-bottom: 1px solid #fff;
+        background-position: center -160px;
+    }
+
+    .userNavItem:hover {
+        background-position: center -80px;
+    }
+
+    .userNavItem:hover p {
+        color: #888;
+    }
+
+    .userNavItem.dashboard {
+        background-image: url('../images/sub_nav_dashboard_sprite.png');
+    }
+
+    .userNavItem.import {
+        background-image: url('../images/sub_nav_import_sprite.png');
+    }
+
+    .userNavItem.reports {
+        background-image: url('../images/sub_nav_reports_sprite.png');
+    }
+
+    .userNavItem p {
+        margin: 52px auto 17px auto;
+        text-align: center;
+        line-height: 100%;
+        font-size: 11px;
+        color: #666;
+        font-weight: bold;
+    }
+
+    .userNavItem#userProfile {
+        float: left;
+        width: 350px;
+    }
+
+        .userNavItem#userProfile #imgContainer {
+            float: left;
+            position: relative;
+            top: -1px;
+            width: 81px;
+            height: 81px;
+            margin: 0 25px 0 0;
+            overflow: hidden;
+        }
+
+        .userNavItem#userProfile img {
+            width: 81px;
+        }
+
+        .userNavItem#userProfile p {
+            margin: 0;
+        }
+
+#userNameContainer {
+    display: table;
+    height: 80px;
+}
+
+#userNameText {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: left;
+}
+
+
+.userNavItem#userProfile p.userName {
+    padding-top: 0px;
+    line-height: 100%;
+    font-size: 24px;
+    color: #666;
+    text-align: left;
+    font-weight: normal;
+    word-wrap: break-word;
+    max-width: 200px;
+}
+
+.userNavItem#userProfile p.activeSince {
+    padding-top: 8px;
+    line-height: 13px;
+    font-size: 13px;
+    color: #888;
+    text-align: left;
+    font-weight: normal;
+}
+
+.userNavBorder {
+    display: none;
+}
+
+.userNavBorder {
+    width: 3px;
+    height: 80px;
+    float: right;
+    background-repeat: no-repeat;
+    background-position: 0 5px;
+}
+    .userNavBorder.selected {
+        display: block;
+    }
+
+    .userNavBorder.right {
+        background-image: url('../images/sub_nav_selected_shadow_right.png');
+    }
+
+    .userNavBorder.left {
+        background-image: url('../images/sub_nav_selected_shadow_left.png');
+    }
+
+
+
+
+@media only screen and (max-device-width : 1024px) {
+    .bodyContainer {
+        margin: 0;
+    }
+
+    .sizeConstraint {
+        padding: 0;
+    }
 }

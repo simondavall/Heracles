@@ -1,8 +1,10 @@
-﻿@{
+﻿@model IndexViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="subNavcontainer clearfix">
+    <partial name="_SubNavigation" model="@Model.SubNavigationViewModel"/>
 </div>
+
+<partial name="Activity/_ActivityPage" />
