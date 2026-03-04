@@ -84,7 +84,7 @@ namespace Heracles.Infrastructure.Data
 
         public async Task<Track> GetTrackAsync(Guid trackId)
         {
-            var track = await DbContext.Tracks.Where(x => x.Id == trackId).FirstOrDefaultAsync();
+            var track = await DbContext.Tracks.FirstOrDefaultAsync(x => x.Id == trackId);
             if (track is null)
             {
                 //TODO Create default Track
