@@ -248,7 +248,7 @@ var mapController = {
 
 		editActivity : false,
 
-		mapboxAccessToken: 'pk.eyJ1Ijoic2ltb25kYXZhbGwiLCJhIjoiY2t2dHFuNXFxMnpmYjJ4b3VtcXVjODVkeiJ9.icCJP9MPW4BrfnTz5-y4Yg'
+		mapboxAccessToken: ''
 	},
 	initialize	: function(options)
 	{

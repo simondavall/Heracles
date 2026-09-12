@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Heracles.Application.Enums;
 using Heracles.Application.Interfaces;
 using Heracles.Infrastructure.Identity;
 using Heracles.Web.Controllers.Shared;
+using Heracles.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

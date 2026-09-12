@@ -1,0 +1,38 @@
+﻿<div class="userNavContainer clearfix">
+    <a asp-controller="Import" asp-action="Index">
+        <div class="userNavItem import @GetTabClass(SubNavTab.Import)">
+            <p>IMPORT</p>
+        </div>
+    </a>
+    <div class="userNavBorder left "></div>
+    <div class="userNavBorder right @GetTabClass(SubNavTab.Reports)"></div>
+    <a href="#">
+        <div class="userNavItem reports @GetTabClass(SubNavTab.Reports)">
+            <p>REPORTS</p>
+        </div>
+    </a>
+    <div class="userNavBorder left "></div>
+    <div class="userNavBorder right @GetTabClass(SubNavTab.Dashboard)"></div>
+    <a href="/">
+        <div class="userNavItem dashboard @GetTabClass(SubNavTab.Dashboard)">
+            <p>DASHBOARD</p>
+        </div>
+    </a>
+
+    <div class="userNavBorder left selected"></div>
+    <div class="userNavItem" id="userProfile">
+        <div id="imgContainer" class="profileBoxSmall">
+            <div class="avatarContainer">
+                <a class="avatar" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                    <img src="~/images/profile-med.jpg" title="@Username" alt=""/>
+                </a>
+            </div>
+        </div>
+        <div id="userNameContainer">
+            <div id="userNameText">
+                <p class="userName">@Username</p>
+                <p class="activeSince">@ActiveSince</p>
+            </div>
+        </div>
+    </div>
+</div>

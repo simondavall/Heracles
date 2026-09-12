@@ -6,6 +6,7 @@
 .idea
 .data
 .publish
+.env
 
 # User-specific files
 *.rsuser
