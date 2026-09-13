@@ -19,72 +19,82 @@ namespace Heracles.Infrastructure.Data
     /// <typeparam name="TId"></typeparam>
     public abstract class EfRepository<T, TId> : IAsyncRepository<T, TId> where T : BaseEntity<TId>, IAggregateRoot
     {
-        protected readonly GpxDbContext DbContext;
-
-        protected EfRepository(GpxDbContext dbContext)
+        private readonly IDbContextFactory<GpxDbContext> _contextFactory;
+        
+        protected EfRepository(IDbContextFactory<GpxDbContext> contextFactory)
         {
-            DbContext = dbContext;
+            _contextFactory = contextFactory;
         }
 
         public virtual async Task<T> GetByIdAsync(TId id, CancellationToken cancellationToken = default)
         {
+            await using var dbContext = await _contextFactory.CreateDbContextAsync(cancellationToken);
+            
             var keyValues = new object[] { id };
-            return await DbContext.Set<T>().FindAsync(keyValues, cancellationToken);
+            return await dbContext.Set<T>().FindAsync(keyValues, cancellationToken);
         }
 
         public async Task<IReadOnlyList<T>> ListAllAsync(CancellationToken cancellationToken = default)
         {
-            return await DbContext.Set<T>().ToListAsync(cancellationToken);
+            await using var dbContext = await _contextFactory.CreateDbContextAsync(cancellationToken);
+            return await dbContext.Set<T>().ToListAsync(cancellationToken);
         }
 
         public async Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec, CancellationToken cancellationToken = default)
         {
-            var specificationResult = ApplySpecification(spec);
+            await using var dbContext = await _contextFactory.CreateDbContextAsync(cancellationToken);
+            var specificationResult = ApplySpecification(spec,  dbContext);
             return await specificationResult.ToListAsync(cancellationToken);
         }
 
         public async Task<int> CountAsync(ISpecification<T> spec, CancellationToken cancellationToken = default)
         {
-            var specificationResult = ApplySpecification(spec);
+            await using var dbContext = await _contextFactory.CreateDbContextAsync(cancellationToken);
+            var specificationResult = ApplySpecification(spec, dbContext);
             return await specificationResult.CountAsync(cancellationToken);
         }
 
         public async Task<T> AddAsync(T entity, CancellationToken cancellationToken = default)
         {
-            await DbContext.Set<T>().AddAsync(entity, cancellationToken);
-            await DbContext.SaveChangesAsync(cancellationToken);
+            await using var dbContext = await _contextFactory.CreateDbContextAsync(cancellationToken);
+            await dbContext.Set<T>().AddAsync(entity, cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
 
             return entity;
         }
 
         public async Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
         {
-            DbContext.Entry(entity).State = EntityState.Modified;
-            await DbContext.SaveChangesAsync(cancellationToken);
+            await using var dbContext = await _contextFactory.CreateDbContextAsync(cancellationToken);
+            dbContext.Entry(entity).State = EntityState.Modified;
+            await dbContext.SaveChangesAsync(cancellationToken);
         }
 
         public async Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
         {
-            DbContext.Set<T>().Remove(entity);
-            await DbContext.SaveChangesAsync(cancellationToken);
+            await using var dbContext = await _contextFactory.CreateDbContextAsync(cancellationToken);
+            dbContext.Set<T>().Remove(entity);
+            await dbContext.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<T> FirstAsync(ISpecification<T> spec, CancellationToken cancellationToken = default)
         {
-            var specificationResult = ApplySpecification(spec);
+            await using var dbContext = await _contextFactory.CreateDbContextAsync(cancellationToken);
+            var specificationResult = ApplySpecification(spec, dbContext);
             return await specificationResult.FirstAsync(cancellationToken);
         }
 
         public async Task<T> FirstOrDefaultAsync(ISpecification<T> spec, CancellationToken cancellationToken = default)
         {
-            var specificationResult = ApplySpecification(spec);
+            await using var dbContext = await _contextFactory.CreateDbContextAsync(cancellationToken);
+            var specificationResult = ApplySpecification(spec, dbContext);
             return await specificationResult.FirstOrDefaultAsync(cancellationToken);
         }
 
-        private IQueryable<T> ApplySpecification(ISpecification<T> spec)
+        private IQueryable<T> ApplySpecification(ISpecification<T> spec, GpxDbContext dbContext)
         {
             var evaluator = new SpecificationEvaluator();
-            return evaluator.GetQuery(DbContext.Set<T>().AsQueryable(), spec);
+            return evaluator.GetQuery(dbContext.Set<T>().AsQueryable(), spec);
         }
     }
 }

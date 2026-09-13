@@ -1,0 +1,26 @@
+﻿<div class="component accordion" data-date="@MonthlyActivity.DataDate">
+    <span class=""></span>
+    <span class="expanded">+</span>
+    @MonthlyActivity.Month <span class="yearSpan" style="">'@MonthlyActivity.Year</span>
+    <span class="activityCount">@MonthlyActivity.ActivityCount</span>
+</div>
+<div class="component accordionContent" style="display: none">
+    <ul class="nav nav-pills flex-column secondaryNav">
+        @if (MonthlyActivity.Activities is not null)
+        {
+            @foreach (var activity in MonthlyActivity.Activities)
+            {
+                var selected = activity.IsSelected ? "selected" : " ";
+                var monthDay = $"{activity.MonthNum}/{activity.DayOfMonth}";
+                <li class="nav-item @selected">
+                    <a class="nav-link" href="/@activity.ActivityId">
+                        <span class="startDate">@monthDay</span>
+                        <span class="unitDistance">@activity.Distance km.</span>
+                        @activity.MainText
+                    </a>
+                </li>
+            }
+        }
+    </ul>
+</div>
+<div class="monthDivider"></div>

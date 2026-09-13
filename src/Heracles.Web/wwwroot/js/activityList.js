@@ -28,8 +28,7 @@
         var activitiesStr = "";
 
         for (var i in activities) {
-            var activityPath = activities[i].type === "CARDIO" ? "activity" : "strengthtrainingactivity"
-                , url = `/${activityPath}/${activities[i].activity_id}`
+            var url = `/${activities[i].activity_id}`
                 , extraText = ""
                 , selectedId = $("#selectedActivity").val()
                 , selected = selectedId === activities[i].activity_id ? "selected" : ""
