@@ -13,13 +13,15 @@
     {
         <ActivityList Track="@Track" />
     }
-    @* <partial name="Activity/_ActivityList" model="@Model.ActivityListViewModel"/> *@
 </div>
 
 <div class="mainContentColumn clearfix  leftColVisible">
     <div class="columnContent clearfix">
-        <div class="activityTitle" >
-            @* <partial name="Activity/_ActivityTitle" model="@Model.ActivityTitleViewModel"/> *@
+        <div class="activityTitle">
+            @if (Track is not null)
+            {
+                <ActivityTitle Track="@Track"/>
+            }
         </div>
         <div class="statsBar">
             @* <partial name="Activity/_StatsBar" model="@Model.StatsBarViewModel"/> *@
