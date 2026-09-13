@@ -15,9 +15,7 @@ public partial class SubNavigation : ComponentBase
     private string? ActiveSince { get; set; }
     private string? Username { get; set; }
     
-    protected override async Task OnAfterRenderAsync(bool firstRender) {
-        if (!firstRender)
-            return;
+    protected override async Task OnParametersSetAsync() {
 
         var firstEverActivity = await ActivityService.GetFirstEverActivityAsync();
         var dateOfEarliestActivity = firstEverActivity?.Time ?? DateTime.UtcNow;

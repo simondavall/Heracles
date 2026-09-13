@@ -1,5 +1,5 @@
 ﻿<div class="userNavContainer clearfix">
-    <a asp-controller="Import" asp-action="Index">
+    <a href="/import">
         <div class="userNavItem import @GetTabClass(SubNavTab.Import)">
             <p>IMPORT</p>
         </div>
@@ -24,7 +24,7 @@
         <div id="imgContainer" class="profileBoxSmall">
             <div class="avatarContainer">
                 <a class="avatar" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
-                    <img src="~/images/profile-med.jpg" title="@Username" alt=""/>
+                    <img src="/images/profile-med.jpg" title="@Username" alt=""/>
                 </a>
             </div>
         </div>
