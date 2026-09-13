@@ -13,7 +13,7 @@
                 var selected = activity.IsSelected ? "selected" : " ";
                 var monthDay = $"{activity.MonthNum}/{activity.DayOfMonth}";
                 <li class="nav-item @selected">
-                    <a class="nav-link" href="/@activity.ActivityId">
+                    <a class="nav-link" href="/@activity.ActivityId" data-enhance-nav="false">
                         <span class="startDate">@monthDay</span>
                         <span class="unitDistance">@activity.Distance km.</span>
                         @activity.MainText

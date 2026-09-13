@@ -40,7 +40,7 @@
             }
 
             activitiesStr += `<li class="nav-item ${selected} ${strengthClass}">`;
-            activitiesStr += `<a class="nav-link" href="${url}">`;
+            activitiesStr += `<a class="nav-link" href="${url}" data-enhance-nav="false">`;
             activitiesStr += `<span class="startDate">${activities[i].monthNum}/${activities[i].dayOfMonth}</span>`;
 
             if (activities[i].type === "CARDIO") {

@@ -15,13 +15,6 @@ public partial class ActivityList : ComponentBase
     private IList<MonthlyActivity> _monthlyActivityList = [];
     private int _activeMonthTab;
     private string _selectedActivityId = null!;
-
-    private MonthlyActivity? _selectedMonth;
-
-    private async Task SelectMonthAsync(MonthlyActivity month) { 
-        _selectedMonth = month;
-        month.Activities ??= await ActivityService.GetActivitiesByDateAsync(month.ActivityDate, Track.Id);
-    }
     
     protected override async Task OnInitializedAsync() {
         await LoadMonthlyActivitySummary();
@@ -41,6 +34,5 @@ public partial class ActivityList : ComponentBase
                     Activities = x.Activities
                 })
             .ToList();
-        _selectedMonth = _monthlyActivityList.FirstOrDefault();
     }
 }

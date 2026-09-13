@@ -28,10 +28,12 @@
             {
                 <StatsBar Track="@Track"/>
             }
-            @* <partial name="Activity/_StatsBar" model="@Model.StatsBarViewModel"/> *@
         </div>
         <div id="map_area">
-            @* <partial name="Activity/_MapArea" model="@Model.MapAreaViewModel"/> *@
+            @if (Track is not null)
+            {
+                <MapArea Track="@Track"/>
+            }
         </div>
     </div>
 </div>
