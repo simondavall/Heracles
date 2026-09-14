@@ -1807,7 +1807,6 @@ var mapController = {
 			urlString += pointsArray[i].lng + ',' + pointsArray[i].lat;
 		}
 
-		var returnString = 'https://api.mapbox.com/v4/directions/mapbox.walking/' + urlString + '.json?access_token=' + mapController.model.rkMapboxAccessToken + '&geometry=polyline';
-		return returnString;
+		return 'https://api.mapbox.com/v4/directions/mapbox.walking/' + urlString + '.json?access_token=' + mapController.model.mapboxAccessToken + '&geometry=polyline';
 	}
 }
