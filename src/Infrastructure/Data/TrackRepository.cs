@@ -88,7 +88,7 @@ namespace Heracles.Infrastructure.Data
             var track = await dbContext.Tracks.FirstOrDefaultAsync(x => x.Id == trackId);
             if (track is null)
             {
-                //TODO Create default Track
+                // todo: Create default Track
                 return default;
             }
             track.TrackSegments = await dbContext.TrackSegments.Where(x => x.TrackId == track.Id).OrderBy(x=>x.Seq).ToListAsync();
@@ -118,7 +118,7 @@ namespace Heracles.Infrastructure.Data
             var track = await dbContext.Tracks.OrderByDescending(x => x.Time).FirstOrDefaultAsync();
             if (track is null)
             {
-                //TODO Create default Track
+                // todo: Create default Track
                 return default;
             }
             track.TrackSegments = await dbContext.TrackSegments.Where(x => x.TrackId == track.Id).OrderBy(x => x.Seq).ToListAsync();

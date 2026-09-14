@@ -318,7 +318,7 @@ var mapController = {
 			'Satellite View' 	: L.mapbox.styleLayer('mapbox://styles/mapbox/satellite-streets-v11')
 		}).addTo(mapController.model.map);
 
-		//todo - sdv removed as no fullscreen function
+		// todo: - sdv removed as no fullscreen function
 		//L.control.fullscreen().addTo(mapController.model.map);
 
 		$('#map-loading').fadeOut(400,function(){

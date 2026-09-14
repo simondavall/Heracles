@@ -54,9 +54,9 @@ namespace Heracles.Infrastructure.UnitTests.Gpx.Processors
         [Test]
         public void GetCaloriesBurned_RunningCaloriesGreaterThanCyclingCalories()
         {
-            //todo - this test highlights an issue. Cycling at a high rate should have a higher calorie burn.
-            // but because one value is used, cycling will always be less than running regardless of effort.
-            // Need to change the values to depend on work rate.
+            // todo: - this test highlights an issue. Cycling at a high rate should have a higher calorie burn.
+            //  but because one value is used, cycling will always be less than running regardless of effort.
+            //  Need to change the values to depend on work rate.
             var trackRunning = new Track
             {
                 ActivityType = ActivityType.Running,

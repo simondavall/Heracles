@@ -173,7 +173,7 @@ body {
     -webkit-border-radius: 3px;
     border-radius: 3px;
 }
-/*todo - do i need subNavTrue?*/
+/* todo: - do i need subNavTrue? */
     .bodyContainer.subNavTrue {
         padding: 0;
     }
