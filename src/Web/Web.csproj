@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
     <UserSecretsId>aspnet-Heracles.Web-A6AC4E79-979D-481C-8C91-E206969EF84E</UserSecretsId>
     <AssemblyName>Heracles.Web</AssemblyName>
     <RootNamespace>Heracles.Web</RootNamespace>

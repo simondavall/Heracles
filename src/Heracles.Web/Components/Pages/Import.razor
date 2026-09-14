@@ -1,0 +1,103 @@
+﻿@page "/import"
+@rendermode InteractiveServer
+@using Heracles.Web.Components.Features.Shared
+
+<PageTitle>Import</PageTitle>
+
+<div class="subNavcontainer clearfix">
+    <SubNavigation SelectedTab="SubNavTab.Import" />
+</div>
+
+<div class="container">
+    <div class="columnContent clearfix">
+
+        <div class="mainColumnPadding">
+            <div class="multipleMapImport">
+                <div class="mappingImportContainer">
+
+                    <div class="header">
+                        Import multiple activities
+                    </div>
+
+                    <div class="info">
+                        <label for="trackFiles" id="trackFileLabel">
+                            You can upload multiple activities at once.
+                            Please select the GPX files you would like to import.
+                        </label>
+                    </div>
+
+                    <div class="uploader" id="uniform-trackFiles">
+
+                        <InputFile id="trackFiles"
+                                   OnChange="UploadFilesAsync"
+                                   multiple
+                                   accept=".gpx,.tcx,.fit" />
+
+                        <span class="filename">
+                            @_selectedFileDescription
+                        </span>
+
+                        <span class="action">
+                            Choose File
+                        </span>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (_isImporting)
+        {
+            <div class="row progressbar" id="progress">
+                <div class="progress-bar"
+                     style="@($"width: {_progressPercentage}%")">
+                </div>
+            </div>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(_errorMessage))
+        {
+            <div class="text-danger">
+                @_errorMessage
+            </div>
+        }
+
+        @if (_importExecuted)
+        {
+            <div class="importedfiles">
+
+                @if (_filesImported > 0)
+                {
+                    <div id="successFilesHeader"
+                         class="successfiles" style="display: block;">
+
+                        Successfully uploaded
+                        @FormatSuccessfullyImported()
+                    </div>
+                }
+
+                @if (_filesFailed.Count > 0)
+                {
+                    <div id="errorFilesHeader"
+                         class="failedfiles" style="display: block;">
+
+                        Could not upload the following
+                        @FormatDisplay(_filesFailed.Count):
+
+                        <div id="errorFiles">
+                            @foreach (var failedFile in _filesFailed)
+                            {
+                                <p class="error-file">
+                                    @failedFile.Filename -
+                                    [@failedFile.Reason]
+                                </p>
+                            }
+                        </div>
+                    </div>
+                }
+
+            </div>
+        }
+
+    </div>
+</div>
