@@ -1,4 +1,6 @@
-﻿<div class="userNavContainer clearfix">
+﻿@using Microsoft.AspNetCore.Components.Authorization
+
+<div class="userNavContainer clearfix">
     <a href="/import">
         <div class="userNavItem import @GetTabClass(SubNavTab.Import)">
             <p>IMPORT</p>
@@ -19,20 +21,24 @@
         </div>
     </a>
 
-    <div class="userNavBorder left selected"></div>
-    <div class="userNavItem" id="userProfile">
-        <div id="imgContainer" class="profileBoxSmall">
-            <div class="avatarContainer">
-                <a class="avatar" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
-                    <img src="/images/profile-med.jpg" title="@Username" alt=""/>
-                </a>
+    <AuthorizeView>
+        <Authorized>
+            <div class="userNavBorder left selected"></div>
+            <div class="userNavItem" id="userProfile">
+                <div id="imgContainer" class="profileBoxSmall">
+                    <div class="avatarContainer">
+                        <a class="avatar" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                            <img src="/images/profile-med.jpg" title="@DisplayName(context.User)" alt=""/>
+                        </a>
+                    </div>
+                </div>
+                <div id="userNameContainer">
+                    <div id="userNameText">
+                        <p class="userName">@DisplayName(context.User)</p>
+                        <p class="activeSince">@ActiveSince</p>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div id="userNameContainer">
-            <div id="userNameText">
-                <p class="userName">@Username</p>
-                <p class="activeSince">@ActiveSince</p>
-            </div>
-        </div>
-    </div>
+        </Authorized>
+    </AuthorizeView>
 </div>
