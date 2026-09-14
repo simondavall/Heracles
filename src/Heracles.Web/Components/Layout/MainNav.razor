@@ -1,9 +1,37 @@
-﻿<nav class="navbar navbar-expand-md navbar-dark bg-dark border-bottom mb-3">
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark border-bottom mb-3">
     <div class="container navbar-content">
         <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Heracles</a>
 
         <div class="navbar-collapse collapse d-md-inline-flex flex-md-row-reverse">
-            <partial name="_LoginPartial" />
+            <AuthorizeView>
+                <Authorized>
+                    <div class="nav-item px-3">
+                        <a class="main-nav-link" href="/authentication/logout">
+                            <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Log out
+                        </a>
+                    </div>
+                    <div class="nav-item px-3">
+                        @* todo: send this link to config? *@
+                        <a class="user-link" href="https://soteria.local/Account/Manage" target="_blank">
+                            <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @DisplayName(context.User)
+                        </a>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
         </div>
     </div>
 </nav>
+
+@code {
+
+    private static string DisplayName(ClaimsPrincipal user)
+    {
+        return user.FindFirst("display_name")?.Value
+               ?? user.Identity?.Name
+               ?? string.Empty;
+    }
+
+}

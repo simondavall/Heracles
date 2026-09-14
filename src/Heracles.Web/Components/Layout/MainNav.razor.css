@@ -1,0 +1,12 @@
+.main-nav-link {
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: bold; 
+    color: white;
+    height: 40px;
+}
+.user-link {
+    text-decoration: none;
+    color: lightgray;
+    height: 40px;
+}
