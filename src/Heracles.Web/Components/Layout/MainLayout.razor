@@ -1,0 +1,25 @@
+﻿@inherits LayoutComponentBase
+
+<div class="userLayout activity">
+    <div id="pageWrapper">
+        <div id="homeNavContainer">
+            <div class="sizeConstraint">
+                <MainNav/>
+            </div>
+        </div>
+        <div class="bodyWrapper">
+            <div class="sizeConstraint">
+                <div class="bodyContainer clearfix subNavTrue">
+                    @Body
+                </div>
+            </div>
+            <div id="footerContainer" class="micro-text">
+                <div class="sizeConstraint">
+                    <div class="container">
+                        &copy; 2021 - Heracles.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
