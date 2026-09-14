@@ -30,7 +30,7 @@ namespace Heracles.Application.Services.Import.Progress
         private void InitializeImportProgress(Guid processId)
         {
             ProcessId = processId;
-            TrackProgressMethod = GetFilesProcessedProgress;
+            TrackProgressMethod ??= GetFilesProcessedProgress;
             _progressService.InitializeProgress(ProcessId);
         }
 

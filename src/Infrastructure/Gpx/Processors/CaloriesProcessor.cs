@@ -12,8 +12,8 @@ namespace Heracles.Infrastructure.Gpx.Processors
             {
                 return 0; // do not set calories for negative duration
             }
-            //todo - improvements can be made here. met needs to be created by the activity based on the speed.
-            // met is the measure of calorie burn rate for a given activity
+            // todo: - improvements can be made here. met needs to be created by the activity based on the speed.
+            //  met is the measure of calorie burn rate for a given activity
             double met = 11; // default set as met for running at 6.7mph (9 min miles)
             const double weight = 90;
             var duration = track.Duration;

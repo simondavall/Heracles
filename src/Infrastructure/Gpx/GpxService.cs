@@ -22,7 +22,7 @@ namespace Heracles.Infrastructure.Gpx
         {
             try
             {
-                // TODO Convert this to async/await
+                // todo: Convert this to async/await
                 var gpxTrack = GpxEngine.GetGpxTrackFromFile(file);
                 if (gpxTrack != null)
                 {
@@ -32,7 +32,7 @@ namespace Heracles.Infrastructure.Gpx
             }
             catch (Exception e)
             {
-                //TODO throw custom exception. Declare exception in App/Domain. Put e as inner exception.
+                // todo: throw custom exception. Declare exception in App/Domain. Put e as inner exception.
                 _logger.LogError(e, $"GpxService Failed to create TrackAggregate for file {file.FileName} with message: {e.Message}");
                 throw;
             }

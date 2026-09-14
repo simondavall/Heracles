@@ -1,5 +1,4 @@
 ﻿using Heracles.Application.Interfaces;
-using Heracles.Domain.Interfaces;
 using Heracles.Infrastructure.Data;
 using Heracles.Infrastructure.Gpx;
 using Heracles.Infrastructure.Identity;
@@ -15,38 +14,31 @@ namespace Heracles.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
-        {
+        public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration) {
             services = AddDatabaseContexts(services, configuration);
 
             services.AddScoped<ITrackRepository, TrackRepository>();
 
             services.AddTransient<IGpxService, GpxService>();
 
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services
+                .AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppIdentityDbContext>();
         }
 
-        internal static IServiceCollection AddDatabaseContexts(IServiceCollection services, IConfiguration configuration)
-        {
-            if (configuration.GetValue<bool>("UseInMemoryDatabase"))
-            {
-                services.AddDbContext<GpxDbContext>(options =>
-                    options.UseInMemoryDatabase("HeraclesDb"));
+        internal static IServiceCollection AddDatabaseContexts(IServiceCollection services, IConfiguration configuration) {
+            if (configuration.GetValue<bool>("UseInMemoryDatabase")) {
+                services.AddDbContextFactory<GpxDbContext>(options => { options.UseInMemoryDatabase("HeraclesDb"); });
 
                 services.AddDbContext<AppIdentityDbContext>(options =>
                     options.UseInMemoryDatabase("HeraclesAuthDb"));
             }
-            else
-            {
-                services.AddDbContext<GpxDbContext>(options =>
-                    options.UseSqlServer(
-                        configuration.GetConnectionString("HeraclesDb")));
+            else {
+                services.AddDbContextFactory<GpxDbContext>(options => { options.UseSqlServer(configuration.GetConnectionString("HeraclesDb")); });
 
                 services.AddDbContext<AppIdentityDbContext>(options =>
-                    options.UseSqlServer(
-                        configuration.GetConnectionString("HeraclesAuthDb")));
+                    options.UseSqlServer(configuration.GetConnectionString("HeraclesAuthDb")));
             }
 
             services.AddDatabaseDeveloperPageExceptionFilter();
@@ -54,16 +46,13 @@ namespace Heracles.Infrastructure
             return services;
         }
 
-        public static IApplicationBuilder AddInfrastructure(this IApplicationBuilder app, IWebHostEnvironment env)
-        {
+        public static IApplicationBuilder AddInfrastructure(this IApplicationBuilder app, IWebHostEnvironment env) {
             app = UseMigrationsEndPoint(app, env);
             return app;
         }
 
-        internal static IApplicationBuilder UseMigrationsEndPoint(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
+        internal static IApplicationBuilder UseMigrationsEndPoint(IApplicationBuilder app, IWebHostEnvironment env) {
+            if (env.IsDevelopment()) {
                 app.UseMigrationsEndPoint();
             }
 

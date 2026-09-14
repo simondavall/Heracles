@@ -248,7 +248,7 @@ var mapController = {
 
 		editActivity : false,
 
-		mapboxAccessToken: 'pk.eyJ1Ijoic2ltb25kYXZhbGwiLCJhIjoiY2t2dHFuNXFxMnpmYjJ4b3VtcXVjODVkeiJ9.icCJP9MPW4BrfnTz5-y4Yg'
+		mapboxAccessToken: ''
 	},
 	initialize	: function(options)
 	{
@@ -1747,7 +1747,7 @@ var mapController = {
 		{
 			var statusUpdateIcon;
 			var thisStatusUpdate = mapController.model.statusUpdates[i];
-			if (thisStatusUpdate.photoKey == undefined) // text only
+			if (thisStatusUpdate.photoKey === undefined) // text only
 			{
 				statusUpdateIcon = new L.icon({
 					iconUrl: siteRoot + "/images/map/text.png"
@@ -1797,8 +1797,8 @@ var mapController = {
 	},
 	getDirectionsAPIUrl : function(pointsArray)
 	{
-		var urlString = '';
-		for(var i=0;i<pointsArray.length;i++)
+		let urlString = '';
+		for(let i=0;i<pointsArray.length;i++)
 		{
 			if(urlString.length > 0)
 			{
@@ -1807,7 +1807,6 @@ var mapController = {
 			urlString += pointsArray[i].lng + ',' + pointsArray[i].lat;
 		}
 
-		var returnString = 'https://api.mapbox.com/v4/directions/mapbox.walking/' + urlString + '.json?access_token=' + mapController.model.rkMapboxAccessToken + '&geometry=polyline';
-		return returnString;
+		return 'https://api.mapbox.com/v4/directions/mapbox.walking/' + urlString + '.json?access_token=' + mapController.model.mapboxAccessToken + '&geometry=polyline';
 	}
 }
