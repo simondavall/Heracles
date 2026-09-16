@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Heracles.Web.Components.Theme;
 using MudBlazor;
 
@@ -43,5 +44,12 @@ public partial class MainLayout
                 await _themeProvider.GetSystemDarkModeAsync(),
             _ => false
         };
+    }
+    
+    private static string DisplayName(ClaimsPrincipal user)
+    {
+        return user.FindFirst("display_name")?.Value
+               ?? user.Identity?.Name
+               ?? string.Empty;
     }
 }

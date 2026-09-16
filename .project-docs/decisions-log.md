@@ -2,31 +2,28 @@
 
 It provides a historical record of why important implementation decisions were made and helps prevent previously resolved discussions from being revisited without new evidence.
 
-<example decision for structure and content>
-<remove this once the first actual decision has been added>
-2026-09-09
+2026-09-16
 
-### Use a validated Taurus-owned application settings authority
+### Separate host authentication from common Infrastructure
 
 #### Decision
 
-Taurus represents application configuration through an immutable `TaurusSettings` model owned by `Taurus.Application`.
+Heracles.Web authenticates users through Soteria using OpenID Connect rather than the legacy ASP.NET Core Identity implementation used by the existing MVC Web application.
 
-The Web composition root loads the configured ASP.NET Core configuration sources and creates `TaurusSettings` during startup.
+Common Infrastructure registration does not register a host authentication implementation.
 
-Creation validates all represented settings and prevents application startup if any are missing or invalid. Validation failures are collected and reported together through a startup exception.
+The legacy ASP.NET Core Identity services, AppIdentityDbContext and Entity Framework Identity stores are registered through a separate Identity-specific Infrastructure registration. The existing MVC Web application explicitly opts into that registration.
 
-After successful creation, Web, Application and Infrastructure consume the validated settings model rather than independently reading raw configuration for migrated settings.
+Heracles.Web registers common Infrastructure without legacy Identity and configures Soteria authentication at its own composition root.
 
-Settings will be migrated into the authority incrementally as existing configuration usage is reviewed.
+Heracles.Web uses cookie authentication for its local authenticated session and OpenID Connect as its challenge mechanism. Application access requires authentication by default through the authorization fallback policy.
 
 #### Rationale
 
-- Application code should be able to rely on required configuration being complete and valid.
-- Central validation removes repeated null handling, parsing and fallback behaviour from individual consumers.
-- Strongly typed settings make configuration dependencies explicit.
-- Owning the settings model in Application allows both Web and Infrastructure to consume it without introducing an invalid project dependency.
-- Passing the settings authority avoids increasingly large dependency-registration signatures containing individual configuration values.
-- Constructing the authority in Web preserves configuration providers and startup as host responsibilities.
-- Keeping `IConfiguration` at the composition boundary prevents lower layers from independently interpreting the same configuration.
-- Incremental migration allows the pattern to be adopted without expanding the current task into an application-wide configuration refactoring.
+- Heracles.Web and the legacy MVC Web application use different authentication authorities.
+- Authentication configuration is a host concern and should not be introduced implicitly by common Infrastructure registration.
+- Registering both authentication implementations caused the legacy `Identity.Application` scheme to conflict with the Heracles.Web cookie authentication scheme.
+- Relying on dependency-registration order to resolve competing authentication schemes would create hidden and fragile behaviour.
+- Separating Identity registration makes each application's authentication dependency explicit.
+- The legacy MVC application can continue using its existing Identity implementation while Heracles.Web migrates to Soteria.
+- The separation removes the unused legacy Identity authentication dependency from Heracles.Web without requiring migration of the retiring MVC application's Identity implementation.

@@ -22,7 +22,7 @@ namespace Heracles.Infrastructure.UnitTests
             mockConfig.Setup(x => x.GetSection("UseInMemoryDatabase").Value).Returns("true");
             var services = new ServiceCollection();
 
-            DependencyInjection.AddDatabaseContexts(services, mockConfig.Object);
+            services.AddIdentityInfrastructure(mockConfig.Object);
 
             services.Should().Contain(x => x.ServiceType.Name == nameof(AppIdentityDbContext));
             services.Should().Contain(x => x.ServiceType.Name == nameof(IDeveloperPageExceptionFilter));
@@ -35,7 +35,7 @@ namespace Heracles.Infrastructure.UnitTests
             mockConfig.Setup(x => x.GetSection("UseInMemoryDatabase").Value).Returns("false");
             var services = new ServiceCollection();
 
-            DependencyInjection.AddDatabaseContexts(services, mockConfig.Object);
+            services.AddIdentityInfrastructure(mockConfig.Object);
 
             services.Should().Contain(x => x.ServiceType.Name == nameof(AppIdentityDbContext));
             services.Should().Contain(x => x.ServiceType.Name == nameof(IDeveloperPageExceptionFilter));
