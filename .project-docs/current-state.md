@@ -43,3 +43,9 @@ where development should continue.
 - Removed the temporary database/dependency-chain test code after verification.
 - Established use of the built-in ASP.NET Core / Microsoft.Extensions.Logging logging infrastructure with configuration-driven log levels.
 - Established the initial architectural decisions and conventions in architecture.md.
+- Established the Heracles theme.
+- Defined light and dark colour palettes.
+- Configured application typography and visual styling.
+- Integrated MudBlazor styling and JavaScript.
+- Implemented System, Light and Dark theme switching.
+- Verified theme switching behaviour.
