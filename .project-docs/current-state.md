@@ -9,17 +9,20 @@ where development should continue.
 
 # Current milestone
 
-- Milestone 1.2 – Heracles Design System
+- Milestone 1.3 - Foundation services
 
 # Current task
 
-- Establish the Heracles theme.
+- Implement Authentication via Soteria
 
 # Remaining milestone tasks
 
-- Establish reusable UI patterns.
-- Establish theme switching.
-- Establish responsive foundations.
+- Implement DataProtection
+- Implement DotEnv
+- Implement Serilog
+- Create SelfSignedCertificate for heracles.local
+- Verify publish to local Production
+- Implement LocalStorge for user state
 
 # Completed work
 

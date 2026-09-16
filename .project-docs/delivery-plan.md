@@ -104,7 +104,7 @@ A clean, runnable Heracles.Web Blazor application with authentication, logging, 
 
 ---
 
-## Milestone 1.3 – Application Shell
+## Milestone 1.4 – Application Shell
 
 - Create the main application layout.
 - Create the Heracles application header.
@@ -122,24 +122,6 @@ A clean, runnable Heracles.Web Blazor application with authentication, logging, 
 **Deliverable**
 
 A recognisable Heracles application shell providing the shared layout and navigation for all application features.
-
----
-
-## Milestone 1.4 – Authentication and User Context
-
-- Integrate the existing authentication mechanism.
-- Restrict application access to authenticated users.
-- Implement login.
-- Implement logout.
-- Establish authenticated user context.
-- Display authenticated user information.
-- Load the current Heracles user profile.
-- Handle unauthorised access.
-- Validate authentication behaviour with Interactive Server rendering.
-
-**Deliverable**
-
-Users authenticate and enter Heracles.Web with their application identity and profile available to the component hierarchy.
 
 ---
 
