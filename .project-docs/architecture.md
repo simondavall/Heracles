@@ -206,9 +206,17 @@ Routable application screens are implemented under Components/Pages.
 
 ## Authentication
 
-Authentication is part of the Heracles application architecture but will be integrated into Heracles.Web as a separate implementation milestone.
+Heracles.Web authenticates users through Soteria using OpenID Connect.
 
-The initial Heracles.Web foundation operates without authentication.
+Heracles.Web uses the OpenID Connect authorization-code flow with PKCE and establishes the local authenticated application session using cookie authentication.
+
+Application routes require authentication by default through the ASP.NET Core authorization fallback policy. Endpoints that must be accessible without authentication explicitly allow anonymous access.
+
+Authentication state is cascaded to Blazor components so application UI can respond to the authenticated user.
+
+Heracles.Web owns its authentication configuration at the application composition root.
+
+The legacy ASP.NET Core Identity implementation used by the existing MVC Web application is registered separately from common Infrastructure. The existing MVC application explicitly opts into that Identity infrastructure while Heracles.Web uses Soteria.
 
 ## Logging
 

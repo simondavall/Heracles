@@ -13,12 +13,10 @@ where development should continue.
 
 # Current task
 
-- Implement Authentication via Soteria
+- Implement DataProtection
 
 # Remaining milestone tasks
 
-- Implement DataProtection
-- Implement DotEnv
 - Implement Serilog
 - Create SelfSignedCertificate for heracles.local
 - Verify publish to local Production
@@ -52,3 +50,16 @@ where development should continue.
 - Integrated MudBlazor styling and JavaScript.
 - Implemented System, Light and Dark theme switching.
 - Verified theme switching behaviour.
+- Integrated Heracles.Web authentication with Soteria using OpenID Connect.
+- Configured cookie authentication for the Heracles.Web authenticated session.
+- Configured OpenID Connect authorization-code flow with PKCE.
+- Configured authenticated-by-default authorization using the fallback authorization policy.
+- Added Soteria login, logout and access-denied handling.
+- Added cascading authentication state for Blazor components.
+- Integrated authenticated user information into the application layout.
+- Separated legacy ASP.NET Core Identity registration from common Infrastructure registration.
+- Updated the existing MVC Web application to explicitly opt into its legacy Identity infrastructure.
+- Verified Soteria authentication, authenticated application access and logout.
+- Verified the existing MVC Web Identity login continues to operate.
+- Implemented DotNetEnv loading for local execution.
+- Configured local OpenID Connect secrets through environment-based configuration.

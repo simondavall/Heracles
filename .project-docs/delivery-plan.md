@@ -90,9 +90,9 @@ Heracles.Web has a reusable visual design system supporting light and dark theme
 
 ## Milestone 1.3 - Foundation services
 
-- Implement Authentication via Soteria
+- ✓ Implement Authentication via Soteria
 - Implement DataProtection
-- Implement DotEnv
+- ✓ Implement DotNetEnv
 - Implement Serilog
 - Create SelfSignedCertificate for heracles.local
 - Verify publish to local Production

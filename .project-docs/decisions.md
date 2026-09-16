@@ -80,14 +80,29 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 
 # Authentication
 
-- Introduce authentication as a dedicated implementation milestone.
-- Allow the initial Heracles.Web foundation to operate without authentication.
+- Authenticate Heracles.Web users through Soteria using OpenID Connect.
+- Use the OpenID Connect authorization-code flow with PKCE.
+- Use cookie authentication for the Heracles.Web authenticated application session.
+- Require authentication by default using the ASP.NET Core authorization fallback policy.
+- Explicitly allow anonymous access only where required.
+- Provide authentication state to Blazor components through cascading authentication state.
+- Keep Heracles.Web authentication configuration at the application composition root.
+- Keep legacy ASP.NET Core Identity registration separate from common Infrastructure registration.
+- Require application hosts to explicitly opt into host-specific authentication infrastructure.
+- Retain the existing MVC Web application's legacy Identity implementation while it remains available for reference.
 
 # Logging
 
 - Use the ASP.NET Core logging infrastructure and `Microsoft.Extensions.Logging`.
 - Use `ILogger<T>` for application-level logging.
 - Configure logging levels through application configuration.
+
+# Local Configuration
+
+- Use DotNetEnv during local execution to load local environment configuration.
+- Keep OpenID Connect client secrets outside committed application configuration.
+- Add environment variables to ASP.NET Core configuration so application configuration is consumed through the normal IConfiguration hierarchy.
+- Limit DotNetEnv loading to explicitly identified local execution.
 
 # Shared Design
 
