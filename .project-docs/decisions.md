@@ -50,6 +50,9 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 
 - Support light and dark themes as first-class application requirements.
 - Establish the Heracles visual identity through a central MudBlazor theme.
+- Retain blue as the principal Heracles application colour with neutral surfaces and semantic colours.
+- Use a clean, restrained visual style appropriate for an information-rich application.
+- Establish application-wide typography, spacing, shape and elevation through the design system.
 
 # Responsive Design
 

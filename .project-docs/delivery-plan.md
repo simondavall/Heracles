@@ -66,37 +66,21 @@ A clean, runnable Heracles.Web Blazor application with the technical foundations
 
 ## Milestone 1.2 – Heracles Design System
 
-- Establish the Heracles theme.
-  - Define the primary colour palette.
-  - Define the light palette.
-  - Define the dark palette.
-  - Configure typography.
-  - Configure icons.
-  - Configure standard spacing.
-  - Configure borders and elevation.
-  - Establish semantic colours for success, warning, error and information.
+- ✓ Establish the Heracles theme.
+  - ✓ Define the primary colour palette.
+  - ✓ Define the light palette.
+  - ✓ Define the dark palette.
+  - ✓ Configure typography.
+  - ✓ Configure icons.
+  - ✓ Configure standard spacing.
+  - ✓ Configure borders and elevation.
+  - ✓ Establish semantic colours for success, warning, error and information.
 
-- Establish reusable UI patterns.
-  - Create standard panel styling.
-  - Create standard section headers.
-  - Create standard loading states.
-  - Create standard empty states.
-  - Create standard error states.
-  - Create standard metric/statistic presentation.
-  - Establish form presentation conventions.
-
-- Establish theme switching.
-  - Support light mode.
-  - Support dark mode.
-  - Support system theme preference.
-  - Verify shared components in each theme.
-
-- Establish responsive foundations.
-  - Define supported breakpoints.
-  - Establish desktop layout behaviour.
-  - Establish tablet layout behaviour.
-  - Establish mobile layout behaviour.
-  - Establish reusable responsive layout patterns.
+- ✓ Establish theme switching.
+  - ✓ Support light mode.
+  - ✓ Support dark mode.
+  - ✓ Support system theme preference.
+  - ✓ Verify shared components in each theme.
 
 **Deliverable**
 
@@ -104,7 +88,23 @@ Heracles.Web has a reusable visual design system supporting light and dark theme
 
 ---
 
-## Milestone 1.3 – Application Shell
+## Milestone 1.3 - Foundation services
+
+- Implement Authentication via Soteria
+- Implement DataProtection
+- Implement DotEnv
+- Implement Serilog
+- Create SelfSignedCertificate for heracles.local
+- Verify publish to local Production
+- Implement LocalStorge for user state
+
+**Deliverable**
+
+A clean, runnable Heracles.Web Blazor application with authentication, logging, data protection with working local production environment.
+
+---
+
+## Milestone 1.4 – Application Shell
 
 - Create the main application layout.
 - Create the Heracles application header.
@@ -122,24 +122,6 @@ Heracles.Web has a reusable visual design system supporting light and dark theme
 **Deliverable**
 
 A recognisable Heracles application shell providing the shared layout and navigation for all application features.
-
----
-
-## Milestone 1.4 – Authentication and User Context
-
-- Integrate the existing authentication mechanism.
-- Restrict application access to authenticated users.
-- Implement login.
-- Implement logout.
-- Establish authenticated user context.
-- Display authenticated user information.
-- Load the current Heracles user profile.
-- Handle unauthorised access.
-- Validate authentication behaviour with Interactive Server rendering.
-
-**Deliverable**
-
-Users authenticate and enter Heracles.Web with their application identity and profile available to the component hierarchy.
 
 ---
 

@@ -9,17 +9,20 @@ where development should continue.
 
 # Current milestone
 
-- Milestone 1.2 – Heracles Design System
+- Milestone 1.3 - Foundation services
 
 # Current task
 
-- Establish the Heracles theme.
+- Implement Authentication via Soteria
 
 # Remaining milestone tasks
 
-- Establish reusable UI patterns.
-- Establish theme switching.
-- Establish responsive foundations.
+- Implement DataProtection
+- Implement DotEnv
+- Implement Serilog
+- Create SelfSignedCertificate for heracles.local
+- Verify publish to local Production
+- Implement LocalStorge for user state
 
 # Completed work
 
@@ -43,3 +46,9 @@ where development should continue.
 - Removed the temporary database/dependency-chain test code after verification.
 - Established use of the built-in ASP.NET Core / Microsoft.Extensions.Logging logging infrastructure with configuration-driven log levels.
 - Established the initial architectural decisions and conventions in architecture.md.
+- Established the Heracles theme.
+- Defined light and dark colour palettes.
+- Configured application typography and visual styling.
+- Integrated MudBlazor styling and JavaScript.
+- Implemented System, Light and Dark theme switching.
+- Verified theme switching behaviour.

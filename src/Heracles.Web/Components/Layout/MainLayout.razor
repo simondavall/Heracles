@@ -1,28 +1,36 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider />
+@using Heracles.Web.Components.Theme
+
+<MudThemeProvider @ref="_themeProvider"
+                  Theme="@HeraclesTheme.Default"
+                  IsDarkMode="@_isDarkMode" />
+
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<MudLayout>
+    <MudAppBar Elevation="1">
+        <MudText Typo="Typo.h6">Heracles</MudText>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+        <MudSpacer />
 
-        <article class="content px-4">
+        <MudSelect T="ThemeMode"
+                   Value="@_themeMode"
+                   ValueChanged="SetThemeModeAsync"
+                   Variant="Variant.Outlined"
+                   Margin="Margin.Dense"
+                   Style="width: 130px">
+            <MudSelectItem Value="@ThemeMode.System">System</MudSelectItem>
+            <MudSelectItem Value="@ThemeMode.Light">Light</MudSelectItem>
+            <MudSelectItem Value="@ThemeMode.Dark">Dark</MudSelectItem>
+        </MudSelect>
+    </MudAppBar>
+
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Large" Class="mt-8">
             @Body
-        </article>
-    </main>
-</div>
-
-<div id="blazor-error-ui" data-nosnippet>
-    An unhandled error has occurred.
-    <a href="." class="reload">Reload</a>
-    <span class="dismiss">🗙</span>
-</div>
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
