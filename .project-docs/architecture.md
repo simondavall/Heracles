@@ -218,6 +218,24 @@ Heracles.Web owns its authentication configuration at the application compositio
 
 The legacy ASP.NET Core Identity implementation used by the existing MVC Web application is registered separately from common Infrastructure. The existing MVC application explicitly opts into that Identity infrastructure while Heracles.Web uses Soteria.
 
+## Data Protection
+
+Heracles.Web uses ASP.NET Core Data Protection for application data protection, including authentication-cookie protection.
+
+The Data Protection key ring is persisted to a configurable filesystem location so protected data can remain valid across application restarts and deployments.
+
+Persisted Data Protection keys are encrypted at rest using a dedicated X.509 certificate containing a private key.
+
+The Data Protection certificate is separate from the HTTPS/TLS certificate.
+
+The key-ring path, certificate path and certificate password are supplied through environment-based configuration. Local execution uses DotNetEnv while hosted environments use their normal environment-variable configuration mechanism.
+
+The Data Protection implementation does not depend on a platform-specific certificate store or operating-system-specific key protection mechanism and is intended to operate consistently across Windows and Linux environments.
+
+Heracles.Web uses a stable Data Protection application name of `Heracles.Web`.
+
+Data Protection configuration and certificate loading are validated during application startup so invalid or incomplete configuration prevents the application from starting.
+
 ## Logging
 
 Heracles.Web uses the ASP.NET Core logging infrastructure and Microsoft.Extensions.Logging.

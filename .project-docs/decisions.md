@@ -112,3 +112,16 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 - Avoid speculative abstractions.
 - Prefer small abstractions with focused responsibilities.
 - Optimise for maintainability and consistency.
+
+# Data Protection
+
+- Use ASP.NET Core Data Protection for Heracles.Web protected application data.
+- Persist the Data Protection key ring to a configurable filesystem location.
+- Encrypt persisted Data Protection keys at rest using a dedicated X.509 certificate containing a private key.
+- Keep the Data Protection certificate separate from the HTTPS/TLS certificate.
+- Use `Heracles.Web` as the stable Data Protection application name.
+- Supply the key-ring path, certificate path and certificate password through environment-based configuration.
+- Avoid platform-specific certificate stores and operating-system-specific key protection so the Data Protection configuration remains portable between Windows and Linux.
+- Validate required Data Protection configuration and certificate requirements during application startup.
+- Treat the Data Protection certificate and persisted key ring as durable application state.
+- Do not automatically generate or replace the Data Protection certificate during application startup.
