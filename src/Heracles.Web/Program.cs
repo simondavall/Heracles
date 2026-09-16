@@ -3,6 +3,7 @@ using Heracles.Application;
 using Heracles.Infrastructure;
 using Heracles.Web.Components;
 using Heracles.Web.Components.Features.Authentication;
+using Heracles.Web.Components.Features.DataProtection;
 using Microsoft.AspNetCore.Authorization;
 using MudBlazor.Services;
 
@@ -22,6 +23,7 @@ if (isLocalExecution) {
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 
+builder.Services.AddHeraclesDataProtection(builder.Configuration);
 builder.Services.AddHeraclesAuthentication(builder.Configuration);
 
 builder.Services.AddMudServices();

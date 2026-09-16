@@ -13,11 +13,11 @@ where development should continue.
 
 # Current task
 
-- Implement DataProtection
+- Implement Serilog
 
 # Remaining milestone tasks
 
-- Implement Serilog
+- Implement HeraclesSettings
 - Create SelfSignedCertificate for heracles.local
 - Verify publish to local Production
 - Implement LocalStorge for user state
@@ -63,3 +63,13 @@ where development should continue.
 - Verified the existing MVC Web Identity login continues to operate.
 - Implemented DotNetEnv loading for local execution.
 - Configured local OpenID Connect secrets through environment-based configuration.
+- Implemented cross-platform ASP.NET Core Data Protection.
+- Configured a stable Heracles.Web Data Protection application name.
+- Configured persistent filesystem storage for the Data Protection key ring.
+- Configured encryption at rest for persisted Data Protection keys using a dedicated X.509 certificate.
+- Configured the Data Protection key path, certificate path and certificate password through environment-based configuration.
+- Added fail-fast validation for missing Data Protection configuration, missing certificates, invalid certificate credentials and certificates without a private key.
+- Verified Data Protection key persistence and encryption at rest.
+- Verified an authenticated Soteria session remains valid across Heracles.Web application restarts using the persisted key ring.
+- Verified Data Protection startup failure paths.
+- Documented Data Protection certificate creation, configuration, verification and replacement considerations.
