@@ -1,6 +1,7 @@
 ﻿@inherits LayoutComponentBase
 
 @using Heracles.Web.Components.Theme
+@using Microsoft.AspNetCore.Components.Authorization
 
 <MudThemeProvider @ref="_themeProvider"
                   Theme="@HeraclesTheme.Default"
@@ -26,6 +27,23 @@
             <MudSelectItem Value="@ThemeMode.Light">Light</MudSelectItem>
             <MudSelectItem Value="@ThemeMode.Dark">Dark</MudSelectItem>
         </MudSelect>
+        <AuthorizeView>
+            <Authorized>
+                <MudButton Href="https://soteria.local/Account/Manage"
+                         Target="_blank"
+                         rel="noopener noreferrer"
+                         Variant="Variant.Text"
+                         Color="Color.Secondary">
+                    @DisplayName(context.User)
+                </MudButton>
+
+                <MudButton Color="Color.Inherit"
+                           Variant="Variant.Text"
+                           Href="/authentication/logout">
+                    Log Out
+                </MudButton>
+            </Authorized>
+        </AuthorizeView>
     </MudAppBar>
 
     <MudMainContent>
