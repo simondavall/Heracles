@@ -265,3 +265,20 @@ The Development environment writes logs to the console. The Production environme
 Logging levels and category overrides are configured independently for each environment so logging granularity can be appropriate to the environment.
 
 The Production log-file path is supplied through environment-based configuration rather than committed application configuration. Local execution uses DotNetEnv while hosted environments use their normal environment-variable configuration mechanism.
+
+### Browser-local user state
+
+Lightweight user preferences that do not require server-side persistence are stored in browser LocalStorage.
+
+Heracles.Web owns this state because it represents browser-specific presentation preferences rather than application or deployment configuration.
+
+`UserState` represents the persisted values. `UserStateService` provides the browser persistence boundary and is registered with scoped lifetime so its in-memory state is isolated to the current Blazor circuit.
+
+UserState is persisted as a single JSON document. Missing persisted state produces a default `UserState`. Invalid persisted JSON is discarded and replaced with default state rather than allowing corrupt browser preferences to terminate the Blazor circuit.
+
+LocalStorage access is implemented through an isolated JavaScript ES module and occurs only after browser JavaScript interop is available.
+
+Persisted UserState is intentionally limited to non-sensitive preferences. Secrets, authentication material, and other security-sensitive data must not be stored through this mechanism.
+
+The persisted JSON schema is allowed to evolve naturally while requirements remain simple. Unknown JSON properties are ignored when loading and removed on subsequent saves. Explicit schema versioning or migration infrastructure will only be introduced if a demonstrated compatibility requirement arises.
+

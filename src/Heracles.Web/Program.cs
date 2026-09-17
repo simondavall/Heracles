@@ -5,6 +5,7 @@ using Heracles.Infrastructure;
 using Heracles.Web.Components;
 using Heracles.Web.Components.Features.Authentication;
 using Heracles.Web.Components.Features.DataProtection;
+using Heracles.Web.Components.Features.UserState;
 using Microsoft.AspNetCore.Authorization;
 using MudBlazor.Services;
 using Serilog;
@@ -33,6 +34,8 @@ builder.Services.AddApplication();
 
 builder.Services.AddHeraclesDataProtection(settings.DataProtection);
 builder.Services.AddHeraclesAuthentication(settings.OpenIdConnect);
+
+builder.Services.AddScoped<UserStateService>();
 
 builder.Services.AddMudServices();
 

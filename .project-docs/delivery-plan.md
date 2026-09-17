@@ -95,7 +95,8 @@ Heracles.Web has a reusable visual design system supporting light and dark theme
 - ✓ Implement DataProtection
 - ✓ Implement Serilog
 - ✓ Implement HeraclesSettings
-- Implement LocalStorge for user state
+- ✓ Implement LocalStorage for user state
+- Persist and simplify theme preference.
 - Create staging environment
 
 **Deliverable**

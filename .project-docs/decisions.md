@@ -142,3 +142,18 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 - Validate required Data Protection configuration and certificate requirements during application startup.
 - Treat the Data Protection certificate and persisted key ring as durable application state.
 - Do not automatically generate or replace the Data Protection certificate during application startup.
+
+### User state persistence
+
+- Lightweight browser-specific user preferences are persisted in browser LocalStorage.
+- Browser-local user state belongs to Heracles.Web.
+- `UserState` contains persisted preference values.
+- `UserStateService` owns loading and saving UserState.
+- `UserStateService` has scoped lifetime and must not be registered as a singleton.
+- UserState is persisted as a single JSON document.
+- LocalStorage access occurs through JavaScript interop after interactive rendering is available.
+- Missing persisted state resolves to a default UserState.
+- Invalid persisted JSON is discarded and resolves to default UserState.
+- UserState must contain only non-sensitive preferences.
+- No generic LocalStorage repository or persistence abstraction is introduced without a demonstrated requirement.
+- No schema versioning or migration mechanism is introduced until persisted-state compatibility requires one.
