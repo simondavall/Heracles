@@ -81,3 +81,32 @@ The Production log-file path is supplied through environment-based configuration
 - A retention limit prevents Production log files from accumulating indefinitely.
 - Keeping the Production log-file path outside committed configuration allows the deployment environment to control the physical logging location.
 - Environment-based configuration allows local DotNetEnv configuration, IIS App Pool environment variables and future hosting mechanisms to supply deployment-specific values without changing the application implementation.
+
+2026-09-17
+
+### Validate application configuration through HeraclesSettings
+
+#### Decision
+
+Heracles application configuration is represented by strongly typed settings records in `Heracles.Application.Configuration`.
+
+`HeraclesSettings` acts as the root configuration object and groups configuration into focused settings objects for individual application concerns.
+
+Heracles.Web creates `HeraclesSettings` explicitly at the application composition root after configuration sources have been loaded. Required values are validated during creation and all detected configuration failures are reported together. Invalid configuration prevents application startup.
+
+Startup registrations consume focused settings objects where they have been migrated to the validated configuration model. Authentication receives `OpenIdConnectSettings` and Data Protection receives `DataProtectionSettings`.
+
+Settings objects are not registered with dependency injection unless a runtime consumer demonstrates a requirement for injection.
+
+Infrastructure database registration continues to receive `IConfiguration` while the existing registration contract is shared with the legacy Web application.
+
+#### Rationale
+
+- Application configuration should be validated once rather than requiring each consumer to retrieve and repeatedly validate configuration values.
+- Successfully created settings objects provide consumers with values that have already satisfied their startup validation requirements.
+- Focused settings records prevent consumers from receiving unrelated application configuration.
+- Locating the configuration model in Application makes it visible to projects throughout the solution without coupling the model to Heracles.Web.
+- Explicit creation in the Heracles.Web composition root makes configuration availability and validation order visible during application startup.
+- Keeping settings outside dependency injection until runtime injection is required avoids speculative service registrations.
+- Reporting all detected configuration failures together provides more useful startup diagnostics than failing on the first invalid value.
+- Retaining the existing Infrastructure registration contract avoids changes to the legacy Web application during the Heracles.Web migration.

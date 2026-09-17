@@ -91,6 +91,18 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 - Require application hosts to explicitly opt into host-specific authentication infrastructure.
 - Retain the existing MVC Web application's legacy Identity implementation while it remains available for reference.
 
+# Application Configuration
+
+- Represent Heracles application configuration through strongly typed settings records in `Heracles.Application.Configuration`.
+- Use `HeraclesSettings` as the root validated application configuration object.
+- Group configuration into focused settings objects that can be passed independently to consumers.
+- Create `HeraclesSettings` explicitly at the application composition root after configuration sources have been loaded.
+- Validate required application configuration once during startup and prevent application startup when validation fails.
+- Collect configuration validation failures and report them together rather than failing on the first invalid setting.
+- Pass focused settings objects to startup registrations rather than passing `IConfiguration` where the consumer has been migrated to the validated configuration model.
+- Do not register settings objects with dependency injection until a runtime consumer requires injection.
+- Keep Infrastructure database registration on `IConfiguration` while compatibility with the legacy Web application requires the existing registration contract.
+
 # Logging
 
 - Use Serilog as the Heracles.Web logging implementation.

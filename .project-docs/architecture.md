@@ -214,9 +214,25 @@ Application routes require authentication by default through the ASP.NET Core au
 
 Authentication state is cascaded to Blazor components so application UI can respond to the authenticated user.
 
-Heracles.Web owns its authentication configuration at the application composition root.
+Heracles.Web owns authentication configuration at the application composition root and passes validated `OpenIdConnectSettings` to the authentication registration.
 
 The legacy ASP.NET Core Identity implementation used by the existing MVC Web application is registered separately from common Infrastructure. The existing MVC application explicitly opts into that Identity infrastructure while Heracles.Web uses Soteria.
+
+## Application configuration
+
+Heracles application configuration is represented by strongly typed configuration records in the Application project under `Heracles.Application.Configuration`.
+
+`HeraclesSettings` is the root application configuration object and groups configuration into focused settings objects for individual application concerns.
+
+Heracles.Web creates and validates `HeraclesSettings` explicitly at the application composition root after all configuration sources have been loaded and before services that consume application configuration are registered.
+
+Configuration validation is performed once during application startup. All configuration errors detected by `HeraclesSettings` are collected and reported together, and invalid application configuration prevents the application from starting.
+
+Consumers receive the focused settings object required by their responsibility rather than `IConfiguration` or the complete `HeraclesSettings` object.
+
+Settings objects are not registered with dependency injection unless a runtime consumer demonstrates a requirement for injection.
+
+Infrastructure currently continues to receive `IConfiguration` for database registration to preserve compatibility with the legacy Web application.
 
 ## Data Protection
 
@@ -234,7 +250,7 @@ The Data Protection implementation does not depend on a platform-specific certif
 
 Heracles.Web uses a stable Data Protection application name of `Heracles.Web`.
 
-Data Protection configuration and certificate loading are validated during application startup so invalid or incomplete configuration prevents the application from starting.
+Required Data Protection configuration is validated when `HeraclesSettings` is created during application startup. Data Protection registration performs its additional filesystem and certificate validation, including certificate loading and private-key requirements. Invalid configuration prevents the application from starting.
 
 ## Logging
 
