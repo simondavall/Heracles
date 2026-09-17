@@ -49,8 +49,3 @@ public sealed class UserStateService(IJSRuntime jsRuntime) : IAsyncDisposable
         return _module;
     }
 }
-
-public sealed class UserState
-{
-    public bool? IsDarkMode { get; set; }
-}
