@@ -1,16 +1,16 @@
 using System.Security.Cryptography.X509Certificates;
+using Heracles.Application.Configuration;
 using Microsoft.AspNetCore.DataProtection;
 
 namespace Heracles.Web.Components.Features.DataProtection;
 
 public static class DataProtectionExtensions
 {
-    public static IServiceCollection AddHeraclesDataProtection(this IServiceCollection services, IConfiguration configuration) {
-        var keyPath = GetRequiredConfiguration(configuration, "DataProtection:KeyPath");
-        var certificatePath = GetRequiredConfiguration(configuration, "DataProtection:CertificatePath");
-        var certificatePassword = GetRequiredConfiguration(configuration, "DataProtection:CertificatePassword");
+    public static IServiceCollection AddHeraclesDataProtection(this IServiceCollection services, DataProtectionSettings settings) {
+        var certificatePath = settings.CertificatePath;
+        var certificatePassword = settings.CertificatePassword;
 
-        var keyDirectory = new DirectoryInfo(keyPath);
+        var keyDirectory = new DirectoryInfo(settings.KeyPath);
 
         if (!keyDirectory.Exists) 
             keyDirectory.Create();
@@ -37,14 +37,5 @@ public static class DataProtectionExtensions
             .ProtectKeysWithCertificate(certificate);
 
         return services;
-    }
-
-    private static string GetRequiredConfiguration(IConfiguration configuration, string key) { 
-        var value = configuration[key];
-
-        if (string.IsNullOrWhiteSpace(value))
-            throw new InvalidOperationException($"Required configuration value '{key}' has not been provided.");
-
-        return value;
     }
 }

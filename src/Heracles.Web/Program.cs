@@ -1,5 +1,6 @@
 using DotNetEnv;
 using Heracles.Application;
+using Heracles.Application.Configuration;
 using Heracles.Infrastructure;
 using Heracles.Web.Components;
 using Heracles.Web.Components.Features.Authentication;
@@ -25,11 +26,13 @@ builder.Services.AddSerilog((services, configuration) => configuration
     .ReadFrom.Configuration(builder.Configuration)
     .ReadFrom.Services(services));
 
+var settings = HeraclesSettings.Create(builder.Configuration);
+
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 
-builder.Services.AddHeraclesDataProtection(builder.Configuration);
-builder.Services.AddHeraclesAuthentication(builder.Configuration);
+builder.Services.AddHeraclesDataProtection(settings.DataProtection);
+builder.Services.AddHeraclesAuthentication(settings.OpenIdConnect);
 
 builder.Services.AddMudServices();
 

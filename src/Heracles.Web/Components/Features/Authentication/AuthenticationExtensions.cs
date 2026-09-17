@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Heracles.Application.Configuration;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -7,7 +8,7 @@ namespace Heracles.Web.Components.Features.Authentication;
 
 public static class AuthenticationExtensions
 {
-    public static IServiceCollection AddHeraclesAuthentication(this IServiceCollection services, IConfiguration configuration) {
+    public static IServiceCollection AddHeraclesAuthentication(this IServiceCollection services, OpenIdConnectSettings settings) {
         services
             .AddAuthentication(options => {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -15,10 +16,9 @@ public static class AuthenticationExtensions
             })
             .AddCookie()
             .AddOpenIdConnect(options => {
-                // todo replace these with HeraclesSettings that will be complete and validated
-                options.Authority = configuration.GetValue<string>("OpenIdConnect:Authority");
-                options.ClientId = configuration.GetValue<string>("OpenIdConnect:ClientId");
-                options.ClientSecret = configuration.GetValue<string>("OpenIdConnect:ClientSecret");
+                options.Authority = settings.Authority.ToString();
+                options.ClientId = settings.ClientId;
+                options.ClientSecret = settings.ClientSecret;
                 
                 options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.ResponseType = OpenIdConnectResponseType.Code;

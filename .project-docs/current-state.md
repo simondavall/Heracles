@@ -13,11 +13,10 @@ where development should continue.
 
 # Current task
 
-- Implement HeraclesSettings
+- Implement LocalStorge for user state
 
 # Remaining milestone tasks
 
-- Implement LocalStorge for user state
 - Create staging environment
 
 # Completed work
@@ -79,3 +78,15 @@ where development should continue.
 - Configured environment-specific logging levels and category overrides.
 - Configured the Production log-file path through environment-based configuration.
 - Verified Development console logging and Production file logging.
+- Implemented strongly typed Heracles application configuration through `HeraclesSettings`.
+- Located the application configuration model in `Heracles.Application.Configuration` for solution-wide visibility.
+- Split application configuration into focused `DatabaseSettings`, `OpenIdConnectSettings` and `DataProtectionSettings` records.
+- Configured Heracles.Web to create and validate `HeraclesSettings` explicitly at the application composition root.
+- Added startup validation for required application configuration with aggregated validation failures.
+- Configured OpenID Connect authority as a validated absolute URI.
+- Updated Authentication registration to consume validated `OpenIdConnectSettings`.
+- Updated Data Protection registration to consume validated `DataProtectionSettings`.
+- Retained Data Protection-specific filesystem and certificate validation within Data Protection registration.
+- Retained the existing Infrastructure `IConfiguration` database registration for compatibility with the legacy Web application.
+- Verified valid Development and Production configuration allows normal application startup.
+- Verified invalid configuration prevents startup and reports multiple configuration failures together.
