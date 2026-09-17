@@ -13,11 +13,10 @@ where development should continue.
 
 # Current task
 
-- Implement Serilog
+- Implement HeraclesSettings
 
 # Remaining milestone tasks
 
-- Implement HeraclesSettings
 - Implement LocalStorge for user state
 - Create staging environment
 
@@ -72,3 +71,11 @@ where development should continue.
 - Verified an authenticated Soteria session remains valid across Heracles.Web application restarts using the persisted key ring.
 - Verified Data Protection startup failure paths.
 - Documented Data Protection certificate creation, configuration, verification and replacement considerations.
+- Implemented Serilog as the Heracles.Web logging implementation.
+- Retained `ILogger<T>` as the application-facing logging abstraction.
+- Configured Serilog through environment-specific application configuration.
+- Configured Development logging to the console.
+- Configured Production logging to daily rolling files with a 31-file retention limit.
+- Configured environment-specific logging levels and category overrides.
+- Configured the Production log-file path through environment-based configuration.
+- Verified Development console logging and Production file logging.

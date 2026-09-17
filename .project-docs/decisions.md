@@ -93,9 +93,14 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 
 # Logging
 
-- Use the ASP.NET Core logging infrastructure and `Microsoft.Extensions.Logging`.
-- Use `ILogger<T>` for application-level logging.
-- Configure logging levels through application configuration.
+- Use Serilog as the Heracles.Web logging implementation.
+- Continue to use `ILogger<T>` as the application-facing logging abstraction.
+- Configure Serilog through application configuration.
+- Keep logging levels and category overrides environment-specific.
+- Use console logging in the Development environment.
+- Use daily rolling file logging in the Production environment.
+- Retain 31 Production log files.
+- Supply the Production log-file path through environment-based configuration rather than committed application configuration.
 
 # Local Configuration
 
