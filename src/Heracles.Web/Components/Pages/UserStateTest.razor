@@ -1,0 +1,52 @@
+@page "/user-state-test"
+@using Heracles.Web.Components.Features.UserState
+@inject UserStateService UserStateService
+
+<PageTitle>User State Test</PageTitle>
+
+<MudText Typo="Typo.h4">User State Test</MudText>
+
+<MudText>
+    IsDarkMode:
+    @(UserStateService.State.IsDarkMode?.ToString() ?? "null")
+</MudText>
+
+<MudStack Row="true"
+          Spacing="2"
+          Class="mt-4">
+
+    <MudButton Variant="Variant.Filled"
+               OnClick="SetDarkAsync">
+        Set Dark
+    </MudButton>
+
+    <MudButton Variant="Variant.Filled"
+               OnClick="SetLightAsync">
+        Set Light
+    </MudButton>
+
+</MudStack>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        await UserStateService.LoadAsync();
+
+        StateHasChanged();
+    }
+
+    private async Task SetDarkAsync()
+    {
+        UserStateService.State.IsDarkMode = true;
+        await UserStateService.SaveAsync();
+    }
+
+    private async Task SetLightAsync()
+    {
+        UserStateService.State.IsDarkMode = false;
+        await UserStateService.SaveAsync();
+    }
+}
