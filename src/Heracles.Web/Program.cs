@@ -6,6 +6,7 @@ using Heracles.Web.Components.Features.Authentication;
 using Heracles.Web.Components.Features.DataProtection;
 using Microsoft.AspNetCore.Authorization;
 using MudBlazor.Services;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,10 @@ if (isLocalExecution) {
 
     builder.WebHost.UseStaticWebAssets();
 }
+
+builder.Services.AddSerilog((services, configuration) => configuration
+    .ReadFrom.Configuration(builder.Configuration)
+    .ReadFrom.Services(services));
 
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();

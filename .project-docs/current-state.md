@@ -18,9 +18,8 @@ where development should continue.
 # Remaining milestone tasks
 
 - Implement HeraclesSettings
-- Create SelfSignedCertificate for heracles.local
-- Verify publish to local Production
 - Implement LocalStorge for user state
+- Create staging environment
 
 # Completed work
 
