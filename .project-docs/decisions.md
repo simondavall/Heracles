@@ -157,3 +157,15 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 - UserState must contain only non-sensitive preferences.
 - No generic LocalStorage repository or persistence abstraction is introduced without a demonstrated requirement.
 - No schema versioning or migration mechanism is introduced until persisted-state compatibility requires one.
+
+### Theme preference behaviour
+
+- Light and dark themes are defined centrally through `HeraclesTheme`.
+- Explicit theme preference is persisted through `UserState.IsDarkMode`.
+- A null `IsDarkMode` means no explicit preference and causes Heracles.Web to follow the browser/system colour scheme.
+- An explicit light or dark preference takes precedence over subsequent system preference changes.
+- The detected system preference is not persisted as an explicit user preference.
+- Theme selection uses a single action-oriented icon toggle between light and dark.
+- The theme toggle icon represents the available action rather than the currently active theme.
+- There is intentionally no UI mechanism for returning to automatic system preference after an explicit selection.
+- Theme preference resolution remains owned by the Blazor/MudBlazor application lifecycle.

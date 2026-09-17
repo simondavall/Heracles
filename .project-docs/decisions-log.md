@@ -130,3 +130,24 @@ Keeping this capability within Heracles.Web reflects the browser-specific nature
 A single JSON document provides simple load/save behaviour while allowing straightforward additions and removals of properties. Testing confirmed that unknown persisted properties are ignored during deserialization and removed on subsequent saves.
 
 Schema versioning and migration infrastructure are deferred until a concrete compatibility requirement exists.
+
+## 2026-09-17 — Persist explicit theme preference through UserState
+
+**Decision**
+
+Use `UserState.IsDarkMode` as the persisted representation of the user's theme preference.
+
+A null value represents no explicit preference and causes Heracles.Web to follow the browser/system colour scheme. Explicit true or false values select dark or light mode respectively and take precedence over subsequent system preference changes.
+
+Replace the previous System / Light / Dark selector with a single action-oriented light/dark icon toggle.
+
+There is intentionally no UI mechanism for returning to automatic system preference after the user makes an explicit selection.
+
+**Rationale**
+
+The nullable preference represents the required three states without maintaining a separate theme-mode abstraction.
+
+Persisting only explicit user selections allows Heracles.Web to respect the system preference by default while retaining a user's deliberate light or dark selection across browser sessions.
+
+A direct light/dark toggle keeps the frequently used interaction simple. Returning to system-controlled behaviour is not currently important enough to justify additional UI.
+
