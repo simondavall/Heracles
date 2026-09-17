@@ -110,3 +110,23 @@ Infrastructure database registration continues to receive `IConfiguration` while
 - Keeping settings outside dependency injection until runtime injection is required avoids speculative service registrations.
 - Reporting all detected configuration failures together provides more useful startup diagnostics than failing on the first invalid value.
 - Retaining the existing Infrastructure registration contract avoids changes to the legacy Web application during the Heracles.Web migration.
+
+## 2026-09-17 — Persist lightweight user state in browser LocalStorage
+
+**Decision**
+
+Persist lightweight browser-specific user preferences through a scoped `UserStateService` in Heracles.Web.
+
+UserState is stored as a single JSON document in browser LocalStorage and accessed through an isolated JavaScript ES module after browser interop becomes available.
+
+Missing state resolves to default UserState. Invalid persisted JSON is discarded and reset to default state.
+
+**Rationale**
+
+The anticipated preferences are small, browser-specific presentation settings that do not currently justify database persistence.
+
+Keeping this capability within Heracles.Web reflects the browser-specific nature of the state and avoids introducing persistence abstractions or dependencies that are not yet required.
+
+A single JSON document provides simple load/save behaviour while allowing straightforward additions and removals of properties. Testing confirmed that unknown persisted properties are ignored during deserialization and removed on subsequent saves.
+
+Schema versioning and migration infrastructure are deferred until a concrete compatibility requirement exists.

@@ -13,11 +13,11 @@ where development should continue.
 
 # Current task
 
-- Implement LocalStorge for user state
+- Persist and simplify theme preference.
 
 # Remaining milestone tasks
 
-- Create staging environment
+- Create staging environment.
 
 # Completed work
 
@@ -90,3 +90,12 @@ where development should continue.
 - Retained the existing Infrastructure `IConfiguration` database registration for compatibility with the legacy Web application.
 - Verified valid Development and Production configuration allows normal application startup.
 - Verified invalid configuration prevents startup and reports multiple configuration failures together.
+- Implemented browser-local UserState persistence in Heracles.Web.
+- Added scoped `UserStateService` for loading and saving lightweight user preferences.
+- Persisted UserState as a single JSON document in browser LocalStorage.
+- Added isolated JavaScript ES module for LocalStorage access.
+- Added nullable Dark Mode preference with null representing no explicit user preference.
+- Added recovery from invalid persisted UserState by discarding corrupt browser state and returning to defaults.
+- Verified UserState persistence across page reloads and application restarts.
+- Verified missing and invalid persisted state fall back to default UserState.
+- Verified persisted JSON tolerates removed properties and redundant properties are removed on subsequent saves.
