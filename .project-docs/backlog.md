@@ -3,5 +3,8 @@
 # Enhancements
 
 # Technical Debt
+- Change Infrasturcture registration to use Heracles settings when Web is decommissioned. Web currently passes the
+IConfiguration whereas Heracles.Web will send Heracles settings. Heracles.Web will continue to send IConfiguration
+until Web is no longer required.
 
 # Nice-to-have
