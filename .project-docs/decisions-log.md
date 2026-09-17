@@ -54,3 +54,30 @@ Heracles.Web uses `Heracles.Web` as its stable Data Protection application name.
 - A PFX-based certificate can be deployed consistently across those environments without coupling Data Protection to the Windows certificate store or DPAPI.
 - Keeping Data Protection and HTTPS certificates separate allows their purposes and lifecycles to remain independent.
 - Environment-based configuration allows local DotNetEnv configuration, IIS App Pool environment variables and future hosting mechanisms to use the same application implementation.
+
+2026-09-17
+
+### Use Serilog for application logging
+
+#### Decision
+
+Heracles.Web uses Serilog as its logging implementation while application code continues to consume logging through the standard `ILogger<T>` abstraction.
+
+Serilog is configured through application configuration with environment-specific logging levels, category overrides and sinks.
+
+The Development environment writes logs to the console.
+
+The Production environment writes logs to daily rolling files with a 31-file retention limit.
+
+The Production log-file path is supplied through environment-based configuration rather than committed application configuration.
+
+#### Rationale
+
+- Serilog provides the logging implementation required by Heracles.Web while retaining integration with the standard .NET logging abstractions.
+- Keeping application code dependent on `ILogger<T>` avoids coupling components and services directly to Serilog.
+- Environment-specific configuration allows Development and Production to use different logging granularity without application-code changes.
+- Console logging provides appropriate local development diagnostics.
+- Rolling file logging provides persistent diagnostics for the locally hosted Production environment.
+- A retention limit prevents Production log files from accumulating indefinitely.
+- Keeping the Production log-file path outside committed configuration allows the deployment environment to control the physical logging location.
+- Environment-based configuration allows local DotNetEnv configuration, IIS App Pool environment variables and future hosting mechanisms to supply deployment-specific values without changing the application implementation.

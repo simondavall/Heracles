@@ -238,8 +238,14 @@ Data Protection configuration and certificate loading are validated during appli
 
 ## Logging
 
-Heracles.Web uses the ASP.NET Core logging infrastructure and Microsoft.Extensions.Logging.
+Heracles.Web uses Serilog as its logging implementation.
 
-Application code uses ILogger<T> where application-level logging is required.
+Application code continues to consume logging through `ILogger<T>` so logging remains integrated with the standard .NET dependency-injection and logging abstractions.
 
-Logging levels are controlled through application configuration.
+Serilog configuration is environment-specific and supplied through application configuration.
+
+The Development environment writes logs to the console. The Production environment writes logs to daily rolling files with a 31-file retention limit.
+
+Logging levels and category overrides are configured independently for each environment so logging granularity can be appropriate to the environment.
+
+The Production log-file path is supplied through environment-based configuration rather than committed application configuration. Local execution uses DotNetEnv while hosted environments use their normal environment-variable configuration mechanism.
