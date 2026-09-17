@@ -282,3 +282,18 @@ Persisted UserState is intentionally limited to non-sensitive preferences. Secre
 
 The persisted JSON schema is allowed to evolve naturally while requirements remain simple. Unknown JSON properties are ignored when loading and removed on subsequent saves. Explicit schema versioning or migration infrastructure will only be introduced if a demonstrated compatibility requirement arises.
 
+### Theme preference
+
+Heracles.Web supports light and dark application themes through the central MudBlazor `HeraclesTheme`.
+
+The user's explicit theme preference is stored through browser-local `UserState` as a nullable `IsDarkMode` value.
+
+Theme resolution follows these rules:
+
+- `IsDarkMode == null` uses the browser/system colour-scheme preference.
+- `IsDarkMode == false` explicitly selects the light theme.
+- `IsDarkMode == true` explicitly selects the dark theme.
+
+The browser/system preference remains active until the user explicitly selects a theme. Once an explicit preference exists, subsequent system theme changes do not change the application theme.
+
+Theme selection is presented as a single action-oriented icon toggle. The user can switch directly between light and dark themes; there is intentionally no UI for returning to automatic system preference.

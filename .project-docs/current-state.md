@@ -13,11 +13,11 @@ where development should continue.
 
 # Current task
 
-- Persist and simplify theme preference.
+- Create staging environment
 
 # Remaining milestone tasks
 
-- Create staging environment.
+- None
 
 # Completed work
 
@@ -99,3 +99,12 @@ where development should continue.
 - Verified UserState persistence across page reloads and application restarts.
 - Verified missing and invalid persisted state fall back to default UserState.
 - Verified persisted JSON tolerates removed properties and redundant properties are removed on subsequent saves.
+- Persisted explicit light and dark theme preferences through browser-local UserState.
+- Added system colour-scheme fallback when no explicit theme preference exists.
+- Retained system theme change monitoring while no explicit preference exists.
+- Explicit user theme selection now takes precedence over subsequent system preference changes.
+- Replaced the System / Light / Dark theme selector with a single action-oriented theme toggle.
+- Removed the redundant ThemeMode state model.
+- Verified light and dark theme selections persist across page refreshes and application restarts.
+- Verified system theme preference remains the default until the user explicitly selects a theme.
+- Verified immediate light/dark theme switching across the application.
