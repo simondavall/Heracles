@@ -11,43 +11,42 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<div class="@(_themeReady ? null : "theme-loading")">
-    <MudLayout>
-        <MudAppBar Elevation="1">
-            <MudText Typo="Typo.h6">Heracles</MudText>
 
-            <MudSpacer />
+<MudLayout>
+    <MudAppBar Elevation="1">
+        <MudText Typo="Typo.h6">Heracles</MudText>
 
-            <MudTooltip Text="@ThemeToggleText">
-                <MudIconButton Icon="@ThemeToggleIcon"
-                               Color="Color.Inherit"
-                               OnClick="ToggleThemeAsync"
-                               aria-label="@ThemeToggleText" />
-            </MudTooltip>
+        <MudSpacer />
 
-            <AuthorizeView>
-                <Authorized>
-                    <MudButton Href="https://soteria.local/Account/Manage"
-                               Target="_blank"
-                               rel="noopener noreferrer"
-                               Variant="Variant.Text"
-                               Color="Color.Secondary">
-                        @DisplayName(context.User)
-                    </MudButton>
+        <MudTooltip Text="@ThemeToggleText">
+            <MudIconButton Icon="@ThemeToggleIcon"
+                           Color="Color.Inherit"
+                           OnClick="ToggleThemeAsync"
+                           aria-label="@ThemeToggleText" />
+        </MudTooltip>
 
-                    <MudButton Color="Color.Inherit"
-                               Variant="Variant.Text"
-                               Href="/authentication/logout">
-                        Log Out
-                    </MudButton>
-                </Authorized>
-            </AuthorizeView>
-        </MudAppBar>
+        <AuthorizeView>
+            <Authorized>
+                <MudButton Href="https://soteria.local/Account/Manage"
+                           Target="_blank"
+                           rel="noopener noreferrer"
+                           Variant="Variant.Text"
+                           Color="Color.Secondary">
+                    @DisplayName(context.User)
+                </MudButton>
 
-        <MudMainContent>
-            <MudContainer MaxWidth="MaxWidth.Large" Class="mt-8">
-                @Body
-            </MudContainer>
-        </MudMainContent>
-    </MudLayout>
-</div>
+                <MudButton Color="Color.Inherit"
+                           Variant="Variant.Text"
+                           Href="/authentication/logout">
+                    Log Out
+                </MudButton>
+            </Authorized>
+        </AuthorizeView>
+    </MudAppBar>
+
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Large" Class="mt-8">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>

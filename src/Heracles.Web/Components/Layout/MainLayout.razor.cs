@@ -9,10 +9,9 @@ public partial class MainLayout
 {
     [Inject]
     private UserStateService UserStateService { get; set; } = null!;
-
+    
     private MudThemeProvider? _themeProvider;
     private bool _isDarkMode;
-    private bool _themeReady;
 
     private string ThemeToggleIcon => _isDarkMode
         ? Icons.Material.Filled.LightMode
@@ -30,8 +29,7 @@ public partial class MainLayout
         _isDarkMode = UserStateService.State.IsDarkMode ?? await _themeProvider.GetSystemDarkModeAsync();
 
         await _themeProvider.WatchSystemDarkModeAsync(OnSystemThemeChangedAsync);
-        _themeReady = true;
-
+        
         StateHasChanged();
     }
 

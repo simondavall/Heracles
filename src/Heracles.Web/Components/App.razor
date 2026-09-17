@@ -20,28 +20,5 @@
     <ReconnectModal />
     <script src="@Assets["_framework/blazor.web.js"]"></script>
     <script src="@Assets["_content/MudBlazor/MudBlazor.min.js"]"></script>
-    <script>
-        (() => {
-            let isDarkMode;
-    
-            try {
-                const json = localStorage.getItem("heracles.userState");
-    
-                if (json) {
-                    const state = JSON.parse(json);
-    
-                    if (typeof state.IsDarkMode === "boolean")
-                        isDarkMode = state.IsDarkMode;
-                }
-            }
-            catch {
-                // UserStateService owns recovery from invalid persisted state.
-            }
-    
-            isDarkMode ??= window.matchMedia("(prefers-color-scheme: dark)").matches;
-    
-            document.documentElement.dataset.theme = isDarkMode ? "dark" : "light";
-        })();
-    </script>
     </body>
 </html>
