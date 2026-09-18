@@ -125,11 +125,11 @@ A clean, runnable Heracles.Web Blazor application with authentication, logging, 
             └───────────────────────────────────────┘
 ```
 
-- Create the main application layout.
-  - Create the Heracles application header.
-  - Create the main application body
+- ✓ Create the main application layout.
+  - ✓ Create the Heracles application header.
+  - ✓ Create the main application body
     - Create primary application navigation
-    - Create the main content area
+    - ✓ Create the main content area
 - Verify desktop, tablet and mobile layouts.
 
 **Deliverable**

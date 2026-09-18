@@ -2,11 +2,10 @@
 
 It provides a historical record of why important implementation decisions were made and helps prevent previously resolved discussions from being revisited without new evidence.
 
-2026-09-16
+## Separate host authentication from common Infrastructure
+(16-09-2026)
 
-### Separate host authentication from common Infrastructure
-
-#### Decision
+### Decision
 
 Heracles.Web authenticates users through Soteria using OpenID Connect rather than the legacy ASP.NET Core Identity implementation used by the existing MVC Web application.
 
@@ -18,7 +17,7 @@ Heracles.Web registers common Infrastructure without legacy Identity and configu
 
 Heracles.Web uses cookie authentication for its local authenticated session and OpenID Connect as its challenge mechanism. Application access requires authentication by default through the authorization fallback policy.
 
-#### Rationale
+### Rationale
 
 - Heracles.Web and the legacy MVC Web application use different authentication authorities.
 - Authentication configuration is a host concern and should not be introduced implicitly by common Infrastructure registration.
@@ -28,11 +27,10 @@ Heracles.Web uses cookie authentication for its local authenticated session and 
 - The legacy MVC application can continue using its existing Identity implementation while Heracles.Web migrates to Soteria.
 - The separation removes the unused legacy Identity authentication dependency from Heracles.Web without requiring migration of the retiring MVC application's Identity implementation.
 
-2026-09-16
+## Use certificate-protected persistent Data Protection keys
+(16-09-2026)
 
-### Use certificate-protected persistent Data Protection keys
-
-#### Decision
+### Decision
 
 Heracles.Web uses ASP.NET Core Data Protection with a persistent filesystem key ring.
 
@@ -46,7 +44,7 @@ The Data Protection certificate is separate from the HTTPS/TLS certificate.
 
 Heracles.Web uses `Heracles.Web` as its stable Data Protection application name.
 
-#### Rationale
+### Rationale
 
 - Data Protection keys must survive application restarts and deployments.
 - Persisted key material must be encrypted independently of filesystem permissions.
@@ -57,9 +55,10 @@ Heracles.Web uses `Heracles.Web` as its stable Data Protection application name.
 
 2026-09-17
 
-### Use Serilog for application logging
+## Use Serilog for application logging
+(17-09-2026)
 
-#### Decision
+### Decision
 
 Heracles.Web uses Serilog as its logging implementation while application code continues to consume logging through the standard `ILogger<T>` abstraction.
 
@@ -71,7 +70,7 @@ The Production environment writes logs to daily rolling files with a 31-file ret
 
 The Production log-file path is supplied through environment-based configuration rather than committed application configuration.
 
-#### Rationale
+### Rationale
 
 - Serilog provides the logging implementation required by Heracles.Web while retaining integration with the standard .NET logging abstractions.
 - Keeping application code dependent on `ILogger<T>` avoids coupling components and services directly to Serilog.
@@ -82,11 +81,10 @@ The Production log-file path is supplied through environment-based configuration
 - Keeping the Production log-file path outside committed configuration allows the deployment environment to control the physical logging location.
 - Environment-based configuration allows local DotNetEnv configuration, IIS App Pool environment variables and future hosting mechanisms to supply deployment-specific values without changing the application implementation.
 
-2026-09-17
+## Validate application configuration through HeraclesSettings
+(17-09-2026)
 
-### Validate application configuration through HeraclesSettings
-
-#### Decision
+### Decision
 
 Heracles application configuration is represented by strongly typed settings records in `Heracles.Application.Configuration`.
 
@@ -100,7 +98,7 @@ Settings objects are not registered with dependency injection unless a runtime c
 
 Infrastructure database registration continues to receive `IConfiguration` while the existing registration contract is shared with the legacy Web application.
 
-#### Rationale
+### Rationale
 
 - Application configuration should be validated once rather than requiring each consumer to retrieve and repeatedly validate configuration values.
 - Successfully created settings objects provide consumers with values that have already satisfied their startup validation requirements.
@@ -111,9 +109,10 @@ Infrastructure database registration continues to receive `IConfiguration` while
 - Reporting all detected configuration failures together provides more useful startup diagnostics than failing on the first invalid value.
 - Retaining the existing Infrastructure registration contract avoids changes to the legacy Web application during the Heracles.Web migration.
 
-## 2026-09-17 — Persist lightweight user state in browser LocalStorage
+## Persist lightweight user state in browser LocalStorage
+(17-09-2026)
 
-**Decision**
+### Decision
 
 Persist lightweight browser-specific user preferences through a scoped `UserStateService` in Heracles.Web.
 
@@ -121,7 +120,7 @@ UserState is stored as a single JSON document in browser LocalStorage and access
 
 Missing state resolves to default UserState. Invalid persisted JSON is discarded and reset to default state.
 
-**Rationale**
+### Rationale
 
 The anticipated preferences are small, browser-specific presentation settings that do not currently justify database persistence.
 
@@ -131,9 +130,10 @@ A single JSON document provides simple load/save behaviour while allowing straig
 
 Schema versioning and migration infrastructure are deferred until a concrete compatibility requirement exists.
 
-## 2026-09-17 — Persist explicit theme preference through UserState
+## Persist explicit theme preference through UserState
+(17-09-2026)
 
-**Decision**
+### Decision
 
 Use `UserState.IsDarkMode` as the persisted representation of the user's theme preference.
 
@@ -143,7 +143,7 @@ Replace the previous System / Light / Dark selector with a single action-oriente
 
 There is intentionally no UI mechanism for returning to automatic system preference after the user makes an explicit selection.
 
-**Rationale**
+### Rationale
 
 The nullable preference represents the required three states without maintaining a separate theme-mode abstraction.
 
@@ -151,3 +151,27 @@ Persisting only explicit user selections allows Heracles.Web to respect the syst
 
 A direct light/dark toggle keeps the frequently used interaction simple. Returning to system-controlled behaviour is not currently important enough to justify additional UI.
 
+## Preserve component-specific CSS ownership across MudBlazor component boundaries
+(18-09-2026)
+
+### Decision
+
+Heracles.Web keeps component-specific styling colocated with the owning Razor component in its `.razor.css` file.
+
+Application-wide CSS under `wwwroot` is reserved for styling genuinely shared by multiple components. Component-specific CSS is not moved into application-wide stylesheets solely because a MudBlazor component boundary prevents normal CSS-isolation selectors from reaching its rendered markup.
+
+Where MudBlazor natively represents a presentation requirement through its theme or component API, that mechanism is preferred.
+
+Where component-specific styling must reach markup rendered by a MudBlazor component, the owning Heracles component introduces the minimum structural markup required to establish an owned CSS-isolation scope and uses `::deep` to target the required rendered markup.
+
+This is an explicit compromise and should be reviewed if repeated use produces excessive structural markup or fragile dependencies on MudBlazor implementation details.
+
+### Rationale
+
+- Component markup and component-specific presentation should remain vertically colocated.
+- Moving private component styles into global CSS weakens ownership and makes the global stylesheet responsible for unrelated component implementation details.
+- Blazor CSS isolation does not automatically scope CSS to HTML rendered internally by child MudBlazor components.
+- An Heracles-owned wrapper provides a predictable CSS-isolation boundary from which `::deep` can deliberately cross into the child component.
+- MudBlazor's theme and component APIs remain preferable where they directly model the required presentation.
+- Additional wrapper markup is accepted as a visible technical compromise rather than hiding component-specific styling in application-wide CSS.
+- The approach can be reconsidered if experience across further components demonstrates that its structural or maintenance cost is too high.

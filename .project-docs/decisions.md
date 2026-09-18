@@ -46,6 +46,17 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 - Keep application-wide styling under `wwwroot`.
 - Define application colours through the Heracles theme and semantic palette rather than feature-specific literal colours where practical.
 
+# Styling
+
+- Use MudBlazor theming, CSS isolation and application-level styling to implement the Heracles visual design.
+- Use colocated `.razor.css` files for component-specific styling.
+- Keep application-wide styling under `wwwroot` for styles genuinely shared by multiple components.
+- Do not move component-specific styling into application-wide CSS solely to work around Blazor CSS isolation.
+- Prefer MudBlazor theme and component APIs when they directly represent the required presentation.
+- Where component-specific styling must target markup rendered inside a MudBlazor component, introduce the minimum Heracles-owned structural element required to establish the CSS-isolation scope and target the rendered markup using `::deep`.
+- Accept the additional structural markup as an explicit compromise in favour of preserving vertical ownership of component-specific styling.
+- Define application colours through the Heracles theme and semantic palette rather than feature-specific literal colours where practical.
+
 # Theming
 
 - Support light and dark themes as first-class application requirements.
