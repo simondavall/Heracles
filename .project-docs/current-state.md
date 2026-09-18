@@ -13,11 +13,12 @@ where development should continue.
 
 # Current task
 
-- Create staging environment
+- Create the main application layout.
 
 # Remaining milestone tasks
 
-- None
+- Create primary navigation component
+- Verify desktop, tablet and mobile layouts.
 
 # Completed work
 
@@ -108,3 +109,16 @@ where development should continue.
 - Verified light and dark theme selections persist across page refreshes and application restarts.
 - Verified system theme preference remains the default until the user explicitly selects a theme.
 - Verified immediate light/dark theme switching across the application.
+- Created staging environment
+- Published site to staging
+- Verified staging site working correctly
+- Created the permanent Heracles.Web main application layout.
+- Created the global Heracles application header.
+- Created the constrained application body and main content area.
+- Configured the AppBar to retain the Heracles dark background and light text in both light and dark themes.
+- Established the application body as theme-responsive while keeping the AppBar presentation invariant.
+- Established the primary navigation region ready for the primary navigation component.
+- Implemented responsive application-shell behaviour for desktop, tablet and mobile layouts.
+- Verified the application shell in light and dark themes.
+- Verified existing authentication, logout and theme persistence behaviour through the new application shell.
+- Established the MudBlazor CSS-isolation styling convention for component-specific presentation.

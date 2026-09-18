@@ -97,7 +97,7 @@ Heracles.Web has a reusable visual design system supporting light and dark theme
 - ✓ Implement HeraclesSettings
 - ✓ Implement LocalStorage for user state
 - ✓ Persist and simplify theme preference
-- Create staging environment
+- ✓ Create staging environment
 
 **Deliverable**
 
@@ -107,18 +107,30 @@ A clean, runnable Heracles.Web Blazor application with authentication, logging, 
 
 ## Milestone 1.4 – Application Shell
 
-- Create the main application layout.
-- Create the Heracles application header.
-- Display the Heracles identity.
-- Create authenticated user display.
-- Create primary application navigation.
-- Create the user/profile header.
-- Create the main content area.
-- Create responsive navigation behaviour.
-- Integrate theme selection.
-- Reproduce the general visual identity of the existing Heracles application.
+```text
+┌──────────────────────────────────────────────────────────────┐
+│ Global top AppBar: Heracles                         Logout   │
+└──────────────────────────────────────────────────────────────┘
+            ┌───────────────────────────────────────┐
+            │         Primary Navigation            │
+            ├───────────────────────────────────────┤
+            │                                       │
+            │                                       │
+            │                                       │
+            │         Main Content Area             │
+            │                                       │
+            │                                       │
+            │                                       │
+            │                                       │
+            └───────────────────────────────────────┘
+```
+
+- ✓ Create the main application layout.
+  - ✓ Create the Heracles application header.
+  - ✓ Create the main application body
+    - Create primary application navigation
+    - ✓ Create the main content area
 - Verify desktop, tablet and mobile layouts.
-- Verify light and dark themes.
 
 **Deliverable**
 

@@ -8,6 +8,7 @@
 .publish
 .env
 .data-protection
+.staging
 
 # User-specific files
 *.rsuser
