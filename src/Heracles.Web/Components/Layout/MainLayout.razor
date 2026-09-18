@@ -4,62 +4,64 @@
 
 <MudThemeProvider @ref="_themeProvider"
                   Theme="HeraclesTheme.Default"
-                  IsDarkMode="_isDarkMode"/>
+                  IsDarkMode="_isDarkMode" />
 
-<MudPopoverProvider/>
-<MudDialogProvider/>
-<MudSnackbarProvider/>
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
 
 <MudLayout>
     <div class="application-header">
-    <MudAppBar Elevation="0"
-               Fixed="true">
-        <div class="header-content">
-            <MudText Typo="Typo.h6"
-                     Color="Color.Inherit"
-                     Class="application-title">
-                Heracles
-            </MudText>
+        <MudAppBar Elevation="0"
+                   Fixed="true">
+            <div class="header-content">
+                <MudText Typo="Typo.h6"
+                         Color="Color.Inherit">
+                    Heracles
+                </MudText>
 
-            <MudSpacer/>
+                <MudSpacer />
 
-            <AuthorizeView>
-                <Authorized Context="auth">
-                    <MudButton Href="/account"
-                               Variant="Variant.Text"
-                               Color="Color.Inherit"
-                               StartIcon="@Icons.Material.Filled.AccountCircle"
-                               Class="user-button">
-                        @DisplayName(auth.User)
-                    </MudButton>
-
-                    <MudIconButton Icon="@ThemeToggleIcon"
+                <AuthorizeView>
+                    <Authorized Context="auth">
+                        <MudButton Href="https://soteria.local/account/manage"
+                                   Target="_blank"
+                                   Variant="Variant.Text"
                                    Color="Color.Inherit"
-                                   OnClick="ToggleThemeAsync"
-                                   Title="@ThemeToggleText"
-                                   aria-label="@ThemeToggleText"/>
+                                   StartIcon="@Icons.Material.Filled.AccountCircle">
+                            @DisplayName(auth.User)
+                        </MudButton>
 
-                    <MudIconButton Icon="@Icons.Material.Filled.Logout"
-                                   Color="Color.Inherit"
-                                   Href="/authentication/logout"
-                                   Title="Logout"
-                                   aria-label="Logout"/>
-                </Authorized>
-            </AuthorizeView>
-        </div>
-    </MudAppBar>
-    </div>
-    <MudMainContent Class="application-main">
-        <div class="application-body">
-            <div class="primary-navigation">
-                @* Primary navigation component will be added by the next task. *@
+                        <MudIconButton Icon="@ThemeToggleIcon"
+                                       Color="Color.Inherit"
+                                       OnClick="ToggleThemeAsync"
+                                       Title="@ThemeToggleText"
+                                       aria-label="@ThemeToggleText" />
+
+                        <MudIconButton Icon="@Icons.Material.Filled.Logout"
+                                       Color="Color.Inherit"
+                                       Href="/authentication/logout"
+                                       Title="Logout"
+                                       aria-label="Logout" />
+                    </Authorized>
+                </AuthorizeView>
             </div>
+        </MudAppBar>
+    </div>
 
-            <main class="main-content">
-                @Body
-            </main>
-        </div>
-    </MudMainContent>
+    <div class="application-main">
+        <MudMainContent>
+            <div class="application-body">
+                <div class="primary-navigation">
+                    @* Primary navigation component will be added by the next task. *@
+                </div>
+
+                <main class="main-content">
+                    @Body
+                </main>
+            </div>
+        </MudMainContent>
+    </div>
 </MudLayout>
 
 <div id="blazor-error-ui" data-nosnippet>
