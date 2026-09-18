@@ -8,6 +8,9 @@ public static class HeraclesTheme
     {
         PaletteLight = new PaletteLight
         {
+            AppbarBackground = "#1B222A",
+            AppbarText = "#F1F4F6",
+            
             Primary = "#1976D2",
             Secondary = "#546E7A",
 
@@ -26,6 +29,9 @@ public static class HeraclesTheme
 
         PaletteDark = new PaletteDark
         {
+            AppbarBackground = "#1B222A",
+            AppbarText = "#F1F4F6",
+            
             Primary = "#42A5F5",
             Secondary = "#90A4AE",
 

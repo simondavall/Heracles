@@ -13,11 +13,12 @@ where development should continue.
 
 # Current task
 
-- Create staging environment
+- Create the main application layout.
 
 # Remaining milestone tasks
 
-- None
+- Create primary navigation component
+- Verify desktop, tablet and mobile layouts.
 
 # Completed work
 
@@ -108,3 +109,6 @@ where development should continue.
 - Verified light and dark theme selections persist across page refreshes and application restarts.
 - Verified system theme preference remains the default until the user explicitly selects a theme.
 - Verified immediate light/dark theme switching across the application.
+- Created staging environment
+- Published site to staging
+- Verified staging site working correctly

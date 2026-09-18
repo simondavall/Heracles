@@ -1,52 +1,69 @@
 ﻿@inherits LayoutComponentBase
-
 @using Heracles.Web.Components.Theme
 @using Microsoft.AspNetCore.Components.Authorization
 
 <MudThemeProvider @ref="_themeProvider"
-                  Theme="@HeraclesTheme.Default"
-                  IsDarkMode="@_isDarkMode" />
+                  Theme="HeraclesTheme.Default"
+                  IsDarkMode="_isDarkMode"/>
 
-<MudPopoverProvider />
-<MudDialogProvider />
-<MudSnackbarProvider />
-
+<MudPopoverProvider/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
 
 <MudLayout>
-    <MudAppBar Elevation="1">
-        <MudText Typo="Typo.h6">Heracles</MudText>
+    <div class="application-header">
+    <MudAppBar Elevation="0"
+               Fixed="true">
+        <div class="header-content">
+            <MudText Typo="Typo.h6"
+                     Color="Color.Inherit"
+                     Class="application-title">
+                Heracles
+            </MudText>
 
-        <MudSpacer />
+            <MudSpacer/>
 
-        <MudTooltip Text="@ThemeToggleText">
-            <MudIconButton Icon="@ThemeToggleIcon"
-                           Color="Color.Inherit"
-                           OnClick="ToggleThemeAsync"
-                           aria-label="@ThemeToggleText" />
-        </MudTooltip>
+            <AuthorizeView>
+                <Authorized Context="auth">
+                    <MudButton Href="/account"
+                               Variant="Variant.Text"
+                               Color="Color.Inherit"
+                               StartIcon="@Icons.Material.Filled.AccountCircle"
+                               Class="user-button">
+                        @DisplayName(auth.User)
+                    </MudButton>
 
-        <AuthorizeView>
-            <Authorized>
-                <MudButton Href="https://soteria.local/Account/Manage"
-                           Target="_blank"
-                           rel="noopener noreferrer"
-                           Variant="Variant.Text"
-                           Color="Color.Secondary">
-                    @DisplayName(context.User)
-                </MudButton>
+                    <MudIconButton Icon="@ThemeToggleIcon"
+                                   Color="Color.Inherit"
+                                   OnClick="ToggleThemeAsync"
+                                   Title="@ThemeToggleText"
+                                   aria-label="@ThemeToggleText"/>
 
-                <MudButton Color="Color.Inherit"
-                           Variant="Variant.Text"
-                           Href="/authentication/logout">
-                    Log Out
-                </MudButton>
-            </Authorized>
-        </AuthorizeView>
+                    <MudIconButton Icon="@Icons.Material.Filled.Logout"
+                                   Color="Color.Inherit"
+                                   Href="/authentication/logout"
+                                   Title="Logout"
+                                   aria-label="Logout"/>
+                </Authorized>
+            </AuthorizeView>
+        </div>
     </MudAppBar>
+    </div>
+    <MudMainContent Class="application-main">
+        <div class="application-body">
+            <div class="primary-navigation">
+                @* Primary navigation component will be added by the next task. *@
+            </div>
 
-    <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.Large" Class="mt-8">
-            @Body
-        </MudContainer>
+            <main class="main-content">
+                @Body
+            </main>
+        </div>
     </MudMainContent>
 </MudLayout>
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>
