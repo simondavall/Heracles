@@ -169,12 +169,12 @@ Users can browse and select their existing activities using a native Blazor acti
   - ✓ Display Activity icon.
   - ✓ Display Title
   - ✓ Display Date and Time.
-- Create reusable activity metric components.
-  - Display activity distance.
-  - Display activity duration.
-  - Display average pace.
-  - Display activity rank.
-- Verify light and dark theme presentation.
+- ✓ Create reusable activity metric components.
+  - ✓ Display activity distance.
+  - ✓ Display activity duration.
+  - ✓ Display average pace.
+  - ✓ Display activity rank.
+- ✓ Verify light and dark theme presentation.
 
 **Deliverable**
 

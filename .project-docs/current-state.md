@@ -9,19 +9,25 @@ where development should continue.
 
 # Current milestone
 
-- Milestone 2.2 – Activity Details
+- Milestone 2.3 – Activity Map
 
 # Current task
 
-- Create reusable activity metric components.
-    - Display activity distance.
-    - Display activity duration.
-    - Display average pace.
-    - Display activity rank.
+- Create the activity map component.
+  - Establish isolated JavaScript map integration.
+  - Initialise the map through Blazor lifecycle events.
+  - Display the activity route.
+  - Display route start and end markers.
+  - Fit the map to the activity route.
+  - Handle activity changes through Blazor navigation and component lifecycle events.
+  - Dispose map resources when the component is removed.
+  - Configure Mapbox access token handling.
+  - Implement map behaviour through the isolated activity map integration.
+  - Verify map behaviour during Blazor navigation.
 
 # Remaining milestone tasks
 
-- Verify light and dark theme presentation.
+- None
 
 # Completed work
 
@@ -158,3 +164,18 @@ where development should continue.
 - Retained the existing Activity Navigation empty state with blank Activity Details when no activities exist.
 - Implemented responsive Activity Details presentation with Activity Navigation above Activity Details on mobile viewports.
 - Verified Activity Title presentation in light and dark themes.
+- Created the Activity Metrics Bar feature component.
+- Created a reusable Activity Metric presentation component with consistent dimensions.
+- Added Distance, Duration, Average Pace and Rank metrics.
+- Added the existing metric images for Distance, Duration, Average Pace and Rank.
+- Preserved the existing two-decimal invariant-culture distance formatting.
+- Preserved the existing duration and average pace formatting.
+- Added activity rank and comparative activity count using the existing Application activity service.
+- Established an initial fixed metric order of Distance, Duration, Average Pace and Rank.
+- Implemented equal-width metric presentation independent of metric content or order.
+- Right-aligned metric values so variable-length values expand towards their metric image without changing the metric dimensions.
+- Implemented four-column Metrics Bar presentation for desktop and tablet layouts.
+- Implemented two-column Metrics Bar presentation for mobile layouts.
+- Implemented theme-aware Metrics Bar presentation.
+- Verified metric values update when the selected activity changes.
+- Verified Metrics Bar presentation across desktop, tablet and mobile layouts.
