@@ -13,18 +13,14 @@ where development should continue.
 
 # Current task
 
-- Create the activity title component.
-    - Display Activity icon.
-    - Display Title
-    - Display Date and Time.
-
-# Remaining milestone tasks
-
 - Create reusable activity metric components.
     - Display activity distance.
     - Display activity duration.
     - Display average pace.
     - Display activity rank.
+
+# Remaining milestone tasks
+
 - Verify light and dark theme presentation.
 
 # Completed work
@@ -156,3 +152,9 @@ where development should continue.
 - Verified activity year and month expansion and collapse.
 - Verified the current activity year and month are expanded on initial load.
 - Verified activity selection and Blazor route navigation.
+- Created the Activity Title feature component.
+- Added activity type image, title and date time.
+- Added automatic loading of the most recent activity when entering the application without an activity route.
+- Retained the existing Activity Navigation empty state with blank Activity Details when no activities exist.
+- Implemented responsive Activity Details presentation with Activity Navigation above Activity Details on mobile viewports.
+- Verified Activity Title presentation in light and dark themes.

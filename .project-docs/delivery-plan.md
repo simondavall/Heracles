@@ -165,10 +165,10 @@ Users can browse and select their existing activities using a native Blazor acti
 
 ## Milestone 2.2 – Activity Details
 
-- Create the activity title component.
-  - Display Activity icon.
-  - Display Title
-  - Display Date and Time.
+- ✓ Create the activity title component.
+  - ✓ Display Activity icon.
+  - ✓ Display Title
+  - ✓ Display Date and Time.
 - Create reusable activity metric components.
   - Display activity distance.
   - Display activity duration.
