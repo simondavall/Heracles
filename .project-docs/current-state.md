@@ -13,11 +13,10 @@ where development should continue.
 
 # Current task
 
-- Create the main application layout.
+- Create primary navigation component
 
 # Remaining milestone tasks
 
-- Create primary navigation component
 - Verify desktop, tablet and mobile layouts.
 
 # Completed work
