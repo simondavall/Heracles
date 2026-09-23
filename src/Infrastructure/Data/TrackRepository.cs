@@ -12,6 +12,7 @@ using Heracles.Application.Services.Import;
 using Heracles.Application.Services.Import.Progress;
 using Heracles.Application.TrackAggregate;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Heracles.Infrastructure.Data
 {
@@ -19,14 +20,16 @@ namespace Heracles.Infrastructure.Data
     {
         private readonly IServiceProvider _services;
         private readonly IImportProgressService _progressService;
+        private readonly ILogger<TrackRepository> _logger;
 
         private readonly IDbContextFactory<GpxDbContext> _contextFactory;
         
-        public TrackRepository(IDbContextFactory<GpxDbContext> contextFactory, IServiceProvider services, IImportProgressService progressService) : base(contextFactory)
+        public TrackRepository(IDbContextFactory<GpxDbContext> contextFactory, IServiceProvider services, IImportProgressService progressService, ILogger<TrackRepository> logger) : base(contextFactory)
         {
             _contextFactory = contextFactory;
             _services = services;
             _progressService = progressService;
+            _logger = logger;
         }
 
         public async Task SaveImportedFilesAsync(ImportFilesResult importFilesResult, TrackImportProgress trackProgress, CancellationToken cancellationToken)
@@ -53,6 +56,7 @@ namespace Heracles.Infrastructure.Data
             catch (Exception e)
             {
                 await transaction.RollbackAsync(cancellationToken);
+                _logger.LogError(e, "Error Importing Files");
                 throw;
             }
             finally

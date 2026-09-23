@@ -1,15 +1,17 @@
 ﻿@page "/"
 @page "/activity/{ActivityId:guid}"
 
-
+@using Heracles.Web.Components.Features.ActivityDetails
 
 <PageTitle>Heracles</PageTitle>
 
 <div class="activity-page">
     <ActivityNavigation ActivityId="@ActivityId" />
-</div>
 
-@code {
-    [Parameter]
-    public Guid? ActivityId { get; set; }
-}
+    <main class="activity-details">
+        @if (_activity is not null)
+        {
+            <ActivityTitle Track="@_activity" />
+        }
+    </main>
+</div>

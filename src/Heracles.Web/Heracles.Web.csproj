@@ -21,6 +21,7 @@
 
     <ItemGroup>
       <_ContentIncludedByDefault Remove="Components\Activities\ActivityNavigation.razor" />
+      <_ContentIncludedByDefault Remove="Components\Features\Activities\ActivityDetails\ActivityTitle.razor" />
     </ItemGroup>
 
 </Project>
