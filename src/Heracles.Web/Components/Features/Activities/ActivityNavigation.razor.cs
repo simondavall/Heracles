@@ -154,4 +154,16 @@ public partial class ActivityNavigation
             ? "activity-list-item selected"
             : "activity-list-item";
     }
+    
+    private string GetYearHeadingClass(int year) {
+        return IsYearExpanded(year)
+            ? "activity-heading activity-year-heading selected"
+            : "activity-heading activity-year-heading";
+    }
+
+    private string GetMonthHeadingClass(int activityYearMonth) {
+        return IsMonthExpanded(activityYearMonth)
+            ? "activity-heading activity-month-heading selected"
+            : "activity-heading activity-month-heading";
+    }
 }

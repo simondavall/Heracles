@@ -29,7 +29,7 @@ else
                                    ExpandedChanged="@(expanded => YearExpandedChangedAsync(year.ActivityYear, expanded))"
                                    Class="activity-year">
                     <TitleContent>
-                        <div class="activity-heading activity-year-heading">
+                        <div class="@GetYearHeadingClass(year.ActivityYear)">
                             <span class="activity-navigation-title">
                                 @year.ActivityYear
                             </span>
@@ -49,7 +49,7 @@ else
                                                    ExpandedChanged="@(expanded => MonthExpandedChangedAsync(month, expanded))"
                                                    Class="activity-month">
                                     <TitleContent>
-                                        <div class="activity-heading activity-month-heading">
+                                        <div class="@GetMonthHeadingClass(month.ActivityYearMonth)">
                                             <span class="activity-navigation-title">
                                                 @GetMonthName(month.ActivityYearMonth)
                                             </span>
@@ -110,9 +110,7 @@ else
                                                                     @activity.Distance @activity.DistanceUnits
                                                                 </span>
                                                             </span>
-
-                                                            <MudIcon Icon="@Icons.Material.Filled.ChevronRight"
-                                                                     Class="activity-chevron" />
+                                                            
                                                         </MudButton>
                                                     }
                                                 }
