@@ -5,19 +5,27 @@ where development should continue.
 
 # Current phase
 
-- Phase 1 – Application Foundation
+- Phase 2 – Activity Management
 
 # Current milestone
 
-- Milestone 1.3 - Foundation services
+- Milestone 2.1 – Activity Navigation
 
 # Current task
 
-- Create primary navigation component
+- Create the activity navigation component.
+  - Display activity months.
+  - Display activity counts by month.
+  - Expand and collapse activity months.
+  - Load activities for the selected month.
+  - Display activity summaries.
+  - Highlight the selected activity.
+  - Navigate between activities using Blazor routing.
+  - Add activity navigation loading states.
+  - Add activity navigation empty states.
+  - Implement activity navigation interactions using Blazor component state.
 
 # Remaining milestone tasks
-
-- Verify desktop, tablet and mobile layouts.
 
 # Completed work
 
@@ -121,3 +129,12 @@ where development should continue.
 - Verified the application shell in light and dark themes.
 - Verified existing authentication, logout and theme persistence behaviour through the new application shell.
 - Established the MudBlazor CSS-isolation styling convention for component-specific presentation.
+- Created the primary navigation component.
+- Added authenticated user summary with profile image and display name.
+- Added Active Since presentation using the earliest recorded activity with the existing UTC-now fallback.
+- Added route-aware Dashboard, Reports and Import navigation.
+- Added distinct inactive, hover and selected navigation states.
+- Added Reports and Import placeholder pages as routable navigation targets.
+- Implemented theme-aware primary navigation presentation for light and dark modes.
+- Implemented responsive primary navigation behaviour.
+- Kept primary-navigation presentation colocated in the component's isolated stylesheet.
