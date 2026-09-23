@@ -13,6 +13,7 @@ namespace Heracles.Application.Interfaces
         Task<ActivityInfo> GetActivityInfoAsync(Guid trackId);
         Task<List<ActivityListItem>> GetActivitiesByDateAsync(DateTime startDate, Guid? trackId = null);
         Task<IList<ActivityListMonth>> GetActivitiesSummaryByMonthsAsync(Track track);
+        Task<IList<ActivityListYear>> GetActivitiesSummaryByYearAsync(Track track);
         Task<Track> GetFirstEverActivityAsync();
         Task<Track> GetMostRecentActivityAsync();
         Task<(int rank, int count)> GetActivityRankAsync(Track track);

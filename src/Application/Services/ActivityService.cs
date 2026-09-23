@@ -91,6 +91,11 @@ namespace Heracles.Application.Services
 
             return activityMonthlySummary;
         }
+        
+        public async Task<IList<ActivityListYear>> GetActivitiesSummaryByYearAsync(Track track)
+        {
+            return await _trackRepository.GetTrackSummaryByYearAsync();
+        }
 
         public async Task<Track> GetFirstEverActivityAsync()
         {

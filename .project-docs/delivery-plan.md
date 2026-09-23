@@ -142,21 +142,20 @@ A recognisable Heracles application shell providing the shared layout and naviga
 
 ## Milestone 2.1 – Activity Navigation
 
-- Create the activity navigation component.
-  - Display activity years.
-  - Display activity counts by years.
-  - Expand and collapse activity years.
-  - Load activities for the selected month.
-  - Display activity months.
-  - Display actiivity counts by months.
-  - Expand and colaspse activity months.
-  - Load activities for the selected month.
-  - Display activity summaries.
-  - Highlight the selected activity.
-  - Navigate between activities using Blazor routing.
-  - Add activity navigation loading states.
-  - Add activity navigation empty states.
-  - Implement activity navigation interactions using Blazor component state.
+- ✓ Create the activity navigation component.
+  - ✓ Display activity years.
+  - ✓ Display activity counts by years.
+  - ✓ Expand and collapse activity years.
+  - ✓ Display activity months.
+  - ✓ Display activity counts by months.
+  - ✓ Expand and collapse activity months.
+  - ✓ Load activities for the selected month.
+  - ✓ Display activity summaries.
+  - ✓ Highlight the selected activity.
+  - ✓ Navigate between activities using Blazor routing.
+  - ✓ Add activity navigation loading states.
+  - ✓ Add activity navigation empty states.
+  - ✓ Implement activity navigation interactions using Blazor component state.
 
 **Deliverable**
 
@@ -166,17 +165,15 @@ Users can browse and select their existing activities using a native Blazor acti
 
 ## Milestone 2.2 – Activity Details
 
-- Create the activity page.
-- Load activities by route identifier.
-- Display the activity title.
-- Display the activity date and time.
+- Create the activity title component.
+  - Display Activity icon.
+  - Display Title
+  - Display Date and Time.
 - Create reusable activity metric components.
-- Display activity distance.
-- Display activity duration.
-- Display average pace.
-- Display activity rank.
-- Support activity-specific metric presentation.
-- Reproduce the information hierarchy of the existing activity page.
+  - Display activity distance.
+  - Display activity duration.
+  - Display average pace.
+  - Display activity rank.
 - Verify light and dark theme presentation.
 
 **Deliverable**

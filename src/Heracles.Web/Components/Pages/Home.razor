@@ -1,30 +1,15 @@
 ﻿@page "/"
+@page "/activity/{ActivityId:guid}"
 
-@using Heracles.Application.Interfaces
-@using Heracles.Application.TrackAggregate
 
-@inject IActivityService ActivityService
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Heracles</PageTitle>
 
-<h1>Heracles</h1>
-
-@if (_activity is null)
-{
-    <MudText>No activity loaded.</MudText>
-}
-else
-{
-    <MudText>Most recent activity: @_activity.ActivityType</MudText>
-    <MudText>Date: @_activity.Time</MudText>
-    <MudText>Distance: @_activity.Distance km</MudText>
-}
+<div class="activity-page">
+    <ActivityNavigation ActivityId="@ActivityId" />
+</div>
 
 @code {
-    private Track? _activity;
-
-    protected override async Task OnInitializedAsync()
-    {
-        _activity = await ActivityService.GetMostRecentActivityAsync();
-    }
+    [Parameter]
+    public Guid? ActivityId { get; set; }
 }

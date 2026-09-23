@@ -9,23 +9,23 @@ where development should continue.
 
 # Current milestone
 
-- Milestone 2.1 – Activity Navigation
+- Milestone 2.2 – Activity Details
 
 # Current task
 
-- Create the activity navigation component.
-  - Display activity months.
-  - Display activity counts by month.
-  - Expand and collapse activity months.
-  - Load activities for the selected month.
-  - Display activity summaries.
-  - Highlight the selected activity.
-  - Navigate between activities using Blazor routing.
-  - Add activity navigation loading states.
-  - Add activity navigation empty states.
-  - Implement activity navigation interactions using Blazor component state.
+- Create the activity title component.
+    - Display Activity icon.
+    - Display Title
+    - Display Date and Time.
 
 # Remaining milestone tasks
+
+- Create reusable activity metric components.
+    - Display activity distance.
+    - Display activity duration.
+    - Display average pace.
+    - Display activity rank.
+- Verify light and dark theme presentation.
 
 # Completed work
 
@@ -138,3 +138,21 @@ where development should continue.
 - Implemented theme-aware primary navigation presentation for light and dark modes.
 - Implemented responsive primary navigation behaviour.
 - Kept primary-navigation presentation colocated in the component's isolated stylesheet.
+- Created the Activity Navigation feature component.
+- Added year-based activity navigation with activity counts.
+- Added month-based navigation beneath expanded years with activity counts.
+- Implemented year and month expansion using MudBlazor expansion panels.
+- Initialised the navigator with the current activity year and month expanded.
+- Loaded activity summaries for the selected month through the existing Application activity service.
+- Added activity summary presentation with date, activity type and distance.
+- Added selected activity highlighting.
+- Added selected year and month presentation using the application primary colour.
+- Added Blazor navigation to `/activity/{id}` when an activity is selected.
+- Added `/activity/{id:guid}` as an activity route on the Home page ready for Activity Details.
+- Added Activity Navigation loading and empty states.
+- Kept Activity Navigation presentation colocated in its isolated stylesheet.
+- Implemented theme-aware Activity Navigation presentation.
+- Implemented responsive Activity Navigation presentation.
+- Verified activity year and month expansion and collapse.
+- Verified the current activity year and month are expanded on initial load.
+- Verified activity selection and Blazor route navigation.
