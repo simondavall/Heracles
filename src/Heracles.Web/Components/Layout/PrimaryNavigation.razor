@@ -1,0 +1,59 @@
+﻿
+<div class="primary-navigation">
+    <AuthorizeView>
+        <Authorized Context="auth">
+            <div class="user-summary">
+                <div class="profile">
+                    <img src="images/profile-med.jpg"
+                         alt="" />
+                </div>
+
+                <div class="user-details">
+                    <div class="display-name">
+                        @DisplayName(auth.User)
+                    </div>
+
+                    <div class="active-since">
+                        Active since @ActiveSince
+                    </div>
+                </div>
+            </div>
+        </Authorized>
+    </AuthorizeView>
+
+    <nav class="navigation-items" aria-label="Primary navigation">
+        <div class="navigation-item">
+            <NavLink href="/"
+                     Match="NavLinkMatch.All">
+                <MudIcon Icon="@Icons.Material.Filled.Home"
+                         Class="navigation-icon" />
+
+                <span class="navigation-label">
+                    Dashboard
+                </span>
+            </NavLink>
+        </div>
+
+        <div class="navigation-item">
+            <NavLink href="/reports">
+                <MudIcon Icon="@Icons.Material.Filled.BarChart"
+                         Class="navigation-icon" />
+
+                <span class="navigation-label">
+                    Reports
+                </span>
+            </NavLink>
+        </div>
+
+        <div class="navigation-item">
+            <NavLink href="/import">
+                <MudIcon Icon="@Icons.Material.Filled.Input"
+                         Class="navigation-icon" />
+
+                <span class="navigation-label">
+                    Import
+                </span>
+            </NavLink>
+        </div>
+    </nav>
+</div>

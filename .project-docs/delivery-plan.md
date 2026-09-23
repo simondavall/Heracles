@@ -128,9 +128,9 @@ A clean, runnable Heracles.Web Blazor application with authentication, logging, 
 - ✓ Create the main application layout.
   - ✓ Create the Heracles application header.
   - ✓ Create the main application body
-    - Create primary application navigation
+    - ✓ Create primary application navigation
     - ✓ Create the main content area
-- Verify desktop, tablet and mobile layouts.
+- ✓ Verify desktop, tablet and mobile layouts.
 
 **Deliverable**
 
@@ -143,16 +143,20 @@ A recognisable Heracles application shell providing the shared layout and naviga
 ## Milestone 2.1 – Activity Navigation
 
 - Create the activity navigation component.
-- Display activity months.
-- Display activity counts by month.
-- Expand and collapse activity months.
-- Load activities for the selected month.
-- Display activity summaries.
-- Highlight the selected activity.
-- Navigate between activities using Blazor routing.
-- Add activity navigation loading states.
-- Add activity navigation empty states.
-- Implement activity navigation interactions using Blazor component state.
+  - Display activity years.
+  - Display activity counts by years.
+  - Expand and collapse activity years.
+  - Load activities for the selected month.
+  - Display activity months.
+  - Display actiivity counts by months.
+  - Expand and colaspse activity months.
+  - Load activities for the selected month.
+  - Display activity summaries.
+  - Highlight the selected activity.
+  - Navigate between activities using Blazor routing.
+  - Add activity navigation loading states.
+  - Add activity navigation empty states.
+  - Implement activity navigation interactions using Blazor component state.
 
 **Deliverable**
 

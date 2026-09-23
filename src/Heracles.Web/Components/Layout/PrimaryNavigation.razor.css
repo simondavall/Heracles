@@ -1,0 +1,283 @@
+﻿.primary-navigation {
+    --navigation-height: 80px;
+
+    --navigation-background: color-mix(
+            in srgb,
+            var(--mud-palette-surface) 92%,
+            var(--mud-palette-text-primary) 8%);
+
+    --navigation-user-background: var(--navigation-background);
+    --navigation-profile-background: var(--mud-palette-surface);
+    --navigation-selected-background: var(--mud-palette-surface);
+
+    --navigation-border: var(--mud-palette-divider);
+
+    --navigation-text: var(--mud-palette-text-primary);
+    --navigation-secondary-text: var(--mud-palette-text-secondary);
+    --navigation-icon: var(--mud-palette-text-secondary);
+    --navigation-accent: var(--mud-palette-primary);
+
+    display: flex;
+    width: 100%;
+    height: var(--navigation-height);
+    overflow: hidden;
+
+    color: var(--navigation-text);
+    background-color: var(--navigation-background);
+    border-bottom: 1px solid var(--navigation-border);
+}
+
+/*
+ * User summary
+ */
+
+.user-summary {
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 100%;
+    background-color: var(--navigation-user-background);
+}
+
+.profile {
+    display: flex;
+    flex: 0 0 var(--navigation-height);
+    width: var(--navigation-height);
+    height: var(--navigation-height);
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--navigation-profile-background);
+    border-right: 1px solid var(--navigation-border);
+}
+
+.profile img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-details {
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 0 24px;
+}
+
+.display-name {
+    overflow: hidden;
+
+    color: var(--navigation-text);
+    font-size: 1.25rem;
+    font-weight: 400;
+    line-height: 1.2;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.active-since {
+    margin-top: 4px;
+
+    color: var(--navigation-secondary-text);
+    font-size: 0.75rem;
+    font-weight: 400;
+    line-height: 1.2;
+
+    white-space: nowrap;
+}
+
+/*
+ * Navigation
+ */
+
+.navigation-items {
+    display: flex;
+    flex: 0 0 auto;
+    height: 100%;
+}
+
+.navigation-item {
+    width: 100px;
+    height: 100%;
+
+    border-left: 1px solid var(--navigation-border);
+}
+
+.navigation-item:last-child {
+    border-right: 1px solid var(--navigation-border);
+}
+
+.navigation-item ::deep a {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    color: var(--navigation-icon);
+    background-color: var(--navigation-background);
+
+    text-decoration: none;
+
+    transition:
+            color 120ms ease,
+            background-color 120ms ease;
+}
+
+/*
+ * Inactive hover
+ */
+
+.navigation-item ::deep a:hover {
+    color: var(--navigation-accent);
+    background-color: var(--navigation-background);
+}
+
+/*
+ * Selected route
+ */
+
+.navigation-item ::deep a.active {
+    color: var(--navigation-accent);
+    background-color: var(--navigation-selected-background);
+}
+
+/*
+ * Selected route remains selected while hovered.
+ */
+
+.navigation-item ::deep a.active:hover {
+    color: var(--navigation-accent);
+    background-color: var(--navigation-selected-background);
+}
+
+.navigation-item ::deep a:focus-visible {
+    outline: 2px solid var(--navigation-accent);
+    outline-offset: -2px;
+}
+
+/*
+ * MudIcon inherits the state colour from the NavLink.
+ */
+
+.navigation-item ::deep .navigation-icon {
+    width: 28px;
+    height: 28px;
+
+    color: inherit;
+
+    font-size: 28px;
+}
+
+/*
+ * Label is Heracles-owned markup, but it is rendered beneath NavLink's
+ * component boundary and is therefore reached through the same scope.
+ */
+
+.navigation-item ::deep .navigation-label {
+    color: inherit;
+
+    font-size: 0.6875rem;
+    font-weight: 600;
+    line-height: 1;
+
+    letter-spacing: 0.015em;
+    text-transform: uppercase;
+}
+
+/*
+ * Tablet
+ */
+
+@media (max-width: 959.98px) {
+    .user-details {
+        padding: 0 16px;
+    }
+
+    .navigation-item {
+        width: 88px;
+    }
+}
+
+/*
+ * Narrow tablet / large mobile
+ */
+
+@media (max-width: 719.98px) {
+    .display-name {
+        font-size: 1rem;
+    }
+
+    .navigation-item {
+        width: 76px;
+    }
+}
+
+/*
+ * Mobile
+ *
+ * Preserve the desktop visual language rather than shrinking the entire
+ * desktop strip until it becomes unusable.
+ */
+
+@media (max-width: 599.98px) {
+    .primary-navigation {
+        height: auto;
+        flex-wrap: wrap;
+    }
+
+    .user-summary {
+        flex: 0 0 100%;
+        height: var(--navigation-height);
+
+        border-bottom: 1px solid var(--navigation-border);
+    }
+
+    .navigation-items {
+        width: 100%;
+        height: 64px;
+    }
+
+    .navigation-item {
+        width: auto;
+        flex: 1 1 0;
+
+        border-left: 0;
+    }
+
+    .navigation-item + .navigation-item {
+        border-left: 1px solid var(--navigation-border);
+    }
+
+    .navigation-item:last-child {
+        border-right: 0;
+    }
+
+    .navigation-item ::deep .navigation-icon {
+        width: 24px;
+        height: 24px;
+        font-size: 24px;
+    }
+
+    .navigation-label {
+        margin-top: 4px;
+    }
+}
+
+/*
+ * Very narrow mobile
+ */
+
+@media (max-width: 359.98px) {
+    .user-details {
+        padding: 0 12px;
+    }
+}
