@@ -1,0 +1,35 @@
+﻿<div class="activity-metric">
+    <MudText Typo="Typo.caption"
+             Class="activity-metric-title">
+        @Title
+    </MudText>
+
+    <div class="activity-metric-content">
+        <img class="activity-metric-image"
+             src="@ImagePath"
+             alt="" />
+
+        <div class="activity-metric-value">
+            <span>@Value</span>
+
+            @if (!string.IsNullOrWhiteSpace(SecondaryValue))
+            {
+                <span class="activity-metric-secondary-value">@SecondaryValue</span>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
+
+    [Parameter]
+    public string ImagePath { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Value { get; set; } = string.Empty;
+
+    [Parameter]
+    public string? SecondaryValue { get; set; }
+}
