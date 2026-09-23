@@ -5,6 +5,8 @@
     padding: 12px 24px;
     background-color: var(--mud-palette-surface);
     border-bottom: 1px solid var(--mud-palette-divider);
+    cursor: default;
+    user-select: none;
 }
 
 .activity-title-image {
