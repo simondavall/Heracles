@@ -14,16 +14,20 @@ where development should continue.
 # Current task
 
 - Create the activity navigation component.
-  - Display activity months.
-  - Display activity counts by month.
-  - Expand and collapse activity months.
-  - Load activities for the selected month.
-  - Display activity summaries.
-  - Highlight the selected activity.
-  - Navigate between activities using Blazor routing.
-  - Add activity navigation loading states.
-  - Add activity navigation empty states.
-  - Implement activity navigation interactions using Blazor component state.
+    - Display activity years.
+    - Display activity counts by years.
+    - Expand and collapse activity years.
+    - Load activities for the selected month.
+    - Display activity months.
+    - Display actiivity counts by months.
+    - Expand and colaspse activity months.
+    - Load activities for the selected month.
+    - Display activity summaries.
+    - Highlight the selected activity.
+    - Navigate between activities using Blazor routing.
+    - Add activity navigation loading states.
+    - Add activity navigation empty states.
+    - Implement activity navigation interactions using Blazor component state.
 
 # Remaining milestone tasks
 

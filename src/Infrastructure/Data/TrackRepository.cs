@@ -148,6 +148,17 @@ namespace Heracles.Infrastructure.Data
 
             return result;
         }
+        
+        public async Task<IList<ActivityListYear>> GetTrackSummaryByYearAsync()
+        {
+            await using var dbContext = await _contextFactory.CreateDbContextAsync();
+            var result = await dbContext.Tracks
+                .GroupBy(x => x.Time.Year*100)
+                .Select(g => new ActivityListYear { ActivityYear = g.Key, Count = g.Count()} )
+                .OrderByDescending(g=>g.ActivityYear).ToListAsync();
+
+            return result;
+        }
 
         private static DbConnection GetConnection(DbConnection connection)
         {
