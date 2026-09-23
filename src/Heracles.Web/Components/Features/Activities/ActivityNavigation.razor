@@ -21,6 +21,13 @@ else if (_currentActivity is null || _years.Count == 0)
 else
 {
     <nav class="activity-navigation" aria-label="Activity navigation">
+        <header class="activity-navigation-header">
+            <MudText Typo="Typo.subtitle2"
+                     Class="activity-navigation-header-title">
+                Activities
+            </MudText>
+        </header>
+        
         <MudExpansionPanels MultiExpansion="false"
                             Class="activity-years">
             @foreach (var year in _years)
@@ -67,7 +74,7 @@ else
                                             <div class="activity-month-state">
                                                 <MudProgressCircular Indeterminate="true"
                                                                      Size="Size.Small"
-                                                                     Color="Color.Primary" />
+                                                                     Color="Color.Primary"/>
                                             </div>
                                         }
                                         else if (_expandedMonth == month.ActivityYearMonth)
@@ -110,7 +117,7 @@ else
                                                                     @activity.Distance @activity.DistanceUnits
                                                                 </span>
                                                             </span>
-                                                            
+
                                                         </MudButton>
                                                     }
                                                 }

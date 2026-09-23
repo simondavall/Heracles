@@ -79,6 +79,22 @@
     border-bottom: 1px solid var(--mud-palette-divider);
 }
 
+.activity-navigation-header {
+    display: flex;
+    min-height: 48px;
+    align-items: center;
+    padding: 0 16px;
+    background-color: var(--mud-palette-surface);
+    border-bottom: 1px solid var(--mud-palette-divider);
+}
+
+.activity-navigation ::deep .activity-navigation-header-title {
+    color: var(--mud-palette-text-primary);
+    font-weight: 600;
+    letter-spacing: 0.015em;
+    text-transform: uppercase;
+}
+
 .activity-navigation ::deep .mud-expand-panel-header:hover .activity-heading {
     color: var(--mud-palette-primary);
 }
