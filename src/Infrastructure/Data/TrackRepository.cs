@@ -153,7 +153,7 @@ namespace Heracles.Infrastructure.Data
         {
             await using var dbContext = await _contextFactory.CreateDbContextAsync();
             var result = await dbContext.Tracks
-                .GroupBy(x => x.Time.Year*100)
+                .GroupBy(x => x.Time.Year)
                 .Select(g => new ActivityListYear { ActivityYear = g.Key, Count = g.Count()} )
                 .OrderByDescending(g=>g.ActivityYear).ToListAsync();
 

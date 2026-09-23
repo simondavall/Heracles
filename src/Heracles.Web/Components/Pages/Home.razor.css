@@ -1,0 +1,10 @@
+﻿.activity-page {
+    display: flex;
+    min-height: calc(100vh - var(--mud-appbar-height) - 129px);
+}
+
+@media (max-width: 599.98px) {
+    .activity-page {
+        min-height: 0;
+    }
+}
