@@ -18,21 +18,45 @@
     border-right: 1px solid var(--mud-palette-divider);
 }
 
-.activity-navigation-heading {
+/*
+ * Expansion panels
+ */
+
+.activity-navigation ::deep .mud-expand-panel {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.activity-navigation ::deep .mud-expand-panel-header {
+    min-height: 0;
+    padding: 0;
+}
+
+.activity-navigation ::deep .mud-expand-panel-header:hover {
+    background-color: transparent;
+}
+
+.activity-navigation ::deep .mud-expand-panel-content {
+    padding: 0;
+}
+
+.activity-navigation ::deep .mud-expand-panel .mud-expand-panel-icon {
+    margin-right: 8px;
+    color: var(--mud-palette-text-secondary);
+}
+
+/*
+ * Headings
+ */
+
+.activity-heading {
     display: grid;
     width: 100%;
     align-items: center;
-    padding: 0;
-    color: inherit;
-    background: transparent;
-    border: 0;
-    cursor: pointer;
-    font: inherit;
-    text-align: left;
+    grid-template-columns: 1fr auto;
 }
 
 .activity-year-heading {
-    grid-template-columns: 1fr auto 32px;
     min-height: 44px;
     padding-left: 16px;
     background-color: color-mix(
@@ -43,20 +67,13 @@
 }
 
 .activity-month-heading {
-    grid-template-columns: 1fr auto 32px;
     min-height: 40px;
     padding-left: 24px;
     border-bottom: 1px solid var(--mud-palette-divider);
 }
 
-.activity-navigation-heading:hover {
+.activity-navigation ::deep .mud-expand-panel-header:hover .activity-heading {
     color: var(--mud-palette-primary);
-}
-
-.activity-navigation-heading:focus-visible,
-.activity-list-item:focus-visible {
-    outline: 2px solid var(--mud-palette-primary);
-    outline-offset: -2px;
 }
 
 .activity-navigation-title {
@@ -67,51 +84,57 @@
 
 .activity-navigation-count {
     min-width: 32px;
+    margin-right: 8px;
     color: var(--mud-palette-text-secondary);
     font-size: 0.75rem;
     text-align: right;
 }
 
-.activity-navigation-heading:hover .activity-navigation-count {
+.activity-navigation ::deep .mud-expand-panel-header:hover
+.activity-navigation-count {
     color: inherit;
 }
 
-.activity-navigation-chevron {
-    color: var(--mud-palette-text-secondary);
-}
+/*
+ * Activities
+ */
 
 .activity-list {
     border-bottom: 1px solid var(--mud-palette-divider);
 }
 
-.activity-list-item {
+.activity-list ::deep .activity-list-item {
+    min-width: 0;
+    min-height: 62px;
+    padding: 0;
+    color: var(--mud-palette-text-primary);
+    background-color: var(--mud-palette-surface);
+    border-radius: 0;
+    border-bottom: 1px solid var(--mud-palette-divider);
+    text-transform: none;
+}
+
+.activity-list ::deep .activity-list-item:last-child {
+    border-bottom: 0;
+}
+
+.activity-list ::deep .activity-list-item .mud-button-label {
     display: grid;
     width: 100%;
     min-height: 62px;
     grid-template-columns: 48px minmax(0, 1fr) 24px;
     align-items: stretch;
-    padding: 0;
-    color: var(--mud-palette-text-primary);
-    background-color: var(--mud-palette-surface);
-    border: 0;
-    border-bottom: 1px solid var(--mud-palette-divider);
-    cursor: pointer;
-    font: inherit;
     text-align: left;
 }
 
-.activity-list-item:last-child {
-    border-bottom: 0;
-}
-
-.activity-list-item:hover {
+.activity-list ::deep .activity-list-item:hover {
     background-color: color-mix(
             in srgb,
             var(--mud-palette-surface) 94%,
             var(--mud-palette-primary) 6%);
 }
 
-.activity-list-item.selected {
+.activity-list ::deep .activity-list-item.selected {
     background-color: color-mix(
             in srgb,
             var(--mud-palette-surface) 88%,

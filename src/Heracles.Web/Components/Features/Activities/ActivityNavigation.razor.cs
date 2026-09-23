@@ -50,16 +50,11 @@ public partial class ActivityNavigation
         _expandedYear = _currentActivity.Time.Year;
         _expandedMonth = (_currentActivity.Time.Year * 100) + _currentActivity.Time.Month;
 
-        var currentMonth = _months.FirstOrDefault(x => x.ActivityYearMonth == _expandedMonth);
+        var currentMonth = _months.FirstOrDefault(
+            x => x.ActivityYearMonth == _expandedMonth);
 
-        if (currentMonth?.Activities is not null) {
-            _activities = currentMonth.Activities;
-        }
-        else if (currentMonth is not null) {
-            _activities = await ActivityService.GetActivitiesByDateAsync(
-                GetMonthDate(currentMonth.ActivityYearMonth),
-                _selectedActivityId);
-        }
+        if (currentMonth is not null)
+            await LoadMonthActivitiesAsync(currentMonth);
 
         _isLoading = false;
     }
@@ -75,23 +70,50 @@ public partial class ActivityNavigation
             .OrderByDescending(x => x.ActivityYearMonth);
     }
 
-    private Task ToggleYearAsync(int year) {
-        _expandedYear = _expandedYear == year ? null : year;
+    private bool IsYearExpanded(int year) {
+        return _expandedYear == year;
+    }
 
-        if (_expandedYear is null)
+    private bool IsMonthExpanded(int activityYearMonth) {
+        return _expandedMonth == activityYearMonth;
+    }
+
+    private Task YearExpandedChangedAsync(int year, bool expanded) {
+        if (expanded) {
+            _expandedYear = year;
+
+            if (_expandedMonth.HasValue &&
+                _expandedMonth.Value / 100 != year) {
+                _expandedMonth = null;
+                _activities = [];
+            }
+        }
+        else if (_expandedYear == year) {
+            _expandedYear = null;
             _expandedMonth = null;
+            _activities = [];
+        }
 
         return Task.CompletedTask;
     }
 
-    private async Task ToggleMonthAsync(ActivityListMonth month) {
-        if (_expandedMonth == month.ActivityYearMonth) {
-            _expandedMonth = null;
-            _activities = [];
+    private async Task MonthExpandedChangedAsync(
+        ActivityListMonth month,
+        bool expanded) {
+        if (!expanded) {
+            if (_expandedMonth == month.ActivityYearMonth) {
+                _expandedMonth = null;
+                _activities = [];
+            }
+
             return;
         }
 
         _expandedMonth = month.ActivityYearMonth;
+        await LoadMonthActivitiesAsync(month);
+    }
+
+    private async Task LoadMonthActivitiesAsync(ActivityListMonth month) {
         _isLoadingMonth = true;
         _activities = [];
 
@@ -116,11 +138,15 @@ public partial class ActivityNavigation
     }
 
     private static DateTime GetMonthDate(int activityYearMonth) {
-        return new DateTime(activityYearMonth / 100, activityYearMonth % 100, 1);
+        return new DateTime(
+            activityYearMonth / 100,
+            activityYearMonth % 100,
+            1);
     }
 
     private static string GetMonthName(int activityYearMonth) {
-        return GetMonthDate(activityYearMonth).ToString("MMMM", CultureInfo.InvariantCulture);
+        return GetMonthDate(activityYearMonth)
+            .ToString("MMMM", CultureInfo.InvariantCulture);
     }
 
     private static string GetActivityClass(bool selected) {
