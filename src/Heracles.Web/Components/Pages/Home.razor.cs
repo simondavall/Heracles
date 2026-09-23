@@ -9,6 +9,9 @@ public partial class Home
     [Inject]
     private IActivityService ActivityService { get; set; } = null!;
 
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = null!;
+
     [Parameter]
     public Guid? ActivityId { get; set; }
 
@@ -16,8 +19,15 @@ public partial class Home
 
     protected override async Task OnParametersSetAsync()
     {
-        _activity = ActivityId.HasValue
-            ? await ActivityService.GetActivityAsync(ActivityId.Value)
-            : null;
+        if (ActivityId.HasValue)
+        {
+            _activity = await ActivityService.GetActivityAsync(ActivityId.Value);
+            return;
+        }
+
+        _activity = await ActivityService.GetMostRecentActivityAsync();
+
+        if (_activity is not null)
+            NavigationManager.NavigateTo($"/activity/{_activity.Id}", replace: true);
     }
 }
