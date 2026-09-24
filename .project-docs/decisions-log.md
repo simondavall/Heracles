@@ -209,3 +209,89 @@ Distance markers are deferred to a separate task within the same milestone.
 - Fade transitions conceal abrupt geographic viewport changes.
 - JavaScript isolation keeps third-party integration contained within the owning component.
 - Separating distance markers allows their calculation and presentation requirements to be addressed independently.
+
+## Integrate Mapbox through an isolated Activity Map component
+
+(24-09-2026)
+
+### Decision
+
+Integrate Mapbox GL JS through a dedicated Activity Map component within the Activity Details feature.
+
+Use colocated JavaScript and CSS for component-specific functionality and presentation.
+
+The component receives the selected activity directly and transforms its existing geographic data into a focused map presentation contract.
+
+Represent independent recording segments using GeoJSON MultiLineString geometry.
+
+Maintain separate geographic markers for activity start, finish, pause and resume events.
+
+Retain the Mapbox instance when navigating between activities, updating its geographic data and viewport rather than recreating it.
+
+Apply fade transitions when switching activities.
+
+Manage Mapbox initialisation, updates and disposal explicitly.
+
+### Rationale
+
+- Preserve the existing Application service integration.
+- Avoid introducing unnecessary HTTP requests.
+- Keep Mapbox-specific integration isolated from other components.
+- Prevent artificial geographic connections across recording pauses.
+- Separate route presentation from geographic event markers.
+- Avoid unnecessary map recreation during activity navigation.
+- Preserve a consistent visual experience when switching activities.
+- Maintain explicit ownership of JavaScript resources and lifecycle.
+
+## Calculate and render activity distance markers within the Activity Map feature
+
+(24-09-2026)
+
+### Decision
+
+Calculate distance-marker positions within the Activity Map feature using a focused distance-marker calculator.
+
+Reproduce the existing GPX import distance calculation using the Haversine formula and an Earth radius of 6,371 kilometres.
+
+Calculate cumulative distance from ordered GPS points within each recording segment.
+
+Preserve cumulative distance across recording segments without calculating geographic distance between segment boundaries.
+
+Interpolate marker positions at successive whole-kilometre thresholds.
+
+Retain full calculation precision when positioning markers.
+
+Extend the existing map presentation contract with calculated distance-marker coordinates and values.
+
+Render distance markers through a dedicated GeoJSON source and Mapbox symbol layer.
+
+Generate complete distance-marker images dynamically using SVG, including the background, border, distance value and kilometre label.
+
+Use a fixed dark blue background with white text and borders.
+
+Register and reuse generated images within the existing Mapbox instance.
+
+Use kilometres as the initial fixed distance unit.
+
+Defer configurable map presentation and distance units to a separate application-wide settings task.
+
+### Rationale
+
+- The existing activity data already contains the required GPS points.
+- Additional Application service or Infrastructure access is unnecessary.
+- Reproducing the established import calculation maintains consistency
+  with existing activity distances.
+- Processing segments independently excludes geographic movement
+  during recording pauses.
+- Interpolation positions markers between recorded GPS coordinates.
+- A dedicated GeoJSON source separates distance markers from the route.
+- A symbol layer provides native Mapbox geographic positioning
+  and collision handling.
+- Dynamically generated SVG images provide precise control over
+  marker appearance.
+- Generating complete marker images simplifies the presentation
+  of distance values and unit labels.
+- SVG generation provides a straightforward path to future
+  user-configurable marker colours.
+- Fixed defaults avoid introducing application-wide settings
+  infrastructure before it is required.

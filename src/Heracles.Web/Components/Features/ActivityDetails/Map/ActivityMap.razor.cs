@@ -58,7 +58,8 @@ public partial class ActivityMap : IAsyncDisposable
         _mapUpdateRequired = false;
     }
 
-    private static ActivityMapData CreateMapData(Track track) {
+    private static ActivityMapData CreateMapData(Track track)
+    {
         var segments = track
             .TrackSegments
             .OrderBy(segment => segment.Seq)
@@ -73,7 +74,9 @@ public partial class ActivityMap : IAsyncDisposable
             .Where(segment => segment.Coordinates.Count > 0)
             .ToArray();
 
-        return new ActivityMapData(segments);
+        var distanceMarkers = DistanceMarkerCalculator.Calculate(track);
+
+        return new ActivityMapData(segments, distanceMarkers);
     }
 
     public async ValueTask DisposeAsync() {

@@ -8,7 +8,7 @@ IConfiguration whereas Heracles.Web will send Heracles settings. Heracles.Web wi
 until Web is no longer required.
 - Investigate initial theme flash (see Notes below)
 - Remove legacy activity presentation metadata from Application (see Notes)
-
+- User-configurable Activity Map settings. (see Notes)
 
 # Nice-to-have
 
@@ -37,3 +37,27 @@ When the legacy Web application is decommissioned, remove:
 - any legacy extension methods or other code used solely to consume those attributes.
 
 Do not perform this cleanup while the legacy Web application remains dependent on the metadata.
+
+## User-configurable Activity Map settings
+
+Introduce user-configurable presentation settings for the Activity Map.
+
+Potential settings include:
+
+- Distance units: kilometres or miles.
+- Distance-marker visibility.
+- Distance-marker interval.
+- Distance-marker background colour.
+- Distance-marker size.
+- Additional map presentation preferences.
+
+Replace the current fixed distance-marker presentation values with
+configurable settings where appropriate.
+
+Support regeneration of dynamically generated SVG marker images
+when relevant settings change.
+
+Determine the appropriate settings model and persistence mechanism
+as part of the application-wide settings implementation.
+
+This work is deferred and is not part of Milestone 2.3.

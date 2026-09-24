@@ -196,36 +196,23 @@ Users can view the principal information for an activity using the new Heracles.
   - ✓ Manage Mapbox initialisation and disposal.
   - ✓ Implement fade transitions when switching activities.
 
-- Implement activity distance markers.
-    - Display kilometre or mile markers along the recorded route.
-    - Exclude distance accumulated during recording pauses.
-    - Ensure marker distances agree with recorded activity distances.
-    - Preserve the existing Activity Map presentation and interactions.
+- ✓ Implement activity distance markers.
+  - ✓ Calculate cumulative distance across recording segments.
+  - ✓ Exclude distance accumulated during recording pauses.
+  - ✓ Calculate marker positions at whole-kilometre intervals.
+  - ✓ Interpolate marker positions between recorded GPS coordinates.
+  - ✓ Handle zero-distance GPS points.
+  - ✓ Extend the Activity Map presentation contract.
+  - ✓ Introduce a dedicated GeoJSON source and symbol layer.
+  - ✓ Generate distance-marker SVG images dynamically.
+  - ✓ Display distance values and kilometre labels.
+  - ✓ Integrate distance markers with existing map transitions.
+  - ✓ Verify distance-marker presentation and behaviour.
 
 **Deliverable**
 
-Users can view recorded activity routes and significant geographic
-events through a lifecycle-safe Blazor map component, including
-distance markers consistent with the recorded activity distance.
-
----
-
-## Milestone 2.4 – Complete Activity Experience
-
-- Inventory remaining activity functionality in the existing application.
-- Migrate required remaining activity information.
-- Migrate activity editing where required.
-- Migrate activity deletion where required.
-- Implement activity loading feedback.
-- Implement activity error handling.
-- Optimise activity database queries.
-- Verify activity navigation behaviour.
-- Verify responsive activity layouts.
-- Verify existing Heracles activity behaviour is preserved where required.
-
-**Deliverable**
-
-The existing Heracles activity workflow is available through the new Heracles.Web interface.
+Users can view recorded activity routes and significant geographic events through a lifecycle-safe 
+Blazor map component, including distance markers consistent with the recorded activity distance.
 
 ---
 
@@ -234,18 +221,16 @@ The existing Heracles activity workflow is available through the new Heracles.We
 ## Milestone 3.1 – File Import
 
 - Create the activity import page.
-- Support GPX files.
-- Support TCX files.
-- Support FIT files.
-- Support multiple file selection.
-- Configure file-count limits.
-- Configure file-size limits.
-- Integrate browser file selection with the existing import services.
-- Import selected activity files.
-- Persist imported activities.
-- Display successfully imported file counts.
-- Display failed imports.
-- Display import errors.
+  - Support only GPX files.
+  - Support multiple file selection.
+  - Configure file-count limits.
+  - Configure file-size limits.
+  - Integrate browser file selection with the existing import services.
+  - Import selected activity files.
+  - Persist imported activities.
+  - Display successfully imported file counts.
+  - Display failed imports.
+  - Display import errors.
 
 **Deliverable**
 
@@ -307,6 +292,25 @@ Users can view their principal Heracles information from the new dashboard.
 **Deliverable**
 
 Existing Heracles reporting capabilities are available through Heracles.Web.
+
+---
+
+## Milestone 4.3 – Complete Activity Experience
+
+- Inventory remaining activity functionality in the existing application.
+- Migrate required remaining activity information.
+- Migrate activity editing where required.
+- Migrate activity deletion where required.
+- Implement activity loading feedback.
+- Implement activity error handling.
+- Optimise activity database queries.
+- Verify activity navigation behaviour.
+- Verify responsive activity layouts.
+- Verify existing Heracles activity behaviour is preserved where required.
+
+**Deliverable**
+
+The existing Heracles activity workflow is available through the new Heracles.Web interface.
 
 ---
 

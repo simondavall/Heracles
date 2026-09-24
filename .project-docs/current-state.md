@@ -187,3 +187,14 @@ where development should continue.
 - Preserved the existing map instance during activity transitions.
 - Added reduced-motion support for activity transitions.
 - Verified initial map rendering and activity route switching.
+- Created a focused distance-marker calculator using the existing GPX import distance formula.
+- Implemented cumulative distance calculation across recording segments while excluding recording pauses.
+- Implemented interpolated geographic positioning at whole-kilometre intervals.
+- Extended the Activity Map presentation contract with distance markers.
+- Added a dedicated GeoJSON source and Mapbox symbol layer for distance markers.
+- Implemented dynamically generated SVG distance markers.
+- Established dark blue distance-marker presentation with white text and borders.
+- Displayed distance values above kilometre unit labels.
+- Supported distance-marker image registration and reuse.
+- Integrated distance-marker updates with the existing activity transitions.
+- Verified distance-marker presentation and activity navigation.

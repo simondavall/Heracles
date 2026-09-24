@@ -1,6 +1,12 @@
 ﻿const routeSourceId = "activity-route";
 const routeLayerId = "activity-route-line";
+
+const distanceSourceId = "activity-distance-markers";
+const distanceLayerId = "activity-distance-symbols";
+
 const fadeDuration = 250;
+
+const distanceMarkerColour = "#163A63";
 
 export function createMap(container, accessToken, data) {
     const map = new mapboxgl.Map({
@@ -37,6 +43,8 @@ export function createMap(container, accessToken, data) {
     let transitionVersion = 0;
     let hasRenderedActivity = false;
 
+    let renderVersion = 0;
+    
     function transitionToActivity(data) {
         currentData = data;
 
@@ -51,11 +59,14 @@ export function createMap(container, accessToken, data) {
 
         container.classList.add("is-transitioning");
 
-        transitionTimer = setTimeout(() => {
+        transitionTimer = setTimeout(async () => {
             if (disposed || version !== transitionVersion)
                 return;
 
-            updateMap();
+            await updateMap();
+
+            if (disposed || version !== transitionVersion)
+                return;
 
             requestAnimationFrame(() => {
                 if (disposed || version !== transitionVersion)
@@ -102,25 +113,45 @@ export function createMap(container, accessToken, data) {
             return;
 
         addRouteLayer(map);
+        addDistanceLayer(map);
 
         darkTheme = isDarkTheme();
         updateTheme(map);
 
-        updateMap();
-
-        hasRenderedActivity = true;
+        void updateMap().then(() => {
+            if (!disposed)
+                hasRenderedActivity = true;
+        });
     });
 
-    function updateMap() {
-        if (disposed || !map.getSource(routeSourceId))
+    async function updateMap() {
+        if (
+            disposed ||
+            !map.getSource(routeSourceId) ||
+            !map.getSource(distanceSourceId)
+        ) {
+            return;
+        }
+
+        const version = ++renderVersion;
+        const data = currentData;
+
+        await registerDistanceMarkerImages(
+            map,
+            data,
+            () => !disposed && version === renderVersion
+        );
+
+        if (disposed || version !== renderVersion)
             return;
 
-        updateRoute(map, currentData);
+        updateRoute(map, data);
+        updateDistanceMarkers(map, data);
 
         removeMarkers(markers);
-        markers = createMarkers(map, currentData);
+        markers = createMarkers(map, data);
 
-        fitActivity(map, currentData);
+        fitActivity(map, data);
     }
 
     return {
@@ -133,6 +164,7 @@ export function createMap(container, accessToken, data) {
                 return;
 
             disposed = true;
+            renderVersion++;
 
             clearTimeout(transitionTimer);
             themeObserver.disconnect();
@@ -143,6 +175,85 @@ export function createMap(container, accessToken, data) {
             map.remove();
         }
     };
+}
+
+async function registerDistanceMarkerImages(map, data, isCurrent){
+    for (const marker of data.distanceMarkers) {
+        if (!isCurrent())
+            return;
+
+        const imageId = `distance-marker-${marker.distance}`;
+
+        if (map.hasImage(imageId))
+            continue;
+
+        const svg = createDistanceMarkerSvg(
+            marker.distance,
+            distanceMarkerColour
+        );
+
+        const image = await loadSvgImage(svg);
+
+        if (!isCurrent())
+            return;
+
+        if (!map.hasImage(imageId))
+            map.addImage(imageId, image);
+    }
+}
+
+function createDistanceMarkerSvg(distance, backgroundColour) {
+    return `
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="28"
+             height="36"
+             viewBox="0 0 28 36">
+
+            <rect
+                x="1"
+                y="1"
+                width="26"
+                height="34"
+                rx="3"
+                fill="${backgroundColour}"
+                stroke="#FFFFFF"
+                stroke-width="1.5"
+            />
+
+            <text
+                x="14"
+                y="17"
+                text-anchor="middle"
+                font-family="Arial, sans-serif"
+                font-size="16"
+                font-weight="bold"
+                fill="#FFFFFF"
+            >${distance}</text>
+
+            <text
+                x="14"
+                y="28"
+                text-anchor="middle"
+                font-family="Arial, sans-serif"
+                font-size="10"
+                fill="#FFFFFF"
+            >km</text>
+
+        </svg>
+    `;
+}
+
+function loadSvgImage(svg) {
+    return new Promise((resolve, reject) => {
+        const image = new Image();
+
+        image.onload = () => resolve(image);
+        image.onerror = reject;
+
+        image.src =
+            "data:image/svg+xml;charset=utf-8," +
+            encodeURIComponent(svg);
+    });
 }
 
 function addRouteLayer(map) {
@@ -212,6 +323,77 @@ function updateRoute(map, data) {
         return;
 
     source.setData(createRoute(data));
+}
+
+function addDistanceLayer(map) {
+    if (!map.getSource(distanceSourceId)) {
+        map.addSource(distanceSourceId, {
+            type: "geojson",
+            data: emptyDistanceMarkers()
+        });
+    }
+
+    if (!map.getLayer(distanceLayerId)) {
+        map.addLayer({
+            id: distanceLayerId,
+            type: "symbol",
+            source: distanceSourceId,
+            slot: "top",
+
+            layout: {
+                "icon-image": ["get", "icon"],
+                "icon-size": 0.8,
+                "icon-anchor": "center",
+                "icon-allow-overlap": true,
+                "icon-ignore-placement": false
+            },
+
+            paint: {
+                "icon-opacity": 1,
+                "icon-emissive-strength": 1
+            }
+        });
+    }
+}
+
+function emptyDistanceMarkers() {
+    return {
+        type: "FeatureCollection",
+        features: []
+    };
+}
+
+function createDistanceMarkers(data) {
+    return {
+        type: "FeatureCollection",
+
+        features: data.distanceMarkers.map(marker => ({
+            type: "Feature",
+
+            properties: {
+                distance: marker.distance,
+                icon: `distance-marker-${marker.distance}`
+            },
+
+            geometry: {
+                type: "Point",
+
+                coordinates: [
+                    marker.longitude,
+                    marker.latitude
+                ]
+            }
+        }))
+    };
+}
+
+function updateDistanceMarkers(map, data) {
+    const source = map.getSource(distanceSourceId);
+
+    if (!source)
+        return;
+
+    source.setData(createDistanceMarkers(data));
 }
 
 function createMarkers(map, data) {
