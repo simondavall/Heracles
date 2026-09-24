@@ -1,5 +1,6 @@
 ﻿const routeSourceId = "activity-route";
 const routeLayerId = "activity-route-line";
+const fadeDuration = 250;
 
 export function createMap(container, accessToken, data) {
     const map = new mapboxgl.Map({
@@ -32,6 +33,39 @@ export function createMap(container, accessToken, data) {
     let currentData = data;
     let disposed = false;
 
+    let transitionTimer = null;
+    let transitionVersion = 0;
+    let hasRenderedActivity = false;
+
+    function transitionToActivity(data) {
+        currentData = data;
+
+        if (!hasRenderedActivity) {
+            updateMap();
+            return;
+        }
+
+        const version = ++transitionVersion;
+
+        clearTimeout(transitionTimer);
+
+        container.classList.add("is-transitioning");
+
+        transitionTimer = setTimeout(() => {
+            if (disposed || version !== transitionVersion)
+                return;
+
+            updateMap();
+
+            requestAnimationFrame(() => {
+                if (disposed || version !== transitionVersion)
+                    return;
+
+                container.classList.remove("is-transitioning");
+            });
+        }, fadeDuration);
+    }
+    
     let darkTheme = null;
 
     const themeObserver = new MutationObserver(() => {
@@ -73,6 +107,8 @@ export function createMap(container, accessToken, data) {
         updateTheme(map);
 
         updateMap();
+
+        hasRenderedActivity = true;
     });
 
     function updateMap() {
@@ -89,8 +125,7 @@ export function createMap(container, accessToken, data) {
 
     return {
         update(data) {
-            currentData = data;
-            updateMap();
+            transitionToActivity(data);
         },
 
         dispose() {
@@ -99,11 +134,12 @@ export function createMap(container, accessToken, data) {
 
             disposed = true;
 
+            clearTimeout(transitionTimer);
+            themeObserver.disconnect();
+
             removeMarkers(markers);
             markers = [];
 
-            themeObserver.disconnect();
-            
             map.remove();
         }
     };

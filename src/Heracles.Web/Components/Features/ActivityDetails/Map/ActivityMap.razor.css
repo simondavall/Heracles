@@ -11,6 +11,12 @@
     inset: 0;
     width: 100%;
     height: 100%;
+    opacity: 1;
+    transition: opacity 250ms ease-in-out;
+}
+
+.activity-map-container.is-transitioning {
+    opacity: 0;
 }
 
 ::deep .activity-map-marker {
