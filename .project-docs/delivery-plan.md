@@ -184,11 +184,29 @@ Users can view the principal information for an activity using the new Heracles.
 
 ## Milestone 2.3 – Activity Map
 
-- Create the activity map component.
+- ✓ Create the initial Activity Map component.
+  - ✓ Integrate Mapbox GL JS.
+  - ✓ Display recorded activity routes.
+  - ✓ Preserve independent recording segments.
+  - ✓ Display start, finish, pause and resume markers.
+  - ✓ Automatically fit the viewport to the selected activity.
+  - ✓ Support activity navigation without recreating the map.
+  - ✓ Implement light and dark map presentation.
+  - ✓ Implement responsive presentation.
+  - ✓ Manage Mapbox initialisation and disposal.
+  - ✓ Implement fade transitions when switching activities.
+
+- Implement activity distance markers.
+    - Display kilometre or mile markers along the recorded route.
+    - Exclude distance accumulated during recording pauses.
+    - Ensure marker distances agree with recorded activity distances.
+    - Preserve the existing Activity Map presentation and interactions.
 
 **Deliverable**
 
-Users can view activity routes through a lifecycle-safe Blazor map component.
+Users can view recorded activity routes and significant geographic
+events through a lifecycle-safe Blazor map component, including
+distance markers consistent with the recorded activity distance.
 
 ---
 

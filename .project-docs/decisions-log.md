@@ -53,8 +53,6 @@ Heracles.Web uses `Heracles.Web` as its stable Data Protection application name.
 - Keeping Data Protection and HTTPS certificates separate allows their purposes and lifecycles to remain independent.
 - Environment-based configuration allows local DotNetEnv configuration, IIS App Pool environment variables and future hosting mechanisms to use the same application implementation.
 
-2026-09-17
-
 ## Use Serilog for application logging
 (17-09-2026)
 
@@ -175,3 +173,39 @@ This is an explicit compromise and should be reviewed if repeated use produces e
 - MudBlazor's theme and component APIs remain preferable where they directly model the required presentation.
 - Additional wrapper markup is accepted as a visible technical compromise rather than hiding component-specific styling in application-wide CSS.
 - The approach can be reconsidered if experience across further components demonstrates that its structural or maintenance cost is too high.
+
+## Integrate Mapbox through an isolated Activity Map component
+
+(24-09-2026)
+
+### Decision
+
+Heracles.Web uses Mapbox GL JS v3 to render recorded activity routes.
+
+The Activity Map is implemented as a Blazor feature component with a colocated JavaScript ES module and isolated CSS.
+
+The component receives the selected activity from the Activity Details page and projects its recorded geographic information into a focused presentation data contract.
+
+Recorded activity segments are represented independently using GeoJSON MultiLineString geometry.
+
+The route uses a dedicated Mapbox geographic source and presentation layer. Start, finish, pause and resume locations use separate markers.
+
+The Mapbox instance is retained when navigating between activities.
+Route changes use fade-out and fade-in transitions, with viewport repositioning occurring while the map is invisible.
+
+The component manages Mapbox initialisation, updates and disposal through its lifecycle.
+
+Additional geographic presentation layers can be introduced without restructuring the existing route implementation.
+
+Distance markers are deferred to a separate task within the same milestone.
+
+### Rationale
+
+- Direct consumption of existing activity data avoids unnecessary internal HTTP requests.
+- A focused presentation contract separates activity data from Mapbox-specific rendering.
+- Independent route segments prevent artificial connecting lines across recording pauses.
+- Dedicated geographic sources and layers support incremental presentation enhancements.
+- Retaining the Mapbox instance avoids unnecessary reinitialisation.
+- Fade transitions conceal abrupt geographic viewport changes.
+- JavaScript isolation keeps third-party integration contained within the owning component.
+- Separating distance markers allows their calculation and presentation requirements to be addressed independently.
