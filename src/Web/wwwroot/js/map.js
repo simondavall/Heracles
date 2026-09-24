@@ -308,8 +308,8 @@ var mapController = {
 			mapController.model.lineColor = '#ff0000';
 		}
 
-		// create map (default location is boston)
-		mapController.model.map = new L.mapbox.map(options.mapDiv).setView([42.3601, -71.0589], 1);
+		// create map
+		mapController.model.map = new L.mapbox.map(options.mapDiv).setView([51.3694, 0.3657], 1);
 		L.mapbox.styleLayer('mapbox://styles/mapbox/outdoors-v11').addTo(mapController.model.map);
 
 		L.control.layers({

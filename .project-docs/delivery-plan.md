@@ -185,16 +185,6 @@ Users can view the principal information for an activity using the new Heracles.
 ## Milestone 2.3 – Activity Map
 
 - Create the activity map component.
-- Establish isolated JavaScript map integration.
-- Initialise the map through Blazor lifecycle events.
-- Display the activity route.
-- Display route start and end markers.
-- Fit the map to the activity route.
-- Handle activity changes through Blazor navigation and component lifecycle events.
-- Dispose map resources when the component is removed.
-- Configure Mapbox access token handling.
-- Implement map behaviour through the isolated activity map integration.
-- Verify map behaviour during Blazor navigation.
 
 **Deliverable**
 

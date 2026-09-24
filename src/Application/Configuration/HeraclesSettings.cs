@@ -9,7 +9,8 @@ namespace Heracles.Application.Configuration;
 public sealed record HeraclesSettings(
     DatabaseSettings DatabaseSettings,
     OpenIdConnectSettings OpenIdConnect,
-    DataProtectionSettings DataProtection)
+    DataProtectionSettings DataProtection,
+    MapboxSettings Mapbox)
 {
     public static HeraclesSettings Create(IConfiguration configuration) {
         var errors = new List<string>();
@@ -25,6 +26,8 @@ public sealed record HeraclesSettings(
         var dataProtectionCertificatePath = GetRequiredString(configuration, "DataProtection:CertificatePath", errors);
         var dataProtectionCertificatePassword = GetRequiredString(configuration, "DataProtection:CertificatePassword", errors);
 
+        var mapboxAccessToken = GetRequiredString(configuration, "Mapbox:AccessToken", errors);
+        
         if (errors.Count > 0)
             throw new InvalidOperationException(
                 "Invalid Heracles configuration:"
@@ -32,9 +35,18 @@ public sealed record HeraclesSettings(
                 + string.Join(Environment.NewLine, errors.Select(error => $" - {error}")));
         
         return new HeraclesSettings(
-            new DatabaseSettings(heraclesDb!, heraclesAuthDb!),
-            new OpenIdConnectSettings(openIdConnectAuthority!, openIdConnectClientId!, openIdConnectClientSecret!),
-            new DataProtectionSettings(dataProtectionKeyPath!, dataProtectionCertificatePath!, dataProtectionCertificatePassword!));
+            new DatabaseSettings(
+                heraclesDb!,
+                heraclesAuthDb!),
+            new OpenIdConnectSettings(
+                openIdConnectAuthority!,
+                openIdConnectClientId!,
+                openIdConnectClientSecret!),
+            new DataProtectionSettings(
+                dataProtectionKeyPath!,
+                dataProtectionCertificatePath!,
+                dataProtectionCertificatePassword!),
+            new MapboxSettings(mapboxAccessToken!));
     }
 
     private static string? GetRequiredString(IConfiguration configuration, string key, ICollection<string> errors) {
@@ -86,3 +98,6 @@ public sealed record DataProtectionSettings(
     string KeyPath,
     string CertificatePath,
     string CertificatePassword);
+    
+public sealed record MapboxSettings(
+    string AccessToken);

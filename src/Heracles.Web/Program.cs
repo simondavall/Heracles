@@ -28,6 +28,7 @@ builder.Services.AddSerilog((services, configuration) => configuration
     .ReadFrom.Services(services));
 
 var settings = HeraclesSettings.Create(builder.Configuration);
+builder.Services.AddSingleton(settings.Mapbox);
 
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
