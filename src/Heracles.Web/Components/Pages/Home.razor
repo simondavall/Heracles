@@ -2,6 +2,7 @@
 @page "/activity/{ActivityId:guid}"
 
 @using Heracles.Web.Components.Features.ActivityDetails
+@using Heracles.Web.Components.Features.ActivityDetails.Map
 
 <PageTitle>Heracles</PageTitle>
 
@@ -13,6 +14,7 @@
         {
             <ActivityTitle Track="@_activity" />
             <MetricsBar Track="@_activity" />
+            <ActivityMap Track="@_activity" />
         }
     </main>
 </div>

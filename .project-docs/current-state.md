@@ -13,17 +13,7 @@ where development should continue.
 
 # Current task
 
-- Create the activity map component.
-  - Establish isolated JavaScript map integration.
-  - Initialise the map through Blazor lifecycle events.
-  - Display the activity route.
-  - Display route start and end markers.
-  - Fit the map to the activity route.
-  - Handle activity changes through Blazor navigation and component lifecycle events.
-  - Dispose map resources when the component is removed.
-  - Configure Mapbox access token handling.
-  - Implement map behaviour through the isolated activity map integration.
-  - Verify map behaviour during Blazor navigation.
+- Implement activity distance markers.
 
 # Remaining milestone tasks
 
@@ -179,3 +169,21 @@ where development should continue.
 - Implemented theme-aware Metrics Bar presentation.
 - Verified metric values update when the selected activity changes.
 - Verified Metrics Bar presentation across desktop, tablet and mobile layouts.
+- Created the Activity Map feature component using Mapbox GL JS v3.
+- Integrated Mapbox through a colocated JavaScript ES module.
+- Added validated Mapbox access-token configuration through HeraclesSettings.
+- Integrated Activity Map with the existing Activity Details page.
+- Reused the selected activity data without introducing an internal HTTP API.
+- Introduced a strongly typed map presentation data contract.
+- Represented recorded activity segments independently using GeoJSON MultiLineString geometry.
+- Added a dedicated GeoJSON source and presentation layer for activity routes.
+- Added start, finish, pause and resume markers.
+- Added automatic viewport fitting when the selected activity changes.
+- Implemented map updates without recreating the Mapbox instance.
+- Added light and dark basemap presentation.
+- Implemented responsive map presentation.
+- Added explicit JavaScript lifecycle management and disposal.
+- Implemented fade-out and fade-in transitions when switching activities.
+- Preserved the existing map instance during activity transitions.
+- Added reduced-motion support for activity transitions.
+- Verified initial map rendering and activity route switching.
