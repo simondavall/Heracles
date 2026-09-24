@@ -1,5 +1,9 @@
 ﻿const routeSourceId = "activity-route";
 const routeLayerId = "activity-route-line";
+
+const distanceSourceId = "activity-distance-markers";
+const distanceLayerId = "activity-distance-symbols";
+
 const fadeDuration = 250;
 
 export function createMap(container, accessToken, data) {
@@ -102,6 +106,7 @@ export function createMap(container, accessToken, data) {
             return;
 
         addRouteLayer(map);
+        addDistanceLayer(map);
 
         darkTheme = isDarkTheme();
         updateTheme(map);
@@ -112,10 +117,16 @@ export function createMap(container, accessToken, data) {
     });
 
     function updateMap() {
-        if (disposed || !map.getSource(routeSourceId))
+        if (
+            disposed ||
+            !map.getSource(routeSourceId) ||
+            !map.getSource(distanceSourceId)
+        ) {
             return;
+        }
 
         updateRoute(map, currentData);
+        updateDistanceMarkers(map, currentData);
 
         removeMarkers(markers);
         markers = createMarkers(map, currentData);
@@ -212,6 +223,78 @@ function updateRoute(map, data) {
         return;
 
     source.setData(createRoute(data));
+}
+
+function addDistanceLayer(map) {
+    if (!map.getSource(distanceSourceId)) {
+        map.addSource(distanceSourceId, {
+            type: "geojson",
+            data: emptyDistanceMarkers()
+        });
+    }
+
+    if (!map.getLayer(distanceLayerId)) {
+        map.addLayer({
+            id: distanceLayerId,
+            type: "symbol",
+            source: distanceSourceId,
+            slot: "top",
+
+            layout: {
+                "text-field": ["get", "distance"],
+                "text-size": 12,
+                "text-font": ["Open Sans Bold"],
+                "text-allow-overlap": false,
+                "text-ignore-placement": false
+            },
+
+            paint: {
+                "text-color": "#FFFFFF",
+                "text-halo-color": "#E53935",
+                "text-halo-width": 5,
+                "text-halo-blur": 0
+            }
+        });
+    }
+}
+
+function emptyDistanceMarkers() {
+    return {
+        type: "FeatureCollection",
+        features: []
+    };
+}
+
+function createDistanceMarkers(data) {
+    return {
+        type: "FeatureCollection",
+
+        features: data.distanceMarkers.map(marker => ({
+            type: "Feature",
+
+            properties: {
+                distance: marker.distance.toString()
+            },
+
+            geometry: {
+                type: "Point",
+
+                coordinates: [
+                    marker.longitude,
+                    marker.latitude
+                ]
+            }
+        }))
+    };
+}
+
+function updateDistanceMarkers(map, data) {
+    const source = map.getSource(distanceSourceId);
+
+    if (!source)
+        return;
+
+    source.setData(createDistanceMarkers(data));
 }
 
 function createMarkers(map, data) {
