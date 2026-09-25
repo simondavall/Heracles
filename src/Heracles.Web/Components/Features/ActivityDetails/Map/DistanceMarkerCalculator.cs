@@ -7,8 +7,8 @@ internal static class DistanceMarkerCalculator
     private const double EarthRadiusKm = 6371;
     private const double MarkerIntervalKm = 1;
 
-    public static IReadOnlyList<ActivityMapDistanceMarker> Calculate(Track track) {
-        var markers = new List<ActivityMapDistanceMarker>();
+    public static IReadOnlyList<MapDistanceMarker> Calculate(Track track) {
+        var markers = new List<MapDistanceMarker>();
 
         var cumulativeDistance = 0d;
         var nextMarkerDistance = MarkerIntervalKm;
@@ -44,7 +44,7 @@ internal static class DistanceMarkerCalculator
                     var latitude = previousPoint.Latitude + (point.Latitude - previousPoint.Latitude) * fraction;
 
                     markers.Add(
-                        new ActivityMapDistanceMarker(
+                        new MapDistanceMarker(
                             (int)nextMarkerDistance,
                             longitude,
                             latitude));

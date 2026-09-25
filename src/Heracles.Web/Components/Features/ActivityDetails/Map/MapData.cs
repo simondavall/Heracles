@@ -1,17 +1,17 @@
 ﻿namespace Heracles.Web.Components.Features.ActivityDetails.Map;
 
-public sealed record ActivityMapData(
-    IReadOnlyList<ActivityMapSegment> Segments,
-    IReadOnlyList<ActivityMapDistanceMarker> DistanceMarkers);
+public sealed record MapData(
+    IReadOnlyList<MapSegment> Segments,
+    IReadOnlyList<MapDistanceMarker> DistanceMarkers);
 
-public sealed record ActivityMapSegment(
-    IReadOnlyList<ActivityMapCoordinate> Coordinates);
+public sealed record MapSegment(
+    IReadOnlyList<MapCoordinate> Coordinates);
 
-public sealed record ActivityMapCoordinate(
+public sealed record MapCoordinate(
     double Longitude,
     double Latitude);
 
-public sealed record ActivityMapDistanceMarker(
+public sealed record MapDistanceMarker(
     int Distance,
     double Longitude,
     double Latitude);
