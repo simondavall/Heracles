@@ -13,7 +13,7 @@ where development should continue.
 
 # Current task
 
-- Implement activity distance markers.
+- Create the activity import page.
 
 # Remaining milestone tasks
 

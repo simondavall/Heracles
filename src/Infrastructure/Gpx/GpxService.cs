@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Dlg.Krakow.Gpx;
+using Heracles.Application.Exceptions;
 using Heracles.Application.Interfaces;
 using Heracles.Application.TrackAggregate;
 using Heracles.Infrastructure.Gpx.Processors;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -30,16 +32,38 @@ namespace Heracles.Infrastructure.Gpx
                     return track;
                 }
             }
+            catch (Exception e) {
+                throw new TrackCreationException(file.FileName, e);
+            }
+
+            return null;
+        }
+        
+        public Track LoadContentsOfGpxFile(IBrowserFile file)
+        {
+            try
+            {
+                // todo: Convert this to async/await
+                var gpxTrack = GetGpxTrackFromFile(file);
+                if (gpxTrack != null)
+                {
+                    var track = CreateTrackAggregate(gpxTrack);
+                    return track;
+                }
+            }
             catch (Exception e)
             {
-                // todo: throw custom exception. Declare exception in App/Domain. Put e as inner exception.
-                _logger.LogError(e, $"GpxService Failed to create TrackAggregate for file {file.FileName} with message: {e.Message}");
-                throw;
+                throw new TrackCreationException(file.Name, e);
             }
 
             return null;
         }
 
+        private static GpxTrack GetGpxTrackFromFile(IBrowserFile file)
+        {
+            return file is { Size: > 0L } ? GpxEngine.GetGpxTrackFromStream(file.OpenReadStream()) : (GpxTrack) null;
+        }
+        
         private static Track CreateTrackAggregate(GpxTrack gpxTrack)
         {
             var track = new Track()
