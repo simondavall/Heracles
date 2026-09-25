@@ -8,7 +8,7 @@ namespace Heracles.Web.Components.Features.ActivityDetails.Map;
 public partial class ActivityMap : IAsyncDisposable
 {
     [Inject]
-    private IJSRuntime JSRuntime { get; set; } = null!;
+    private IJSRuntime JsRuntime { get; set; } = null!;
 
     [Inject]
     private MapboxSettings MapboxSettings { get; set; } = null!;
@@ -21,7 +21,7 @@ public partial class ActivityMap : IAsyncDisposable
     private IJSObjectReference? _module;
     private IJSObjectReference? _map;
 
-    private ActivityMapData? _mapData;
+    private MapData? _mapData;
 
     private bool _disposed;
 
@@ -40,7 +40,7 @@ public partial class ActivityMap : IAsyncDisposable
         if (_disposed || !_mapUpdateRequired || _mapData is null)
             return;
 
-        _module ??= await JSRuntime.InvokeAsync<IJSObjectReference>(
+        _module ??= await JsRuntime.InvokeAsync<IJSObjectReference>(
             "import",
             "./Components/Features/ActivityDetails/Map/ActivityMap.razor.js");
 
@@ -58,16 +58,16 @@ public partial class ActivityMap : IAsyncDisposable
         _mapUpdateRequired = false;
     }
 
-    private static ActivityMapData CreateMapData(Track track)
+    private static MapData CreateMapData(Track track)
     {
         var segments = track
             .TrackSegments
             .OrderBy(segment => segment.Seq)
-            .Select(segment => new ActivityMapSegment(
+            .Select(segment => new MapSegment(
                 segment
                     .TrackPoints
                     .OrderBy(point => point.Seq)
-                    .Select(point => new ActivityMapCoordinate(
+                    .Select(point => new MapCoordinate(
                         point.Longitude,
                         point.Latitude))
                     .ToArray()))
@@ -76,7 +76,7 @@ public partial class ActivityMap : IAsyncDisposable
 
         var distanceMarkers = DistanceMarkerCalculator.Calculate(track);
 
-        return new ActivityMapData(segments, distanceMarkers);
+        return new MapData(segments, distanceMarkers);
     }
 
     public async ValueTask DisposeAsync() {
