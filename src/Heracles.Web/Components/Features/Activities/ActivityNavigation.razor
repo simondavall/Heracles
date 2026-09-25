@@ -1,0 +1,135 @@
+﻿@if (_isLoading)
+{
+    <div class="activity-navigation-state">
+        <MudProgressCircular Indeterminate="true"
+                             Size="Size.Small"
+                             Color="Color.Primary" />
+
+        <MudText Typo="Typo.body2">
+            Loading activities...
+        </MudText>
+    </div>
+}
+else if (_currentActivity is null || _years.Count == 0)
+{
+    <div class="activity-navigation-state">
+        <MudText Typo="Typo.body2">
+            No Activities
+        </MudText>
+    </div>
+}
+else
+{
+    <nav class="activity-navigation" aria-label="Activity navigation">
+        <header class="activity-navigation-header">
+            <MudText Typo="Typo.subtitle2"
+                     Class="activity-navigation-header-title">
+                Activities
+            </MudText>
+        </header>
+        
+        <MudExpansionPanels MultiExpansion="false"
+                            Class="activity-years">
+            @foreach (var year in _years)
+            {
+                <MudExpansionPanel Expanded="@IsYearExpanded(year.ActivityYear)"
+                                   ExpandedChanged="@(expanded => YearExpandedChangedAsync(year.ActivityYear, expanded))"
+                                   Class="activity-year">
+                    <TitleContent>
+                        <div class="@GetYearHeadingClass(year.ActivityYear)">
+                            <span class="activity-navigation-title">
+                                @year.ActivityYear
+                            </span>
+
+                            <span class="activity-navigation-count">
+                                @year.Count
+                            </span>
+                        </div>
+                    </TitleContent>
+
+                    <ChildContent>
+                        <MudExpansionPanels MultiExpansion="false"
+                                            Class="activity-months">
+                            @foreach (var month in GetMonths(year.ActivityYear))
+                            {
+                                <MudExpansionPanel Expanded="@IsMonthExpanded(month.ActivityYearMonth)"
+                                                   ExpandedChanged="@(expanded => MonthExpandedChangedAsync(month, expanded))"
+                                                   Class="activity-month">
+                                    <TitleContent>
+                                        <div class="@GetMonthHeadingClass(month.ActivityYearMonth)">
+                                            <span class="activity-navigation-title">
+                                                @GetMonthName(month.ActivityYearMonth)
+                                            </span>
+
+                                            <span class="activity-navigation-count">
+                                                @month.Count
+                                            </span>
+                                        </div>
+                                    </TitleContent>
+
+                                    <ChildContent>
+                                        @if (_isLoadingMonth &&
+                                             _expandedMonth == month.ActivityYearMonth)
+                                        {
+                                            <div class="activity-month-state">
+                                                <MudProgressCircular Indeterminate="true"
+                                                                     Size="Size.Small"
+                                                                     Color="Color.Primary"/>
+                                            </div>
+                                        }
+                                        else if (_expandedMonth == month.ActivityYearMonth)
+                                        {
+                                            <div class="activity-list">
+                                                @if (_activities.Count == 0)
+                                                {
+                                                    <div class="activity-month-state">
+                                                        No Activities
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    @foreach (var activity in _activities)
+                                                    {
+                                                        var selected = activity.ActivityId == _selectedActivityId;
+
+                                                        <MudButton Variant="Variant.Text"
+                                                                   Color="Color.Inherit"
+                                                                   FullWidth="true"
+                                                                   Class="@GetActivityClass(selected)"
+                                                                   OnClick="() => SelectActivity(activity.ActivityId)"
+                                                                   aria-current="@(selected ? "page" : null)">
+                                                            <span class="activity-date">
+                                                                <span class="activity-month-name">
+                                                                    @activity.Month
+                                                                </span>
+
+                                                                <span class="activity-day">
+                                                                    @activity.DayOfMonth
+                                                                </span>
+                                                            </span>
+
+                                                            <span class="activity-summary">
+                                                                <span class="activity-title">
+                                                                    @activity.MainText
+                                                                </span>
+
+                                                                <span class="activity-distance">
+                                                                    @activity.Distance @activity.DistanceUnits
+                                                                </span>
+                                                            </span>
+
+                                                        </MudButton>
+                                                    }
+                                                }
+                                            </div>
+                                        }
+                                    </ChildContent>
+                                </MudExpansionPanel>
+                            }
+                        </MudExpansionPanels>
+                    </ChildContent>
+                </MudExpansionPanel>
+            }
+        </MudExpansionPanels>
+    </nav>
+}

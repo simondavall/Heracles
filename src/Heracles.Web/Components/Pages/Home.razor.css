@@ -1,0 +1,20 @@
+﻿.activity-page {
+    display: flex;
+    min-height: calc(100vh - var(--mud-appbar-height) - 129px);
+}
+
+.activity-details {
+    flex: 1;
+    min-width: 0;
+}
+
+@media (max-width: 599.98px) {
+    .activity-page {
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    .activity-details {
+        width: 100%;
+    }
+}

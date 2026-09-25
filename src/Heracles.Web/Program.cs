@@ -1,37 +1,69 @@
+using DotNetEnv;
 using Heracles.Application;
+using Heracles.Application.Configuration;
 using Heracles.Infrastructure;
 using Heracles.Web.Components;
+using Heracles.Web.Components.Features.Authentication;
+using Heracles.Web.Components.Features.DataProtection;
+using Heracles.Web.Components.Features.UserState;
+using Microsoft.AspNetCore.Authorization;
+using MudBlazor.Services;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+_ = bool.TryParse(Environment.GetEnvironmentVariable("HERACLES_LOCAL_EXECUTION"), out var isLocalExecution);
+if (isLocalExecution) {
+    Env.NoClobber()
+        .TraversePath()
+        .Load();
+
+    builder.Configuration.AddEnvironmentVariables();
+
+    builder.WebHost.UseStaticWebAssets();
+}
+
+builder.Services.AddSerilog((services, configuration) => configuration
+    .ReadFrom.Configuration(builder.Configuration)
+    .ReadFrom.Services(services));
+
+var settings = HeraclesSettings.Create(builder.Configuration);
+builder.Services.AddSingleton(settings.Mapbox);
+builder.Services.AddSingleton(settings.Import);
 
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 
-// Add services to the container.
+builder.Services.AddHeraclesDataProtection(settings.DataProtection);
+builder.Services.AddHeraclesAuthentication(settings.OpenIdConnect);
+
+builder.Services.AddScoped<UserStateService>();
+
+builder.Services.AddMudServices();
+
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
+if (!app.Environment.IsDevelopment()) {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
-app.UseRouting();
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseAntiforgery();
 
-app.MapStaticAssets();
+app.MapStaticAssets()
+    .Add(endpointBuilder => endpointBuilder.Metadata.Add(new AllowAnonymousAttribute()));
+
+app.UseHeraclesAuthentication();
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 

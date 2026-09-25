@@ -1,25 +1,68 @@
 ﻿@inherits LayoutComponentBase
+@using Heracles.Web.Components.Theme
 
-<div class="userLayout activity">
-    <div id="pageWrapper">
-        <div id="homeNavContainer">
-            <div class="sizeConstraint">
-                <MainNav/>
+<MudThemeProvider @ref="_themeProvider"
+                  Theme="HeraclesTheme.Default"
+                  IsDarkMode="_isDarkMode" />
+
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <div class="application-header">
+        <MudAppBar Elevation="0"
+                   Fixed="true">
+            <div class="header-content">
+                <MudText Typo="Typo.h6"
+                         Color="Color.Inherit">
+                    Heracles
+                </MudText>
+
+                <MudSpacer />
+
+                <AuthorizeView>
+                    <Authorized Context="auth">
+                        <MudButton Href="https://soteria.local/account/manage"
+                                   Target="_blank"
+                                   Variant="Variant.Text"
+                                   Color="Color.Inherit"
+                                   StartIcon="@Icons.Material.Filled.AccountCircle">
+                            @DisplayName(auth.User)
+                        </MudButton>
+
+                        <MudIconButton Icon="@ThemeToggleIcon"
+                                       Color="Color.Inherit"
+                                       OnClick="ToggleThemeAsync"
+                                       title="@ThemeToggleText"
+                                       aria-label="@ThemeToggleText" />
+
+                        <MudIconButton Icon="@Icons.Material.Filled.Logout"
+                                       Color="Color.Inherit"
+                                       Href="/authentication/logout"
+                                       title="Logout"
+                                       aria-label="Logout" />
+                    </Authorized>
+                </AuthorizeView>
             </div>
-        </div>
-        <div class="bodyWrapper">
-            <div class="sizeConstraint">
-                <div class="bodyContainer clearfix subNavTrue">
-                    @Body
-                </div>
-            </div>
-            <div id="footerContainer" class="micro-text">
-                <div class="sizeConstraint">
-                    <div class="container">
-                        &copy; 2021 - Heracles.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </MudAppBar>
     </div>
+
+    <div class="application-main">
+        <MudMainContent>
+            <div class="application-body">
+                <PrimaryNavigation />
+
+                <main class="main-content">
+                    @Body
+                </main>
+            </div>
+        </MudMainContent>
+    </div>
+</MudLayout>
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
 </div>

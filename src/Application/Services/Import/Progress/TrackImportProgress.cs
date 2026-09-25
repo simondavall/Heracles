@@ -1,87 +1,84 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using Heracles.Application.Enums;
-using Heracles.Application.Interfaces;
 
-namespace Heracles.Application.Services.Import.Progress
+namespace Heracles.Application.Services.Import.Progress;
+
+public class TrackImportProgress
 {
-    public class TrackImportProgress
-    {
-        private readonly IImportProgressService _progressService;
-        private const decimal ProgressWeighting = 0.2M;
-        private int _totalRecordsToImport;
-        private int _trackCount;
-        private int _trackSegmentCount;
-        private int _trackPointCount;
-        private int _filesProcessedCount;
-        private decimal _percentageComplete;
+    private const decimal ProcessingWeight = 0.2M;
+    private const decimal PersistenceWeight = 0.8M;
 
-        public TrackImportProgress(IImportProgressService progressService, Guid processId)
-        {
-            _progressService = progressService;
-            ProcessId = processId;
-            
-            InitializeImportProgress(processId);
-        }
+    private readonly Action<decimal>? _progress;
 
-        public Guid ProcessId { get; private set; }
+    private int _trackCount;
+    private int _segmentCount;
+    private int _pointCount;
+    private int _totalRecords;
 
-        public Action<decimal> TrackProgressMethod;
+    private decimal _lastProgress;
 
-        private void InitializeImportProgress(Guid processId)
-        {
-            ProcessId = processId;
-            TrackProgressMethod ??= GetFilesProcessedProgress;
-            _progressService.InitializeProgress(ProcessId);
-        }
+    public TrackImportProgress(Action<decimal>? progress) {
+        _progress = progress;
+        TrackProgressMethod = ReportFileProgress;
+    }
 
-        public void UpdateWithProcessedFileData(ImportFilesResult importFilesResult)
-        {
-            _trackCount = importFilesResult.Tracks.Count;
-            _trackSegmentCount = importFilesResult.TrackSegments.Count;
-            _trackPointCount = importFilesResult.TrackPoints.Count;
+    public Action<decimal> TrackProgressMethod { get; private set; }
 
-            _totalRecordsToImport = _trackCount + _trackSegmentCount + _trackPointCount;
+    public void UpdateWithProcessedFileData(ImportFilesResult result) {
+        _trackCount = result.Tracks.Count;
+        _segmentCount = result.TrackSegments.Count;
+        _pointCount = result.TrackPoints.Count;
 
-            _filesProcessedCount = (int)(_totalRecordsToImport * ProgressWeighting / (1 - ProgressWeighting));
-            _totalRecordsToImport += _filesProcessedCount;
+        _totalRecords = _trackCount + _segmentCount + _pointCount;
+    }
 
-            _progressService.InitializeProgress(ProcessId);
-        }
+    public void SetTrackingProgressMethod(TrackImportMethod method) {
+        TrackProgressMethod = method switch {
+            TrackImportMethod.FilesProcessing => ReportFileProgress,
+            TrackImportMethod.TrackImport => ReportTrackProgress,
+            TrackImportMethod.SegmentImport => ReportSegmentProgress,
+            TrackImportMethod.PointsImport => ReportPointProgress,
+            _ => TrackProgressMethod
+        };
+    }
 
-        public void SetTrackingProgressMethod(TrackImportMethod method)
-        {
-            TrackProgressMethod = method switch
-            {
-                TrackImportMethod.FilesProcessing => GetFilesProcessedProgress,
-                TrackImportMethod.TrackImport => GetTracksProgress,
-                TrackImportMethod.SegmentImport => GetTrackSegmentsProgress,
-                TrackImportMethod.PointsImport => GetTrackPointsProgress,
-                _ => TrackProgressMethod
-            };
-        }
+    public void Complete() => Report(1M);
 
-        private void GetFilesProcessedProgress(decimal percentage)
-        {
-            _percentageComplete = percentage * ProgressWeighting;
-            _progressService.UpdateProgress(ProcessId, _percentageComplete);
-        }
+    private void ReportFileProgress(decimal progress) => Report(Normalize(progress) * ProcessingWeight);
 
-        private void GetTracksProgress(decimal percentage)
-        {
-            _percentageComplete = (percentage * _trackCount + _filesProcessedCount) / _totalRecordsToImport;
-            _progressService.UpdateProgress(ProcessId, _percentageComplete);
-        }
+    private void ReportTrackProgress(decimal progress) => ReportPersistenceProgress(progress, _trackCount, 0);
 
-        private void GetTrackSegmentsProgress(decimal percentage)
-        {
-            _percentageComplete = (percentage * _trackSegmentCount + _filesProcessedCount + _trackCount) / _totalRecordsToImport;
-            _progressService.UpdateProgress(ProcessId, _percentageComplete);
-        }
+    private void ReportSegmentProgress(decimal progress) => ReportPersistenceProgress(progress, _segmentCount, _trackCount);
 
-        private void GetTrackPointsProgress(decimal percentage)
-        {
-            _percentageComplete = (percentage * _trackPointCount + _filesProcessedCount + _trackCount + _trackSegmentCount) / _totalRecordsToImport;
-            _progressService.UpdateProgress(ProcessId, _percentageComplete);
-        }
+    private void ReportPointProgress(decimal progress) => ReportPersistenceProgress(progress, _pointCount, _trackCount + _segmentCount);
+
+    private void ReportPersistenceProgress(decimal progress, int currentCount, int completedCount) {
+        if (_totalRecords == 0)
+            return;
+
+        var processedRecords = completedCount + Normalize(progress) * currentCount;
+        var persistenceProgress = processedRecords / _totalRecords;
+
+        Report(ProcessingWeight + persistenceProgress * PersistenceWeight);
+    }
+
+    private static decimal Normalize(decimal progress) {
+        // File-processing callbacks use fractions.
+        // Bulk-insert callbacks may report percentages.
+        if (progress > 1M) 
+            progress /= 100M;
+
+        return Math.Clamp(progress, 0M, 1M);
+    }
+
+    private void Report(decimal progress) {
+        progress = Math.Clamp(progress, 0M, 1M);
+
+        if (progress <= _lastProgress)
+            return;
+        
+        _lastProgress = progress;
+        _progress?.Invoke(progress);
     }
 }

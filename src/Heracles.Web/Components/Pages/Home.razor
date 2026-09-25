@@ -1,0 +1,20 @@
+﻿@page "/"
+@page "/activity/{ActivityId:guid}"
+
+@using Heracles.Web.Components.Features.ActivityDetails
+@using Heracles.Web.Components.Features.ActivityDetails.Map
+
+<PageTitle>Heracles</PageTitle>
+
+<div class="activity-page">
+    <ActivityNavigation ActivityId="@ActivityId" />
+
+    <main class="activity-details">
+        @if (_activity is not null)
+        {
+            <ActivityTitle Track="@_activity" />
+            <MetricsBar Track="@_activity" />
+            <ActivityMap Track="@_activity" />
+        }
+    </main>
+</div>

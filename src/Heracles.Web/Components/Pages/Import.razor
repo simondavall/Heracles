@@ -1,103 +1,146 @@
 ﻿@page "/import"
-@rendermode InteractiveServer
-@using Heracles.Web.Components.Features.Shared
 
-<PageTitle>Import</PageTitle>
+<PageTitle>Import Activities</PageTitle>
 
-<div class="subNavcontainer clearfix">
-    <SubNavigation SelectedTab="SubNavTab.Import" />
-</div>
+<div class="activity-import">
 
-<div class="container">
-    <div class="columnContent clearfix">
+    <MudText Typo="Typo.h5"
+             Align="Align.Center"
+             Class="import-title">
+        Import multiple activities
+    </MudText>
 
-        <div class="mainColumnPadding">
-            <div class="multipleMapImport">
-                <div class="mappingImportContainer">
+    <MudText Typo="Typo.body1"
+             Align="Align.Center"
+             Class="import-description">
+        You can upload multiple activities at once.
+        Please select the GPX files you would like to import.
+    </MudText>
 
-                    <div class="header">
-                        Import multiple activities
-                    </div>
+    <div class="import-dropzone @(_isImporting ? "import-dropzone-disabled" : "")">
 
-                    <div class="info">
-                        <label for="trackFiles" id="trackFileLabel">
-                            You can upload multiple activities at once.
-                            Please select the GPX files you would like to import.
-                        </label>
-                    </div>
+        <InputFile @key="_inputKey"
+                   OnChange="@OnFilesSelectedAsync"
+                   multiple
+                   accept=".gpx"
+                   disabled="@_isImporting"
+                   class="import-file-input" />
 
-                    <div class="uploader" id="uniform-trackFiles">
+        <MudIcon Icon="@Icons.Material.Filled.CloudUpload"
+                 Size="Size.Large"
+                 Color="Color.Primary" />
 
-                        <InputFile id="trackFiles"
-                                   OnChange="UploadFilesAsync"
-                                   multiple
-                                   accept=".gpx,.tcx,.fit" />
+        <MudText Typo="Typo.body1"
+                 Class="mt-2">
+            Choose files or drag them here
+        </MudText>
 
-                        <span class="filename">
-                            @_selectedFileDescription
-                        </span>
+        <MudText Typo="Typo.caption"
+                 Class="mt-1">
+            GPX files only
+        </MudText>
 
-                        <span class="action">
-                            Choose File
-                        </span>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        @if (_isImporting)
-        {
-            <div class="row progressbar" id="progress">
-                <div class="progress-bar"
-                     style="@($"width: {_progressPercentage}%")">
-                </div>
-            </div>
-        }
-
-        @if (!string.IsNullOrWhiteSpace(_errorMessage))
-        {
-            <div class="text-danger">
-                @_errorMessage
-            </div>
-        }
-
-        @if (_importExecuted)
-        {
-            <div class="importedfiles">
-
-                @if (_filesImported > 0)
-                {
-                    <div id="successFilesHeader"
-                         class="successfiles" style="display: block;">
-
-                        Successfully uploaded
-                        @FormatSuccessfullyImported()
-                    </div>
-                }
-
-                @if (_filesFailed.Count > 0)
-                {
-                    <div id="errorFilesHeader"
-                         class="failedfiles" style="display: block;">
-
-                        Could not upload the following
-                        @FormatDisplay(_filesFailed.Count):
-
-                        <div id="errorFiles">
-                            @foreach (var failedFile in _filesFailed)
-                            {
-                                <p class="error-file">
-                                    @failedFile.Filename -
-                                    [@failedFile.Reason]
-                                </p>
-                            }
-                        </div>
-                    </div>
-                }
-
-            </div>
-        }
+        <MudText Typo="Typo.caption"
+                 Class="mt-1">
+            Maximum @_maximumFileCount files,
+            @_maximumCombinedSizeMb MB combined
+        </MudText>
 
     </div>
+
+    @if (_isImporting)
+    {
+        <div class="import-progress">
+
+            <MudText Typo="Typo.body1">
+                Importing activities...
+            </MudText>
+
+            <MudProgressLinear Value="@((double)_progress)"
+                               Color="Color.Primary"
+                               Rounded="true"
+                               Class="mt-3" />
+
+            <MudText Typo="Typo.caption"
+                     Class="mt-2">
+                @_progress.ToString("0")%
+            </MudText>
+
+            <MudButton Variant="Variant.Outlined"
+                       Color="Color.Error"
+                       Class="mt-3"
+                       OnClick="@CancelImport">
+                Cancel
+            </MudButton>
+
+        </div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(_errorMessage))
+    {
+        <MudAlert Severity="Severity.Error"
+                  Class="mt-4">
+            @_errorMessage
+        </MudAlert>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(_informationMessage))
+    {
+        <MudAlert Severity="Severity.Info"
+                  Class="mt-4">
+            @_informationMessage
+        </MudAlert>
+    }
+
+    @if (_importCompleted && _result is not null)
+    {
+        <div class="import-results">
+
+            <MudAlert Severity="@(_result.FailedFiles.Count == 0
+                                     ? Severity.Success
+                                     : Severity.Warning)">
+
+                @_result.ImportedFiles.Count of
+                @(_result.ImportedFiles.Count + _result.FailedFiles.Count)
+                files successfully imported.
+
+            </MudAlert>
+
+            @if (_result.FailedFiles.Count > 0)
+            {
+                <div class="import-failures">
+
+                    <MudText Typo="Typo.subtitle1"
+                             Class="mb-3">
+                        Could not import the following
+                        @_result.FailedFiles.Count files:
+                    </MudText>
+
+                    @foreach (var failure in _result.FailedFiles)
+                    {
+                        <div class="import-failure">
+
+                            <MudIcon Icon="@Icons.Material.Filled.ErrorOutline"
+                                     Color="Color.Error"
+                                     Size="Size.Small" />
+
+                            <div>
+                                <MudText Typo="Typo.body2">
+                                    @failure.Filename
+                                </MudText>
+
+                                <MudText Typo="Typo.caption">
+                                    @failure.Reason
+                                </MudText>
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+            }
+
+        </div>
+    }
+
 </div>

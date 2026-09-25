@@ -1,0 +1,230 @@
+﻿.activity-navigation {
+    width: 240px;
+    min-height: 100%;
+    color: var(--mud-palette-text-primary);
+    background-color: var(--mud-palette-surface);
+    border-right: 1px solid var(--mud-palette-divider);
+}
+
+.activity-navigation-state {
+    display: flex;
+    width: 240px;
+    min-height: 160px;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 24px;
+    color: var(--mud-palette-text-secondary);
+    border-right: 1px solid var(--mud-palette-divider);
+}
+
+/*
+ * Expansion panels
+ */
+
+.activity-navigation ::deep .mud-expand-panel {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.activity-navigation ::deep .mud-expand-panel-header {
+    min-height: 0;
+    padding: 0;
+}
+
+.activity-navigation ::deep .mud-expand-panel-header:hover {
+    background-color: transparent;
+}
+
+.activity-navigation ::deep .mud-expand-panel-content {
+    padding: 0;
+}
+
+.activity-navigation ::deep .mud-expand-panel-icon {
+    display: none;
+}
+
+/*
+ * Headings
+ */
+
+.activity-heading {
+    display: grid;
+    width: 100%;
+    align-items: center;
+    grid-template-columns: 1fr auto;
+}
+
+.activity-heading.selected {
+    color: var(--mud-palette-primary);
+}
+
+.activity-heading.selected .activity-navigation-count {
+    color: inherit;
+}
+
+.activity-year-heading {
+    min-height: 44px;
+    padding-left: 16px;
+    background-color: color-mix(
+            in srgb,
+            var(--mud-palette-surface) 92%,
+            var(--mud-palette-text-primary) 8%);
+    border-bottom: 1px solid var(--mud-palette-divider);
+}
+
+.activity-month-heading {
+    min-height: 40px;
+    padding-left: 24px;
+    border-bottom: 1px solid var(--mud-palette-divider);
+}
+
+.activity-navigation-header {
+    display: flex;
+    min-height: 48px;
+    align-items: center;
+    padding: 0 16px;
+    background-color: var(--mud-palette-surface);
+    border-bottom: 1px solid var(--mud-palette-divider);
+}
+
+.activity-navigation ::deep .activity-navigation-header-title {
+    color: var(--mud-palette-text-primary);
+    font-weight: 600;
+    letter-spacing: 0.015em;
+    text-transform: uppercase;
+}
+
+.activity-navigation ::deep .mud-expand-panel-header:hover .activity-heading {
+    color: var(--mud-palette-primary);
+}
+
+.activity-navigation-title {
+    min-width: 0;
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+.activity-navigation-count {
+    min-width: 32px;
+    margin-right: 8px;
+    color: var(--mud-palette-text-secondary);
+    font-size: 0.75rem;
+    text-align: right;
+}
+
+.activity-navigation ::deep .mud-expand-panel-header:hover,
+.activity-navigation-count {
+    color: inherit;
+}
+
+/*
+ * Activities
+ */
+
+.activity-list {
+    border-bottom: 1px solid var(--mud-palette-divider);
+}
+
+.activity-list ::deep .activity-list-item {
+    min-width: 0;
+    min-height: 62px;
+    padding: 0;
+    color: var(--mud-palette-text-primary);
+    background-color: var(--mud-palette-surface);
+    border-radius: 0;
+    border-bottom: 1px solid var(--mud-palette-divider);
+    text-transform: none;
+}
+
+.activity-list ::deep .activity-list-item:last-child {
+    border-bottom: 0;
+}
+
+.activity-list ::deep .activity-list-item .mud-button-label {
+    display: grid;
+    width: 100%;
+    min-height: 62px;
+    grid-template-columns: 48px minmax(0, 1fr);
+    align-items: stretch;
+    text-align: left;
+}
+
+.activity-list ::deep .activity-list-item:hover {
+    background-color: color-mix(
+            in srgb,
+            var(--mud-palette-surface) 94%,
+            var(--mud-palette-primary) 6%);
+}
+
+.activity-list ::deep .activity-list-item.selected {
+    background-color: color-mix(
+            in srgb,
+            var(--mud-palette-surface) 88%,
+            var(--mud-palette-primary) 12%);
+}
+
+.activity-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--mud-palette-text-secondary);
+    border-right: 1px solid var(--mud-palette-divider);
+}
+
+.activity-month-name {
+    font-size: 0.625rem;
+    font-weight: 600;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.activity-day {
+    margin-top: 3px;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.activity-summary {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8px 10px;
+}
+
+.activity-title {
+    overflow: hidden;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.25;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.activity-distance {
+    margin-top: 3px;
+    color: var(--mud-palette-text-secondary);
+    font-size: 0.6875rem;
+    line-height: 1.2;
+}
+
+.activity-month-state {
+    display: flex;
+    min-height: 64px;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    color: var(--mud-palette-text-secondary);
+    font-size: 0.75rem;
+}
+
+@media (max-width: 599.98px) {
+    .activity-navigation,
+    .activity-navigation-state {
+        width: 100%;
+        border-right: 0;
+    }
+}

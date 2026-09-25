@@ -1,146 +1,150 @@
-﻿using Heracles.Application.Interfaces;
-using Heracles.Application.Resources;
+using Heracles.Application.Configuration;
+using Heracles.Application.Interfaces;
 using Heracles.Application.Services.Import;
-using Heracles.Application.Services.Import.Progress;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
 namespace Heracles.Web.Components.Pages;
 
-public partial class Import : ComponentBase
+public partial class Import : IDisposable
 {
     [Inject]
     private IImportService ImportService { get; set; } = default!;
     [Inject]
-    private ITrackRepository TrackRepository { get; set; } = default!;
-    [Inject]
-    private IImportProgressService ProgressService { get; set; } = default!;
+    private ImportSettings ImportSettings { get; set; } = default!;
     [Inject]
     private ILogger<Import> Logger { get; set; } = default!;
 
-    private readonly Guid _processId = Guid.NewGuid();
-    private const int MaxFileCount = 100;
-    private const long MaxFileSize = 1 * 1024 * 1024; // 1MB
-    // Improbably the file import is too fast. Applying a small delay can provide the
-    // user with a sense something is happening. Really need this to be externally 
-    // configurable.
-    private const int ImportDelay = 10; // ms
-    
-    private IList<FileResult> _filesFailed = [];
-    private int _filesImported;
-    private bool _importExecuted;
+    private CancellationTokenSource? _cancellationTokenSource;
+    private ImportFilesResult? _result;
+
     private bool _isImporting;
-    private decimal _progressPercentage;
-    private string _selectedFileDescription = "No file selected";
+    private bool _importCompleted;
+    private bool _disposed;
+
+    private decimal _progress;
+
     private string? _errorMessage;
+    private string? _informationMessage;
 
-    private async Task UploadFilesAsync(InputFileChangeEventArgs args) {
-        var files = args.GetMultipleFiles(MaxFileCount);
+    private int _inputKey;
 
-        if (files.Count == 0)
+    private int _maximumFileCount;
+    private int _maximumCombinedSizeMb;
+    private long _maximumCombinedSize;
+
+    protected override void OnInitialized() {
+        _maximumFileCount = ImportSettings.MaximumFileCount;
+        _maximumCombinedSizeMb = ImportSettings.MaximumCombinedSizeMb;
+
+        _maximumCombinedSize = _maximumCombinedSizeMb * 1024L * 1024L;
+    }
+
+    private async Task OnFilesSelectedAsync(InputFileChangeEventArgs args) {
+        if (_isImporting || _disposed)
             return;
+        
+        ResetResults();
 
-        _selectedFileDescription =
-            files.Count == 1
-                ? files[0].Name
-                : $"{files.Count} files selected";
-
-        _filesFailed = [];
-        _filesImported = 0;
-        _importExecuted = false;
-        _errorMessage = null;
-
-        _isImporting = true;
-        _progressPercentage = 0;
+        IReadOnlyList<IBrowserFile> files;
 
         try {
-            await ImportFilesAsync(files);
+            files = args.GetMultipleFiles(_maximumFileCount);
+        }
+        catch (InvalidOperationException) {
+            _errorMessage = $"You can import a maximum of {_maximumFileCount} files at once.";
+            ResetInput();
+            return;
+        }
+
+        if (files.Count == 0) {
+            ResetInput();
+            return;
+        }
+
+        if (files.Sum(file => file.Size) > _maximumCombinedSize) {
+            _errorMessage = $"The combined file size cannot exceed {_maximumCombinedSizeMb} MB.";
+            ResetInput();
+            return;
+        }
+
+        if (files.Any(file => !file.Name.EndsWith(".gpx", StringComparison.OrdinalIgnoreCase))) {
+            _errorMessage = "Only GPX files can be imported.";
+            ResetInput();
+            return;
+        }
+
+        _isImporting = true;
+        _cancellationTokenSource = new CancellationTokenSource();
+        var cancellationToken = _cancellationTokenSource.Token;
+
+        try {
+            await InvokeAsync(StateHasChanged);
+
+            var progress = new Action<decimal>(value => {
+                if (_disposed)
+                    return;
+                
+                _ = InvokeAsync(() => {
+                    if (_disposed)
+                        return;
+
+                    _progress = Math.Clamp(value * 100M, 0M, 100M);
+
+                    StateHasChanged();
+                });
+            });
+
+            _result = await ImportService.ImportTracksFromGpxFilesAsync(files, _maximumCombinedSize, progress, cancellationToken);
+
+            _progress = 100M;
+            _importCompleted = true;
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            _informationMessage = "The import was cancelled.";
+            _result = null;
+        }
+        catch (Exception exception) {
+            Logger.LogError(exception, "Activity import failed");
+            _errorMessage = "The import could not be completed. No files from this batch were saved.";
+            _result = null;
         }
         finally {
             _isImporting = false;
+
+            _cancellationTokenSource?.Dispose();
+            _cancellationTokenSource = null;
+
+            ResetInput();
+
+            if (!_disposed)
+                await InvokeAsync(StateHasChanged);
         }
     }
 
-    private async Task ImportFilesAsync(IReadOnlyList<IBrowserFile> files) {
-        
-        Logger.LogInformation($"Started importing {files.Count} files.");
-        
-        var trackProgress =
-            new TrackImportProgress(
-                ProgressService,
-                _processId);
+    private void CancelImport() {
+        if (!_isImporting)
+            return;
 
-        try {
-            var formFiles = await ConvertToFormFilesAsync(files);
-
-            var result =
-                await ImportService.ImportTracksFromGpxFilesAsync(
-                    formFiles,
-                    progress: ImportProgressChanged);
-
-            trackProgress.UpdateWithProcessedFileData(result);
-
-            await TrackRepository.SaveImportedFilesAsync(result, trackProgress, CancellationToken.None);
-
-            _filesFailed = result.FailedFiles;
-            _filesImported = result.ImportedFiles.Count;
-            _importExecuted = true;
-            _progressPercentage = 100;
-        }
-        catch (Exception ex) {
-            Logger.LogError(ex, "Failed to import activity files.");
-            _errorMessage = ImportServiceStrings.FailedToSaveImportedFiles;
-        }
+        _informationMessage = "Cancelling import...";
+        _cancellationTokenSource?.Cancel();
     }
 
-    private void ImportProgressChanged(decimal value) {
-        _progressPercentage = value * 100;
-        _ = InvokeAsync(StateHasChanged);
-        
-        Thread.Sleep(ImportDelay);
+    private void ResetResults() {
+        _result = null;
+        _progress = 0M;
+        _importCompleted = false;
+
+        _errorMessage = null;
+        _informationMessage = null;
     }
 
-    private string FormatDisplay(int count) => count == 1
-        ? "1 file"
-        : $"{count} files";
-
-    private string FormatSuccessfullyImported() {
-        var total = _filesImported + _filesFailed.Count;
-
-        return total == 1
-            ? $"{_filesImported}/{total} file"
-            : $"{_filesImported}/{total} files";
+    private void ResetInput() {
+        _inputKey++;
     }
-    
-    private static async Task<IFormFileCollection> ConvertToFormFilesAsync(IReadOnlyList<IBrowserFile> files)
-    {
-        var formFiles = new FormFileCollection();
 
-        foreach (var file in files)
-        {
-            var memoryStream = new MemoryStream();
-
-            await using (var browserStream = file.OpenReadStream(MaxFileSize))
-            {
-                await browserStream.CopyToAsync(memoryStream);
-            }
-
-            memoryStream.Position = 0;
-
-            var formFile = new FormFile(
-                memoryStream,
-                0,
-                memoryStream.Length,
-                file.Name,
-                file.Name)
-            {
-                Headers = new HeaderDictionary(),
-                ContentType = file.ContentType
-            };
-
-            formFiles.Add(formFile);
-        }
-
-        return formFiles;
+    public void Dispose() {
+        _disposed = true;
+        _cancellationTokenSource?.Cancel();
     }
 }

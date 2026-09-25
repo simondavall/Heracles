@@ -1,10 +1,11 @@
-﻿using Heracles.Application.TrackAggregate;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Heracles.Application.TrackAggregate;
+using Microsoft.AspNetCore.Components.Forms;
 
-namespace Heracles.Application.Interfaces
+namespace Heracles.Application.Interfaces;
+
+public interface IGpxService
 {
-    public interface IGpxService
-    {
-        Track LoadContentsOfGpxFile(IFormFile file);
-    }
+    Task<Track> LoadContentsOfGpxFileAsync(IBrowserFile file, long maxAllowedSize, CancellationToken cancellationToken = default);
 }

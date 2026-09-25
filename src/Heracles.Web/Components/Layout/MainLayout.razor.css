@@ -1,21 +1,92 @@
-.userLayout .bodyContainer.subNavTrue .leftContentColumn,
-.userLayout .bodyContainer.subNavTrue .mainContentColumn {
-    padding: 0;
+.application-header ::deep .mud-appbar {
+    border-bottom: 1px solid #35404a;
 }
 
-/* Default MainLayout begins here */
-.page {
-    position: relative;
+.header-content {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
 }
 
-main {
-    flex: 1;
+.header-content ::deep .mud-typography {
+    white-space: nowrap;
 }
 
-@media (min-width: 641px) {
-    .page {
-        flex-direction: row;
+.application-main ::deep .mud-main-content {
+    min-height: 100vh;
+    padding-top: var(--mud-appbar-height);
+    background-color: var(--mud-palette-background);
+}
+
+.application-body {
+    width: calc(100% - 48px);
+    max-width: 960px;
+    min-height: calc(100vh - var(--mud-appbar-height) - 48px);
+    margin: 24px auto;
+    overflow: hidden;
+    background-color: var(--mud-palette-surface);
+    border: 1px solid var(--mud-palette-divider);
+    border-radius: var(--mud-default-borderradius);
+}
+
+.main-content {
+    min-width: 0;
+}
+
+@media (max-width: 959.98px) {
+    .header-content {
+        padding: 0 16px;
     }
+
+    .application-body {
+        width: calc(100% - 32px);
+        min-height: calc(100vh - var(--mud-appbar-height) - 32px);
+        margin: 16px auto;
+    }
+}
+
+@media (max-width: 599.98px) {
+    .header-content {
+        padding: 0 8px 0 16px;
+    }
+
+    .application-body {
+        width: 100%;
+        min-height: calc(100vh - var(--mud-appbar-height));
+        margin: 0;
+        border-right: 0;
+        border-left: 0;
+        border-radius: 0;
+    }
+}
+
+@media (max-width: 419.98px) {
+    .header-content ::deep .mud-button-label {
+        display: none;
+    }
+}
+
+#blazor-error-ui {
+    color-scheme: light only;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.6rem 1.25rem 0.7rem;
+    color: #20262d;
+    background: #fff3cd;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+}
+
+#blazor-error-ui .dismiss {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.75rem;
+    cursor: pointer;
 }

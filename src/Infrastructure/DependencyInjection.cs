@@ -15,35 +15,31 @@ namespace Heracles.Infrastructure
     public static class DependencyInjection
     {
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration) {
-            services = AddDatabaseContexts(services, configuration);
+            services.AddDbContextFactory<GpxDbContext>(options => {
+                if (configuration.GetValue<bool>("UseInMemoryDatabase"))
+                    options.UseInMemoryDatabase("HeraclesDb");
+                else
+                    options.UseSqlServer(configuration.GetConnectionString("HeraclesDb"));
+            });
 
             services.AddScoped<ITrackRepository, TrackRepository>();
-
             services.AddTransient<IGpxService, GpxService>();
+        }
+
+        public static void AddIdentityInfrastructure(this IServiceCollection services, IConfiguration configuration) {
+            services.AddDbContext<AppIdentityDbContext>(options => {
+                if (configuration.GetValue<bool>("UseInMemoryDatabase"))
+                    options.UseInMemoryDatabase("HeraclesAuthDb");
+                else
+                    options.UseSqlServer(configuration.GetConnectionString("HeraclesAuthDb"));
+            });
 
             services
                 .AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppIdentityDbContext>();
-        }
-
-        internal static IServiceCollection AddDatabaseContexts(IServiceCollection services, IConfiguration configuration) {
-            if (configuration.GetValue<bool>("UseInMemoryDatabase")) {
-                services.AddDbContextFactory<GpxDbContext>(options => { options.UseInMemoryDatabase("HeraclesDb"); });
-
-                services.AddDbContext<AppIdentityDbContext>(options =>
-                    options.UseInMemoryDatabase("HeraclesAuthDb"));
-            }
-            else {
-                services.AddDbContextFactory<GpxDbContext>(options => { options.UseSqlServer(configuration.GetConnectionString("HeraclesDb")); });
-
-                services.AddDbContext<AppIdentityDbContext>(options =>
-                    options.UseSqlServer(configuration.GetConnectionString("HeraclesAuthDb")));
-            }
 
             services.AddDatabaseDeveloperPageExceptionFilter();
-
-            return services;
         }
 
         public static IApplicationBuilder AddInfrastructure(this IApplicationBuilder app, IWebHostEnvironment env) {
