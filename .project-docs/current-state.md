@@ -5,15 +5,15 @@ where development should continue.
 
 # Current phase
 
-- Phase 2 – Activity Management
+- Phase 4 – Dashboard and Reporting
 
 # Current milestone
 
-- Milestone 2.3 – Activity Map
+- Milestone 4.1 – Reports
 
 # Current task
 
-- Create the activity import page.
+- Inventory existing reports.
 
 # Remaining milestone tasks
 
@@ -198,3 +198,23 @@ where development should continue.
 - Supported distance-marker image registration and reuse.
 - Integrated distance-marker updates with the existing activity transitions.
 - Verified distance-marker presentation and activity navigation.
+- Replaced the Import placeholder page with a functional Blazor activity import page.
+- Implemented multiple GPX file selection and drag-and-drop.
+- Implemented automatic import when files are selected or dropped.
+- Implemented configurable file-count and combined file-size limits.
+- Extended HeraclesSettings with validated ImportSettings.
+- Configured a maximum of 200 files per import operation.
+- Injected validated ImportSettings directly into the Import page.
+- Implemented asynchronous browser-file processing using IBrowserFile.
+- Refactored the Application import service to coordinate GPX processing and database persistence.
+- Removed legacy MVC compatibility requirements from the new import workflow.
+- Removed shared mutable existing-track state from the import operation.
+- Preserved existing GPX processing, validation and duplicate detection.
+- Retained transactional bulk persistence through the existing Infrastructure repository.
+- Replaced legacy HTTP progress tracking with direct Blazor progress callbacks.
+- Retained weighted progress reporting across file processing and database persistence.
+- Implemented import cancellation and prevention of overlapping import operations.
+- Implemented successful-import summaries and individual file-failure reporting.
+- Implemented operation-level error reporting for persistence failures.
+- Implemented theme-aware import presentation using MudBlazor and isolated CSS.
+- Successfully verified an import containing 180 files in a single operation.

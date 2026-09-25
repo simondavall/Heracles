@@ -220,55 +220,39 @@ Blazor map component, including distance markers consistent with the recorded ac
 
 ## Milestone 3.1 – File Import
 
-- Create the activity import page.
-  - Support only GPX files.
-  - Support multiple file selection.
-  - Configure file-count limits.
-  - Configure file-size limits.
-  - Integrate browser file selection with the existing import services.
-  - Import selected activity files.
-  - Persist imported activities.
-  - Display successfully imported file counts.
-  - Display failed imports.
-  - Display import errors.
-  - Display selected file information.
-  - Display import progress.
-  - Ensure progress updates are rendered during processing.
-  - Display individual file failures.
-  - Display final import results.
-  - Prevent duplicate import operations.
-  - Handle cancellation where supported.
-  - Review memory usage during multi-file imports.
-  - Verify large multi-file imports.
-  - Implement the complete upload workflow in Blazor.
-  - Implement import progress through Blazor component state.
+- ✓ Create the activity import page.
+  - ✓ Support GPX files.
+  - ✓ Support multiple file selection.
+  - ✓ Support drag-and-drop.
+  - ✓ Automatically initiate imports.
+  - ✓ Configure file-count limits.
+  - ✓ Configure combined file-size limits.
+  - ✓ Integrate import limits with validated HeraclesSettings.
+  - ✓ Implement asynchronous browser-file processing.
+  - ✓ Coordinate file processing and persistence through the Application import service.
+  - ✓ Preserve GPX validation and duplicate detection.
+  - ✓ Persist imported activities using transactional bulk operations.
+  - ✓ Display successfully imported file counts.
+  - ✓ Display individual file failures and their reasons.
+  - ✓ Display operation-level import errors.
+  - ✓ Display import progress throughout processing and persistence.
+  - ✓ Implement progress reporting through Blazor component state.
+  - ✓ Prevent overlapping import operations.
+  - ✓ Implement cancellation.
+  - ✓ Implement theme-aware import presentation.
+  - ✓ Verify large multi-file imports.
 
 **Deliverable**
 
-Users can import supported activity files directly through the Blazor application. Users receive clear progress and results while importing multiple activity files.
+Users can import multiple GPX activity files directly through Heracles.Web using file selection or drag-and-drop. The application provides progress reporting, cancellation, duplicate detection and import results.
+
+The complete import operation is coordinated through the Application layer, with GPX processing and transactional persistence provided by Infrastructure.
 
 ---
 
 # Phase 4 – Dashboard and Reporting
 
-## Milestone 4.1 – Dashboard
-
-- Inventory the existing dashboard functionality.
-- Identify dashboard information to preserve.
-- Create the dashboard page.
-- Create reusable dashboard components.
-- Display activity summary information.
-- Implement dashboard loading and empty states.
-- Verify responsive presentation.
-- Verify light and dark theme presentation.
-
-**Deliverable**
-
-Users can view their principal Heracles information from the new dashboard.
-
----
-
-## Milestone 4.2 – Reports
+## Milestone 4.1 – Reports
 
 - Inventory existing reports.
 - Establish shared report components.
@@ -286,58 +270,20 @@ Existing Heracles reporting capabilities are available through Heracles.Web.
 
 ---
 
-## Milestone 4.3 – Complete Activity Experience
+## Milestone 4.2 – Dashboard
 
-- Inventory remaining activity functionality in the existing application.
-- Migrate required remaining activity information.
-- Migrate activity editing where required.
-- Migrate activity deletion where required.
-- Implement activity loading feedback.
-- Implement activity error handling.
-- Optimise activity database queries.
-- Verify activity navigation behaviour.
-- Verify responsive activity layouts.
-- Verify existing Heracles activity behaviour is preserved where required.
+- Inventory the existing dashboard functionality.
+- Identify dashboard information to preserve.
+- Create the dashboard page.
+- Create reusable dashboard components.
+- Display activity summary information.
+- Implement dashboard loading and empty states.
+- Verify responsive presentation.
+- Verify light and dark theme presentation.
 
 **Deliverable**
 
-The existing Heracles activity workflow is available through the new Heracles.Web interface.
-
----
-
-# Phase 5 – User Experience
-
-## Milestone 5.1 – Responsive Experience
-
-- Optimise desktop layouts.
-- Optimise tablet layouts.
-- Optimise mobile layouts.
-- Refine responsive navigation.
-- Optimise activity navigation for smaller displays.
-- Optimise maps and reports for smaller displays.
-
-**Deliverable**
-
-Heracles.Web provides a coherent responsive experience across supported devices.
-
----
-
-## Milestone 5.2 – Application Experience
-
-- Improve application navigation.
-- Improve loading feedback.
-- Improve validation presentation.
-- Improve error presentation.
-- Improve empty-state presentation.
-- Improve visual consistency.
-- Review keyboard navigation.
-- Review accessibility.
-- Review application performance.
-- Review perceived performance.
-
-**Deliverable**
-
-Heracles.Web provides a polished, consistent and accessible application experience.
+Users can view their principal Heracles information from the new dashboard.
 
 ---
 
@@ -372,70 +318,6 @@ Required Heracles application settings are available through Heracles.Web.
 
 ---
 
-# Phase 7 – Migration and Production Readiness
-
-## Milestone 7.1 – Legacy Feature Parity
-
-- Inventory remaining Web UI features.
-- Inventory remaining interactive UI behaviour.
-- Inventory remaining JavaScript integrations.
-- Inventory remaining visual and layout requirements.
-- Migrate required remaining functionality.
-- Verify required existing behaviour.
-- Verify all required Web UI features are implemented in Heracles.Web.
-- Verify all required interactive behaviour is implemented.
-- Verify all required visual and layout behaviour is implemented.
-
-**Deliverable**
-
-Heracles.Web provides the functionality required to replace the existing Heracles web application.
-
----
-
-## Milestone 7.2 – Application Hardening
-
-- Review authentication and authorisation.
-- Review application security.
-- Review database access patterns.
-- Review database indexes and query performance.
-- Review server-side circuit resource usage.
-- Review JavaScript interop lifecycle management.
-- Review file-upload resource usage.
-- Implement automated tests for critical workflows.
-- Perform supported-browser testing.
-- Perform responsive-device testing.
-- Perform accessibility testing.
-- Review application logging and diagnostics.
-
-**Deliverable**
-
-Heracles.Web is suitable for production deployment.
-
----
-
-## Milestone 7.3 – Production Cutover
-
-- Configure the production environment.
-- Configure production database connectivity.
-- Configure production authentication.
-- Configure production Mapbox configuration.
-- Configure persistent Data Protection keys where required.
-- Configure application logging.
-- Deploy Heracles.Web alongside the existing application.
-- Perform production smoke testing.
-- Verify critical workflows.
-- Switch users to Heracles.Web.
-- Retain rollback capability during the initial cutover period.
-- Complete the Heracles.Web production cutover.
-
-**Deliverable**
-
-Heracles.Web replaces the legacy Heracles MVC application in production.
-
----
-
 # Enhancements
 
 Future enhancements outside the planned migration phases will be recorded here as the project evolves.
-
-Enhancements accepted during delivery will be added here or incorporated into the appropriate milestone.

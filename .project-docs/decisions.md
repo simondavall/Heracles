@@ -180,3 +180,21 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 - The theme toggle icon represents the available action rather than the currently active theme.
 - There is intentionally no UI mechanism for returning to automatic system preference after an explicit selection.
 - Theme preference resolution remains owned by the Blazor/MudBlazor application lifecycle.
+
+# Activity Import
+
+- Implement activity import directly through the Blazor application.
+- Support multiple GPX files through browser-file selection and drag-and-drop.
+- Automatically begin importing selected files.
+- Keep import limits configurable through validated ImportSettings.
+- Use asynchronous browser-file processing.
+- Coordinate file processing and persistence through IImportService.
+- Keep existing-track detection state local to each import operation.
+- Preserve established GPX processing, validation and duplicate detection.
+- Retain transactional bulk persistence through Infrastructure.
+- Report import progress directly through callbacks consumed by Blazor.
+- Retain weighted progress calculation across file processing and database persistence.
+- Do not retain legacy HTTP polling or process-identifier-based progress infrastructure.
+- Support cancellation and prevent overlapping operations within the Import page.
+- Report individual file-processing failures separately from operation-level persistence failures.
+- Report successful imports only after persistence has completed successfully.

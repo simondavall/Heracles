@@ -279,19 +279,12 @@ Defer configurable map presentation and distance units to a separate application
 
 - The existing activity data already contains the required GPS points.
 - Additional Application service or Infrastructure access is unnecessary.
-- Reproducing the established import calculation maintains consistency
-  with existing activity distances.
-- Processing segments independently excludes geographic movement
-  during recording pauses.
+- Reproducing the established import calculation maintains consistency with existing activity distances.
+- Processing segments independently excludes geographic movement during recording pauses.
 - Interpolation positions markers between recorded GPS coordinates.
 - A dedicated GeoJSON source separates distance markers from the route.
-- A symbol layer provides native Mapbox geographic positioning
-  and collision handling.
-- Dynamically generated SVG images provide precise control over
-  marker appearance.
-- Generating complete marker images simplifies the presentation
-  of distance values and unit labels.
-- SVG generation provides a straightforward path to future
-  user-configurable marker colours.
-- Fixed defaults avoid introducing application-wide settings
-  infrastructure before it is required.
+- A symbol layer provides native Mapbox geographic positioning and collision handling.
+- Dynamically generated SVG images provide precise control over marker appearance.
+- Generating complete marker images simplifies the presentation of distance values and unit labels.
+- SVG generation provides a straightforward path to future user-configurable marker colours.
+- Fixed defaults avoid introducing application-wide settings infrastructure before it is required.

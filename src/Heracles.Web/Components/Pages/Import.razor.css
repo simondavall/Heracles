@@ -1,0 +1,100 @@
+.activity-import {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 16px;
+}
+
+.import-title {
+    margin-bottom: 16px;
+}
+
+.import-description {
+    margin-bottom: 32px;
+}
+
+.import-dropzone {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 220px;
+
+    padding: 32px;
+
+    border: 2px dashed var(--mud-palette-primary);
+    border-radius: 8px;
+
+    background-color: var(--mud-palette-surface);
+
+    text-align: center;
+
+    transition:
+            background-color 150ms ease,
+            border-color 150ms ease;
+}
+
+.import-dropzone:hover {
+    background-color: var(--mud-palette-action-default-hover);
+}
+
+.import-dropzone-disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.import-dropzone ::deep .import-file-input {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    opacity: 0;
+
+    cursor: pointer;
+}
+
+.import-progress {
+    margin-top: 32px;
+    text-align: center;
+}
+
+.import-results {
+    margin-top: 32px;
+}
+
+.import-failures {
+    margin-top: 24px;
+}
+
+.import-failure {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 12px;
+
+    padding: 12px 0;
+
+    border-bottom:
+            1px solid var(--mud-palette-divider);
+}
+
+.import-failure:last-child {
+    border-bottom: none;
+}
+
+@media (max-width: 600px) {
+    .activity-import {
+        padding: 20px 8px;
+    }
+
+    .import-dropzone {
+        min-height: 180px;
+        padding: 24px 16px;
+    }
+}

@@ -10,7 +10,7 @@ public sealed record HeraclesSettings(
     DatabaseSettings DatabaseSettings,
     OpenIdConnectSettings OpenIdConnect,
     DataProtectionSettings DataProtection,
-    MapboxSettings Mapbox)
+    MapboxSettings Mapbox, ImportSettings Import)
 {
     public static HeraclesSettings Create(IConfiguration configuration) {
         var errors = new List<string>();
@@ -27,6 +27,9 @@ public sealed record HeraclesSettings(
         var dataProtectionCertificatePassword = GetRequiredString(configuration, "DataProtection:CertificatePassword", errors);
 
         var mapboxAccessToken = GetRequiredString(configuration, "Mapbox:AccessToken", errors);
+        
+        var maximumFileCount = GetPositiveInt(configuration, "Import:MaximumFileCount", errors);
+        var maximumCombinedSizeMb = GetPositiveInt(configuration, "Import:MaximumCombinedSizeMb", errors);
         
         if (errors.Count > 0)
             throw new InvalidOperationException(
@@ -46,10 +49,13 @@ public sealed record HeraclesSettings(
                 dataProtectionKeyPath!,
                 dataProtectionCertificatePath!,
                 dataProtectionCertificatePassword!),
-            new MapboxSettings(mapboxAccessToken!));
+            new MapboxSettings(mapboxAccessToken!), 
+            new ImportSettings(
+                maximumFileCount!.Value, 
+                maximumCombinedSizeMb!.Value));
     }
 
-    private static string? GetRequiredString(IConfiguration configuration, string key, ICollection<string> errors) {
+    private static string? GetRequiredString(IConfiguration configuration, string key, List<string> errors) {
         var value = configuration[key];
 
         if (!string.IsNullOrWhiteSpace(value))
@@ -69,7 +75,7 @@ public sealed record HeraclesSettings(
         return null;
     }
 
-    private static Uri? GetAbsoluteUri(IConfiguration configuration, string key, ICollection<string> errors) {
+    private static Uri? GetAbsoluteUri(IConfiguration configuration, string key, List<string> errors) {
         var value = configuration[key];
 
         if (string.IsNullOrWhiteSpace(value)) {
@@ -81,6 +87,22 @@ public sealed record HeraclesSettings(
             return uri;
 
         errors.Add($"{key} must be a valid absolute URI.");
+        return null;
+    }
+    
+    private static int? GetPositiveInt(IConfiguration configuration, string key, List<string> errors)
+    {
+        var value = configuration[key];
+
+        if (string.IsNullOrWhiteSpace(value)) {
+            errors.Add($"{key} is required.");
+            return null;
+        }
+
+        if (int.TryParse(value, out var parsedValue) && parsedValue > 0)
+            return parsedValue;
+
+        errors.Add($"{key} must be a positive integer.");
         return null;
     }
 }
@@ -101,3 +123,7 @@ public sealed record DataProtectionSettings(
     
 public sealed record MapboxSettings(
     string AccessToken);
+
+public sealed record ImportSettings(
+    int MaximumFileCount, 
+    int MaximumCombinedSizeMb);

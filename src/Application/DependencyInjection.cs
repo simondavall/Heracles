@@ -1,7 +1,6 @@
 ﻿using Heracles.Application.Interfaces;
 using Heracles.Application.Services;
 using Heracles.Application.Services.Import;
-using Heracles.Application.Services.Import.Progress;
 using Heracles.Application.Services.Points;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,7 +13,6 @@ namespace Heracles.Application
             services.AddScoped<IImportService, ImportService>();
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<IPointService, PointService>();
-            services.AddSingleton<IImportProgressService, ImportProgressService>();
         }
     }
 }
