@@ -1,114 +1,128 @@
-﻿using System;
+﻿#nullable enable
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using Ardalis.GuardClauses;
 using Heracles.Application.Exceptions;
 using Heracles.Application.Interfaces;
 using Heracles.Application.Resources;
 using Heracles.Application.Services.Import.Progress;
 using Heracles.Application.TrackAggregate;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Logging;
 
-namespace Heracles.Application.Services.Import
+namespace Heracles.Application.Services.Import;
+
+public class ImportService : IImportService
 {
-    public class ImportService : IImportService
-    {
-        private readonly IGpxService _gpxService;
-        private readonly ITrackRepository _trackRepository;
-        private IExistingTracks _existingTracks;
-        private readonly ILogger<ImportService> _logger;
+    private readonly IGpxService _gpxService;
+    private readonly ITrackRepository _trackRepository;
+    private readonly ILogger<ImportService> _logger;
 
-        public ImportService(IGpxService gpxService, ITrackRepository trackRepository, ILogger<ImportService> logger)
-        {
-            _gpxService = gpxService;
-            _trackRepository = trackRepository;
-            _logger = logger;
+    public ImportService(IGpxService gpxService, ITrackRepository trackRepository, ILogger<ImportService> logger) {
+        _gpxService = gpxService;
+        _trackRepository = trackRepository;
+        _logger = logger;
+    }
+
+    public async Task<ImportFilesResult> ImportTracksFromGpxFilesAsync(IReadOnlyList<IBrowserFile> files,
+        long maxAllowedSize,
+        Action<decimal>? progress = null,
+        CancellationToken cancellationToken = default) {
+        ArgumentNullException.ThrowIfNull(files);
+        ArgumentOutOfRangeException.ThrowIfZero(files.Count, nameof(files));
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(maxAllowedSize);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(files.Sum(file => file.Size), maxAllowedSize, nameof(files));
+
+        var result = new ImportFilesResult();
+
+        var existingTracks = await ExistingTracks.CreateAsync(_trackRepository);
+
+        var importProgress = new TrackImportProgress(progress);
+
+        for (var index = 0; index < files.Count; index++) {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var file = files[index];
+            await ProcessFileAsync(file, maxAllowedSize, existingTracks, result, cancellationToken);
+
+            importProgress.TrackProgressMethod(ProgressHelper.GetProgress(index + 1, files.Count));
         }
 
-        public async Task<ImportFilesResult> ImportTracksFromGpxFilesAsync(IFormFileCollection files, IExistingTracks existingTracks = null, Action<decimal> progress = null)
-        {
-            Guard.Against.Null(files, nameof(files));
-            var result = new ImportFilesResult();
+        cancellationToken.ThrowIfCancellationRequested();
 
-            _existingTracks = existingTracks ?? await ExistingTracks.CreateAsync(_trackRepository);
-
-            var fileIndex = 0;
-
-            foreach (var file in files)
-            {
-                fileIndex++;
-                progress?.Invoke(ProgressHelper.GetProgress(fileIndex, files.Count)); // round to 4 decimal places
-
-                if (!file.FileName.EndsWith(".gpx"))
-                {
-                    FailedFile(result, file, ImportServiceStrings.IncorrectFileExtension);
-                    continue;
-                }
-
-                try
-                {
-                    var track = _gpxService.LoadContentsOfGpxFile(file);
-
-                    if (_existingTracks.TrackExists(track?.Name))
-                    {
-                        FailedFile(result, file, ImportServiceStrings.DuplicateTrackRecord);
-                        continue;
-                    }
-
-                    ValidateTrackData(track);
-
-                    result.Tracks.Add(track);
-                    result.TrackSegments.AddRange(track.TrackSegments);
-                    foreach (var segment in track.TrackSegments)
-                    {
-                        result.TrackPoints.AddRange(segment.TrackPoints);
-                    }
-
-                    _existingTracks.AddTrack(track.Name);
-                }
-                catch (ImportServiceException e)
-                {
-                    FailedFile(result, file, e.Message);
-                    continue;
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e, $"Failed to import file {file.FileName} with message: {e.Message}");
-                    FailedFile(result, file, e.Message);
-                    continue;
-                }
-
-                result.ImportedFiles.Add(new FileResult(file.FileName, ImportServiceStrings.ImportSuccess));
-            }
-
-            return result;
+        if (result.Tracks.Count > 0) {
+            importProgress.UpdateWithProcessedFileData(result);
+            await _trackRepository.SaveImportedFilesAsync(result, importProgress, cancellationToken);
         }
 
-        private static void FailedFile(ImportFilesResult result, IFormFile file, string errorMessage)
-        {
-            result.FailedFiles.Add(new FileResult(file.FileName, errorMessage));
+        cancellationToken.ThrowIfCancellationRequested();
+        importProgress.Complete();
+
+        return result;
+    }
+
+    private async Task ProcessFileAsync(IBrowserFile file,
+        long maxAllowedSize,
+        IExistingTracks existingTracks,
+        ImportFilesResult result,
+        CancellationToken cancellationToken) {
+        if (!file.Name.EndsWith(".gpx", StringComparison.OrdinalIgnoreCase)) {
+            AddFailure(result, file.Name, ImportServiceStrings.IncorrectFileExtension);
+            return;
         }
 
-        private void ValidateTrackData(Track track)
-        {
-            if (track is null)
-            {
-                throw new ImportServiceException(ImportServiceStrings.FileCouldNotBeProcessed);
+        try {
+            var track = await _gpxService.LoadContentsOfGpxFileAsync(file, maxAllowedSize, cancellationToken);
+            ValidateTrackData(track);
+
+            if (existingTracks.TrackExists(track.Name)) {
+                AddFailure(result, file.Name, ImportServiceStrings.DuplicateTrackRecord);
+                return;
             }
 
-            if (track.TrackSegments is null || track.TrackSegments.Count == 0)
-            {
-                throw new ImportServiceException(ImportServiceStrings.NoTrackSegmentsFound);
+            result.Tracks.Add(track);
+            result.TrackSegments.AddRange(track.TrackSegments);
+
+            foreach (var segment in track.TrackSegments) {
+                result.TrackPoints.AddRange(segment.TrackPoints);
             }
 
-            foreach (var segment in track.TrackSegments)
-            {
-                if (segment.TrackPoints is null || segment.TrackPoints.Count == 0)
-                {
-                    throw new ImportServiceException(ImportServiceStrings.NoTrackPointsFound);
-                }
-            }
+            existingTracks.AddTrack(track.Name);
+
+            result.ImportedFiles.Add(new FileResult(file.Name, ImportServiceStrings.ImportSuccess));
+        }
+        catch (OperationCanceledException)
+            when (cancellationToken.IsCancellationRequested) {
+            throw;
+        }
+        catch (ImportServiceException exception) {
+            AddFailure(result, file.Name, exception.Message);
+        }
+        catch (Exception exception) {
+            _logger.LogError(exception, "Failed to process GPX file {FileName}", file.Name);
+            AddFailure(result, file.Name, ImportServiceStrings.FileCouldNotBeProcessed);
+        }
+    }
+
+    private static void AddFailure(ImportFilesResult result, string filename, string reason) {
+        result.FailedFiles.Add(new FileResult(filename, reason));
+    }
+
+    private static void ValidateTrackData(Track? track) {
+        if (track is null) {
+            throw new ImportServiceException(ImportServiceStrings.FileCouldNotBeProcessed);
         }
 
+        if (track.TrackSegments is null || track.TrackSegments.Count == 0) {
+            throw new ImportServiceException(ImportServiceStrings.NoTrackSegmentsFound);
+        }
+
+        foreach (var segment in track.TrackSegments) {
+            if (segment.TrackPoints is null || segment.TrackPoints.Count == 0) {
+                throw new ImportServiceException(ImportServiceStrings.NoTrackPointsFound);
+            }
+        }
     }
 }

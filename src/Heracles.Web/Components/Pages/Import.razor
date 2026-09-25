@@ -1,7 +1,146 @@
 ﻿@page "/import"
 
-<PageTitle>Import</PageTitle>
+<PageTitle>Import Activities</PageTitle>
 
-<MudText Typo="Typo.h4">
-    Import
-</MudText>
+<div class="activity-import">
+
+    <MudText Typo="Typo.h5"
+             Align="Align.Center"
+             Class="import-title">
+        Import multiple activities
+    </MudText>
+
+    <MudText Typo="Typo.body1"
+             Align="Align.Center"
+             Class="import-description">
+        You can upload multiple activities at once.
+        Please select the GPX files you would like to import.
+    </MudText>
+
+    <div class="import-dropzone @(_isImporting ? "import-dropzone-disabled" : "")">
+
+        <InputFile @key="_inputKey"
+                   OnChange="@OnFilesSelectedAsync"
+                   multiple
+                   accept=".gpx"
+                   disabled="@_isImporting"
+                   class="import-file-input" />
+
+        <MudIcon Icon="@Icons.Material.Filled.CloudUpload"
+                 Size="Size.Large"
+                 Color="Color.Primary" />
+
+        <MudText Typo="Typo.body1"
+                 Class="mt-2">
+            Choose files or drag them here
+        </MudText>
+
+        <MudText Typo="Typo.caption"
+                 Class="mt-1">
+            GPX files only
+        </MudText>
+
+        <MudText Typo="Typo.caption"
+                 Class="mt-1">
+            Maximum @_maximumFileCount files,
+            @_maximumCombinedSizeMb MB combined
+        </MudText>
+
+    </div>
+
+    @if (_isImporting)
+    {
+        <div class="import-progress">
+
+            <MudText Typo="Typo.body1">
+                Importing activities...
+            </MudText>
+
+            <MudProgressLinear Value="@((double)_progress)"
+                               Color="Color.Primary"
+                               Rounded="true"
+                               Class="mt-3" />
+
+            <MudText Typo="Typo.caption"
+                     Class="mt-2">
+                @_progress.ToString("0")%
+            </MudText>
+
+            <MudButton Variant="Variant.Outlined"
+                       Color="Color.Error"
+                       Class="mt-3"
+                       OnClick="@CancelImport">
+                Cancel
+            </MudButton>
+
+        </div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(_errorMessage))
+    {
+        <MudAlert Severity="Severity.Error"
+                  Class="mt-4">
+            @_errorMessage
+        </MudAlert>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(_informationMessage))
+    {
+        <MudAlert Severity="Severity.Info"
+                  Class="mt-4">
+            @_informationMessage
+        </MudAlert>
+    }
+
+    @if (_importCompleted && _result is not null)
+    {
+        <div class="import-results">
+
+            <MudAlert Severity="@(_result.FailedFiles.Count == 0
+                                     ? Severity.Success
+                                     : Severity.Warning)">
+
+                @_result.ImportedFiles.Count of
+                @(_result.ImportedFiles.Count + _result.FailedFiles.Count)
+                files successfully imported.
+
+            </MudAlert>
+
+            @if (_result.FailedFiles.Count > 0)
+            {
+                <div class="import-failures">
+
+                    <MudText Typo="Typo.subtitle1"
+                             Class="mb-3">
+                        Could not import the following
+                        @_result.FailedFiles.Count files:
+                    </MudText>
+
+                    @foreach (var failure in _result.FailedFiles)
+                    {
+                        <div class="import-failure">
+
+                            <MudIcon Icon="@Icons.Material.Filled.ErrorOutline"
+                                     Color="Color.Error"
+                                     Size="Size.Small" />
+
+                            <div>
+                                <MudText Typo="Typo.body2">
+                                    @failure.Filename
+                                </MudText>
+
+                                <MudText Typo="Typo.caption">
+                                    @failure.Reason
+                                </MudText>
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+            }
+
+        </div>
+    }
+
+</div>
