@@ -231,30 +231,21 @@ Blazor map component, including distance markers consistent with the recorded ac
   - Display successfully imported file counts.
   - Display failed imports.
   - Display import errors.
+  - Display selected file information.
+  - Display import progress.
+  - Ensure progress updates are rendered during processing.
+  - Display individual file failures.
+  - Display final import results.
+  - Prevent duplicate import operations.
+  - Handle cancellation where supported.
+  - Review memory usage during multi-file imports.
+  - Verify large multi-file imports.
+  - Implement the complete upload workflow in Blazor.
+  - Implement import progress through Blazor component state.
 
 **Deliverable**
 
-Users can import supported activity files directly through the Blazor application.
-
----
-
-## Milestone 3.2 – Import Progress and Experience
-
-- Display selected file information.
-- Display import progress.
-- Ensure progress updates are rendered during processing.
-- Display individual file failures.
-- Display final import results.
-- Prevent duplicate import operations.
-- Handle cancellation where supported.
-- Review memory usage during multi-file imports.
-- Verify large multi-file imports.
-- Implement the complete upload workflow in Blazor.
-- Implement import progress through Blazor component state.
-
-**Deliverable**
-
-Users receive clear progress and results while importing multiple activity files.
+Users can import supported activity files directly through the Blazor application. Users receive clear progress and results while importing multiple activity files.
 
 ---
 
