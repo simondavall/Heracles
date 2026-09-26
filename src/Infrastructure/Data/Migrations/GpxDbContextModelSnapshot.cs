@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Heracles.Infrastructure.Data.Migrations
 {
-    [DbContext(typeof(GpxDbContext))]
+    [DbContext(typeof(HeraclesDbContext))]
     partial class GpxDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

@@ -13,7 +13,7 @@ namespace Heracles.Infrastructure
     public static class DependencyInjection
     {
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration) {
-            services.AddDbContextFactory<GpxDbContext>(options => {
+            services.AddDbContextFactory<HeraclesDbContext>(options => {
                 if (configuration.GetValue<bool>("UseInMemoryDatabase"))
                     options.UseInMemoryDatabase("HeraclesDb");
                 else

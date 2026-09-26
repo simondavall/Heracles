@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Heracles.Infrastructure.Data.Migrations
 {
-    [DbContext(typeof(GpxDbContext))]
+    [DbContext(typeof(HeraclesDbContext))]
     [Migration("20211104111737_CreateGpxDbScheme")]
     partial class CreateGpxDbScheme
     {

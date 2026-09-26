@@ -15,9 +15,9 @@ namespace Heracles.Infrastructure.Data
     {
         private readonly ILogger<TrackRepository> _logger;
 
-        private readonly IDbContextFactory<GpxDbContext> _contextFactory;
+        private readonly IDbContextFactory<HeraclesDbContext> _contextFactory;
 
-        public TrackRepository(IDbContextFactory<GpxDbContext> contextFactory, ILogger<TrackRepository> logger) {
+        public TrackRepository(IDbContextFactory<HeraclesDbContext> contextFactory, ILogger<TrackRepository> logger) {
             _contextFactory = contextFactory;
             _logger = logger;
         }
@@ -94,7 +94,6 @@ namespace Heracles.Infrastructure.Data
             await using var dbContext = await _contextFactory.CreateDbContextAsync();
             var track = await dbContext.Tracks.FirstOrDefaultAsync(x => x.Id == trackId);
             if (track is null) {
-                // todo: Create default Track
                 return default;
             }
 
@@ -120,7 +119,6 @@ namespace Heracles.Infrastructure.Data
             await using var dbContext = await _contextFactory.CreateDbContextAsync();
             var track = await dbContext.Tracks.OrderByDescending(x => x.Time).FirstOrDefaultAsync();
             if (track is null) {
-                // todo: Create default Track
                 return default;
             }
 
