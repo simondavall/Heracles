@@ -112,7 +112,6 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 - Collect configuration validation failures and report them together rather than failing on the first invalid setting.
 - Pass focused settings objects to startup registrations rather than passing `IConfiguration` where the consumer has been migrated to the validated configuration model.
 - Do not register settings objects with dependency injection until a runtime consumer requires injection.
-- Keep Infrastructure database registration on `IConfiguration` while compatibility with the legacy Web application requires the existing registration contract.
 
 # Logging
 
