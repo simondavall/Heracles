@@ -2,7 +2,6 @@
 using EFCore.BulkExtensions;
 using Heracles.Application.Activities;
 using Heracles.Application.Data;
-using Heracles.Application.Entities;
 using Heracles.Application.Import;
 using Heracles.Application.Import.Progress;
 using Microsoft.EntityFrameworkCore;

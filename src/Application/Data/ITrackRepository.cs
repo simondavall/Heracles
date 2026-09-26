@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Heracles.Application.Activities;
-using Heracles.Application.Entities;
 using Heracles.Application.Import;
 using Heracles.Application.Import.Progress;
 
