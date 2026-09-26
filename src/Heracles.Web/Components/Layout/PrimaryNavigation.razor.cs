@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using System.Security.Claims;
-using Heracles.Application.Interfaces;
+using Heracles.Application.Activities;
 using Microsoft.AspNetCore.Components;
 
 namespace Heracles.Web.Components.Layout;

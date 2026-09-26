@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using FluentAssertions;
-using Heracles.Application.Entities.Points;
-using Heracles.Application.Interfaces;
-using Heracles.Application.TrackAggregate;
+using Heracles.Application.Data;
+using Heracles.Application.Points;
 using NUnit.Framework;
 
 namespace Heracles.Application.UnitTests.Services.PointService
@@ -16,7 +15,7 @@ namespace Heracles.Application.UnitTests.Services.PointService
 
         public CreatePointServiceTests()
         {
-            _sut = new Application.Services.Points.PointService();
+            _sut = new Points.PointService();
             
             _testTrack3Points = new Track
             {

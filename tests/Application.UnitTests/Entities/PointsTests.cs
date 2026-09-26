@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using FluentAssertions;
-using Heracles.Application.Entities.Points;
-using Heracles.Application.TrackAggregate;
+using Heracles.Application.Data;
+using Heracles.Application.Points;
 using NUnit.Framework;
 
 namespace Heracles.Application.UnitTests.Entities

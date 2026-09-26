@@ -1,7 +1,6 @@
-﻿using Heracles.Application.Interfaces;
-using Heracles.Application.Services;
-using Heracles.Application.Services.Import;
-using Heracles.Application.Services.Points;
+﻿using Heracles.Application.Activities;
+using Heracles.Application.Import;
+using Heracles.Application.Points;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Heracles.Application

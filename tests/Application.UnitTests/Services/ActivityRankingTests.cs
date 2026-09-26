@@ -1,7 +1,7 @@
 ﻿using System;
 using FluentAssertions;
-using Heracles.Application.Services;
-using Heracles.Application.TrackAggregate;
+using Heracles.Application.Activities;
+using Heracles.Application.Data;
 using NUnit.Framework;
 
 namespace Heracles.Application.UnitTests.Services

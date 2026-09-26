@@ -1,4 +1,4 @@
-﻿using Heracles.Application.TrackAggregate;
+﻿using Heracles.Application.Data;
 
 namespace Heracles.Web.Components.Features.ActivityDetails.Map;
 

@@ -21,6 +21,5 @@ namespace Heracles.Application.Entities
         public string Type { get; set; }
         public string Username { get; set; }
         public bool IsSelected { get; set; }
-
     }
 }
