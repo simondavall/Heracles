@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 using Heracles.Application.Activities;
 
 namespace Heracles.Application.Data
@@ -7,7 +6,9 @@ namespace Heracles.Application.Data
     public class Track
     {
         public Guid Id { get; set; } = Guid.NewGuid();
-        public string Name { get; set; }
+        [Required]
+        [MaxLength(100)]
+        public required string Name { get; set; }
         public DateTime Time { get; set; } = DateTime.UtcNow;
         public double Distance { get; set; }
         public TimeSpan Duration { get; set; } = TimeSpan.Zero;
@@ -17,6 +18,6 @@ namespace Heracles.Application.Data
         public TimeSpan Pace { get; set; } = TimeSpan.Zero;
         public double Speed { get; set; }
 
-        public IList<TrackSegment> TrackSegments { get; set; }
+        public IList<TrackSegment> TrackSegments { get; set; } = [];
     }
 }

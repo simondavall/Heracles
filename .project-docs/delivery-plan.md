@@ -320,4 +320,6 @@ Required Heracles application settings are available through Heracles.Web.
 
 # Enhancements
 
+- Change database from SQL Server to sqlite3
+
 Future enhancements outside the planned migration phases will be recorded here as the project evolves.

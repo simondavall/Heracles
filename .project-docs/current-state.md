@@ -9,11 +9,11 @@ where development should continue.
 
 # Current milestone
 
-- Milestone 4.1 – Reports
+- Enhancements
 
 # Current task
 
-- Inventory existing reports.
+- Change database from SQL Server to sqlite3
 
 # Remaining milestone tasks
 

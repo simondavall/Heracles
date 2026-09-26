@@ -1,7 +1,4 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Extensions.Configuration;
 
 namespace Heracles.Application.Configuration;
@@ -18,10 +15,9 @@ public sealed record HeraclesSettings(
         var openIdConnectAuthority = GetAbsoluteUri(configuration, "OpenIdConnect:Authority", errors);
         var openIdConnectClientId = GetRequiredString(configuration, "OpenIdConnect:ClientId", errors);
         var openIdConnectClientSecret = GetRequiredString(configuration, "OpenIdConnect:ClientSecret", errors);
-
-        var heraclesDb = GetRequiredConnectionString(configuration, "HeraclesDb", errors);
-        var heraclesAuthDb = GetRequiredConnectionString(configuration, "HeraclesAuthDb", errors);
-
+        
+        var databasePath = GetAbsoluteFilePath(configuration, "Database:DatabasePath", errors);
+        
         var dataProtectionKeyPath = GetRequiredString(configuration, "DataProtection:KeyPath", errors);
         var dataProtectionCertificatePath = GetRequiredString(configuration, "DataProtection:CertificatePath", errors);
         var dataProtectionCertificatePassword = GetRequiredString(configuration, "DataProtection:CertificatePassword", errors);
@@ -39,8 +35,7 @@ public sealed record HeraclesSettings(
         
         return new HeraclesSettings(
             new DatabaseSettings(
-                heraclesDb!,
-                heraclesAuthDb!),
+                databasePath!),
             new OpenIdConnectSettings(
                 openIdConnectAuthority!,
                 openIdConnectClientId!,
@@ -65,16 +60,26 @@ public sealed record HeraclesSettings(
         return null;
     }
 
-    private static string? GetRequiredConnectionString(IConfiguration configuration, string name, List<string> errors) {
-        var value = configuration.GetConnectionString(name);
+    private static string? GetAbsoluteFilePath(IConfiguration configuration, string key, List<string> errors) {
 
-        if (!string.IsNullOrWhiteSpace(value))
-            return value;
+        var value = GetRequiredString(configuration, key, errors);
 
-        errors.Add($"ConnectionStrings:{name} is required.");
-        return null;
+        if (value is null)
+            return null;
+
+        if (!Path.IsPathFullyQualified(value)) {
+            errors.Add($"{key} must contain a fully qualified filesystem path.");
+            return null;
+        }
+
+        if (Path.GetFileName(value).Length == 0) {
+            errors.Add($"{key} must include a database filename.");
+            return null;
+        }
+
+        return value;
     }
-
+    
     private static Uri? GetAbsoluteUri(IConfiguration configuration, string key, List<string> errors) {
         var value = configuration[key];
 
@@ -113,8 +118,7 @@ public sealed record OpenIdConnectSettings(
     string ClientSecret);
 
 public sealed record DatabaseSettings(
-    string HeraclesDb,
-    string HeraclesAuthDb);
+    string DatabasePath);
 
 public sealed record DataProtectionSettings(
     string KeyPath,

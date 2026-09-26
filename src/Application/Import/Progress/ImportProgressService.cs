@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Heracles.Application.Import.Progress
+﻿namespace Heracles.Application.Import.Progress
 {
     public interface IImportProgressService
     {

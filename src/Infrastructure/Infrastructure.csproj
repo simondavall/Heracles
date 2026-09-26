@@ -14,13 +14,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Dlg.Krakow.Gpx" Version="1.0.0"/>
-        <PackageReference Include="EFCore.BulkExtensions" Version="10.0.1"/>
-        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.3"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.3"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.3"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.3"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.3">
+        <PackageReference Include="Dlg.Krakow.Gpx" Version="1.0.0" />
+        <PackageReference Include="EFCore.BulkExtensions" Version="10.0.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.12" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.12" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.12" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.12">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -28,6 +27,10 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Application\Application.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Data\Migrations\" />
     </ItemGroup>
 
 </Project>

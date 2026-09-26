@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using Heracles.Application.Data;
 
 namespace Heracles.Application.Activities;
@@ -9,12 +6,12 @@ namespace Heracles.Application.Activities;
 public interface IActivityService
 {
     Task<bool> DeleteActivityAsync(Guid trackId);
-    Task<Track> GetActivityAsync(Guid trackId);
+    Task<Track?> GetActivityAsync(Guid trackId);
     Task<List<ActivityListItem>> GetActivitiesByDateAsync(DateTime startDate, Guid? trackId = null);
     Task<IList<ActivityListMonth>> GetActivitiesSummaryByMonthsAsync(Track track);
     Task<IList<ActivityListYear>> GetActivitiesSummaryByYearAsync(Track track);
-    Task<Track> GetFirstEverActivityAsync();
-    Task<Track> GetMostRecentActivityAsync();
+    Task<Track?> GetFirstEverActivityAsync();
+    Task<Track?> GetMostRecentActivityAsync();
     Task<(int rank, int count)> GetActivityRankAsync(Track track);
 }
     
@@ -32,7 +29,7 @@ public class ActivityService : IActivityService
         return await _trackRepository.DeleteTrackAsync(trackId);
     }
 
-    public async Task<Track> GetActivityAsync(Guid trackId)
+    public async Task<Track?> GetActivityAsync(Guid trackId)
     {
         return await _trackRepository.GetTrackAsync(trackId);
     }
@@ -91,12 +88,12 @@ public class ActivityService : IActivityService
         return await _trackRepository.GetTrackSummaryByYearAsync();
     }
 
-    public async Task<Track> GetFirstEverActivityAsync()
+    public async Task<Track?> GetFirstEverActivityAsync()
     {
         return await _trackRepository.GetFirstEverActivityAsync();
     }
 
-    public async Task<Track> GetMostRecentActivityAsync()
+    public async Task<Track?> GetMostRecentActivityAsync()
     {
         return await _trackRepository.GetMostRecentTrackAsync();
     }

@@ -1,9 +1,4 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Heracles.Application.Data;
 using Heracles.Application.Import.Progress;
 using Microsoft.AspNetCore.Components.Forms;
@@ -88,7 +83,7 @@ public class ImportService : IImportService
                 return;
             }
 
-            if (existingTracks.TrackExists(track.Name)) {
+            if (existingTracks.TrackExists(track!.Name)) {
                 AddFailure(result, file.Name, ImportServiceStrings.DuplicateTrackRecord);
                 return;
             }
@@ -124,12 +119,12 @@ public class ImportService : IImportService
             return false;
         }
 
-        if (track.TrackSegments is null || track.TrackSegments.Count == 0) {
+        if (track.TrackSegments.Count == 0) {
             failedReason = ImportServiceStrings.NoTrackSegmentsFound;
             return false;
         }
 
-        if (track.TrackSegments.Any(segment => segment.TrackPoints is null || segment.TrackPoints.Count == 0))
+        if (track.TrackSegments.Any(segment => segment.TrackPoints.Count == 0))
         {
             failedReason = ImportServiceStrings.NoTrackPointsFound;
             return false;

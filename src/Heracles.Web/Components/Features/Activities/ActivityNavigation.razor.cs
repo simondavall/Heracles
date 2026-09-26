@@ -117,7 +117,7 @@ public partial class ActivityNavigation
         _activities = [];
 
         try {
-            if (month.Activities is not null) {
+            if (month.Activities.Count > 0) {
                 _activities = month.Activities;
                 return;
             }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Heracles.Application.Data
+﻿namespace Heracles.Application.Data
 {
     public class TrackSegment
     {
@@ -11,7 +8,7 @@ namespace Heracles.Application.Data
         public TimeSpan Duration { get; set; } = TimeSpan.Zero;
         public double Elevation { get; set; }
         public int Calories { get; set; }
-        public IList<TrackPoint> TrackPoints { get; set; }
+        public IList<TrackPoint> TrackPoints { get; set; } = [];
         public Guid TrackId { get; set; }
     }
 }

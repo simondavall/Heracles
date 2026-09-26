@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Heracles.Application.Data;
+﻿using Heracles.Application.Data;
 
 namespace Heracles.Application.Activities
 {

@@ -14,20 +14,19 @@ namespace Heracles.Application.UnitTests.Services
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            _tracks = new Track[]
-            {
-                new() {Pace = new TimeSpan(1)},
-                new() {Pace = new TimeSpan(2)},
-                new() {Pace = new TimeSpan(2)},
-                new() {Pace = new TimeSpan(3)},
-                new() {Pace = new TimeSpan(4)}
-            };
+            _tracks = [
+                new Track {Pace = new TimeSpan(1), Name = string.Empty},
+                new Track {Pace = new TimeSpan(2), Name = string.Empty},
+                new Track {Pace = new TimeSpan(2), Name = string.Empty},
+                new Track {Pace = new TimeSpan(3), Name = string.Empty},
+                new Track {Pace = new TimeSpan(4), Name = string.Empty}
+            ];
         }
 
         [Test]
         public void GetTrackRankCalc_FastestActivity_ReturnsOne()
         {
-            var fastestTrack = new Track { Pace = new TimeSpan(1) };
+            var fastestTrack = new Track { Pace = new TimeSpan(1), Name = string.Empty };
 
             var rank = ActivityRanking.GetRank(fastestTrack, _tracks);
 
@@ -37,7 +36,7 @@ namespace Heracles.Application.UnitTests.Services
         [Test]
         public void GetTrackRankCalc_EqualSecondFastest_ReturnsTwo()
         {
-            var secondFastest = new Track { Pace = new TimeSpan(2) };
+            var secondFastest = new Track { Pace = new TimeSpan(2), Name = string.Empty };
 
             var rank = ActivityRanking.GetRank(secondFastest, _tracks);
 
@@ -47,7 +46,7 @@ namespace Heracles.Application.UnitTests.Services
         [Test]
         public void GetTrackRankCalc_Slowest_ReturnsFiveOutOfFive()
         {
-            var slowest = new Track { Pace = new TimeSpan(4) };
+            var slowest = new Track { Pace = new TimeSpan(4), Name = string.Empty };
 
             var rank = ActivityRanking.GetRank(slowest, _tracks);
 
