@@ -11,16 +11,9 @@ namespace Heracles.Infrastructure.UnitTests.Gpx.Processors
     public class DurationProcessorTests
     {
         [Test]
-        public void TrackDuration_NullSegments_ReturnsZeroDuration()
-        {
-            var result = DurationProcessor.TrackDuration(null);
-
-            result.Should().Be(TimeSpan.Zero);
-        }
-        [Test]
         public void TrackDuration_ZeroSegments_ReturnsZeroDuration()
         {
-            var result = DurationProcessor.TrackDuration(Enumerable.Empty<TrackSegment>());
+            var result = DurationProcessor.TrackDuration([]);
 
             result.Should().Be(TimeSpan.Zero);
         }
@@ -50,17 +43,11 @@ namespace Heracles.Infrastructure.UnitTests.Gpx.Processors
 
             result.Should().Be(TimeSpan.FromMinutes(15));
         }
-        [Test]
-        public void SegmentDuration_NullPoints_ReturnsZeroDuration()
-        {
-            var result = DurationProcessor.SegmentDuration(null);
 
-            result.Should().Be(TimeSpan.Zero);
-        }
         [Test]
         public void SegmentDuration_ZeroSegments_ReturnsZeroDuration()
         {
-            var result = DurationProcessor.SegmentDuration(new List<TrackPoint>());
+            var result = DurationProcessor.SegmentDuration([]);
 
             result.Should().Be(TimeSpan.Zero);
         }

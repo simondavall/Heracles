@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using Dlg.Krakow.Gpx;
+﻿using Dlg.Krakow.Gpx;
 using Heracles.Application.Exceptions;
 using Heracles.Application.Interfaces;
 using Heracles.Application.TrackAggregate;
@@ -21,7 +16,7 @@ namespace Heracles.Infrastructure.Gpx
             _logger = logger;
         }
 
-        public async Task<Track> LoadContentsOfGpxFileAsync(IBrowserFile file, long maxAllowedSize, CancellationToken cancellationToken = default) {
+        public async Task<Track?> LoadContentsOfGpxFileAsync(IBrowserFile file, long maxAllowedSize, CancellationToken cancellationToken = default) {
             try {
                 await using var browserStream = file.OpenReadStream(maxAllowedSize, cancellationToken);
 
