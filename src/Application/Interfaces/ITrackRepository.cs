@@ -10,7 +10,7 @@ using Heracles.Application.TrackAggregate;
 
 namespace Heracles.Application.Interfaces
 {
-    public interface ITrackRepository : IAsyncRepository<Track, Guid>
+    public interface ITrackRepository
     {
         Task<bool> DeleteTrackAsync(Guid trackId);
         Task<Track> GetTrackAsync(Guid trackId);
@@ -18,6 +18,7 @@ namespace Heracles.Application.Interfaces
         Task<Track> GetFirstEverActivityAsync();
         Task<Track> GetMostRecentTrackAsync();
         Task<Track[]> GetTracksInRangeAsync(double upperBounds, double lowerBounds, ActivityType activityType);
+        Task<IList<Track>> GetTracksByDateRangeAsync(DateTime startDate, DateTime endDate);
         Task<IList<ActivityListMonth>> GetTrackSummaryByMonthsAsync();
         Task<IList<ActivityListYear>> GetTrackSummaryByYearAsync();
         Task SaveImportedFilesAsync(ImportFilesResult importFilesResult, TrackImportProgress trackProgress, CancellationToken cancellationToken);

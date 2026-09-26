@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using Heracles.Application.TrackAggregate;
 using Heracles.Infrastructure.Gpx.Processors;
@@ -10,17 +9,9 @@ namespace Heracles.Infrastructure.UnitTests.Gpx.Processors
     public class ElevationProcessorTests
     {
         [Test]
-        public void SegmentElevation_NullTrackPoints_ReturnsZeroElevation()
-        {
-            var result = ElevationProcessor.SegmentElevation(null);
-
-            result.Should().Be(0);
-        }
-
-        [Test]
         public void SegmentElevation_EmptyTrackPoints_ReturnsZeroElevation()
         {
-            var result = ElevationProcessor.SegmentElevation(Enumerable.Empty<TrackPoint>());
+            var result = ElevationProcessor.SegmentElevation([]);
 
             result.Should().Be(0);
         }

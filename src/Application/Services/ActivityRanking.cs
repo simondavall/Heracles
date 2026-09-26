@@ -15,7 +15,7 @@ namespace Heracles.Application.Services
 
         public static int GetRank(Track track, Track[] tracks)
         {
-            return tracks.Count(x => x.Pace < track.Pace) + 1; ;
+            return tracks.Count(x => x.Pace < track.Pace) + 1;
         }
     }
 }

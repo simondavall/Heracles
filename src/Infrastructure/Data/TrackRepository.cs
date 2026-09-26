@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Data.Common;
 using EFCore.BulkExtensions;
 using Heracles.Application.Entities;
 using Heracles.Application.Enums;
@@ -16,14 +11,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Heracles.Infrastructure.Data
 {
-    public class TrackRepository : EfRepository<Track, Guid>, ITrackRepository
+    public class TrackRepository : ITrackRepository
     {
         private readonly ILogger<TrackRepository> _logger;
 
-        private readonly IDbContextFactory<GpxDbContext> _contextFactory;
+        private readonly IDbContextFactory<HeraclesDbContext> _contextFactory;
 
-        public TrackRepository(IDbContextFactory<GpxDbContext> contextFactory, ILogger<TrackRepository> logger)
-            : base(contextFactory) {
+        public TrackRepository(IDbContextFactory<HeraclesDbContext> contextFactory, ILogger<TrackRepository> logger) {
             _contextFactory = contextFactory;
             _logger = logger;
         }
@@ -96,11 +90,10 @@ namespace Heracles.Infrastructure.Data
             return deleteSucceeded;
         }
 
-        public async Task<Track> GetTrackAsync(Guid trackId) {
+        public async Task<Track?> GetTrackAsync(Guid trackId) {
             await using var dbContext = await _contextFactory.CreateDbContextAsync();
             var track = await dbContext.Tracks.FirstOrDefaultAsync(x => x.Id == trackId);
             if (track is null) {
-                // todo: Create default Track
                 return default;
             }
 
@@ -117,16 +110,15 @@ namespace Heracles.Infrastructure.Data
             return await dbContext.Tracks.Select(x => x.Name).ToListAsync();
         }
 
-        public async Task<Track> GetFirstEverActivityAsync() {
+        public async Task<Track?> GetFirstEverActivityAsync() {
             await using var dbContext = await _contextFactory.CreateDbContextAsync();
             return await dbContext.Tracks.OrderBy(x => x.Time).FirstOrDefaultAsync();
         }
 
-        public async Task<Track> GetMostRecentTrackAsync() {
+        public async Task<Track?> GetMostRecentTrackAsync() {
             await using var dbContext = await _contextFactory.CreateDbContextAsync();
             var track = await dbContext.Tracks.OrderByDescending(x => x.Time).FirstOrDefaultAsync();
             if (track is null) {
-                // todo: Create default Track
                 return default;
             }
 
@@ -144,6 +136,17 @@ namespace Heracles.Infrastructure.Data
                 .Tracks
                 .Where(x => x.Distance >= lowerBounds & x.Distance <= upperBounds & x.ActivityType == activityType)
                 .ToArrayAsync();
+        }
+
+        public async Task<IList<Track>> GetTracksByDateRangeAsync(DateTime startDate, DateTime endDate) {
+            await using var dbContext = await _contextFactory.CreateDbContextAsync();
+            var result = await dbContext
+                .Tracks
+                .Where(t => t.Time > startDate & t.Time < endDate)
+                .OrderByDescending(t => t.Time)
+                .ToListAsync();
+
+            return result;
         }
 
         public async Task<IList<ActivityListMonth>> GetTrackSummaryByMonthsAsync() {

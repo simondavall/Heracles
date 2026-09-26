@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Heracles.Application.Entities;
 using Heracles.Application.Extensions;
 using Heracles.Application.Interfaces;
-using Heracles.Application.Specifications;
 using Heracles.Application.TrackAggregate;
 
 namespace Heracles.Application.Services
@@ -46,8 +45,7 @@ namespace Heracles.Application.Services
         {
             var firstOfMonth = new DateTime(startDate.Year, startDate.Month, 1);
             var firstOfNextMonth = firstOfMonth.AddMonths(1);
-            var activitiesByDateSpec = new ActivitiesByDateSpec(firstOfMonth, firstOfNextMonth);
-            var activities = await _trackRepository.ListAsync(activitiesByDateSpec);
+            var activities = await _trackRepository.GetTracksByDateRangeAsync(firstOfMonth, firstOfNextMonth);
             var activitiesList = new List<ActivityListItem>();
             foreach (var track in activities)
             {

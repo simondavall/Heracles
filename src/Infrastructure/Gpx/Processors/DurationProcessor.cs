@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Heracles.Application.TrackAggregate;
+﻿using Heracles.Application.TrackAggregate;
 
 namespace Heracles.Infrastructure.Gpx.Processors
 {
@@ -9,7 +6,7 @@ namespace Heracles.Infrastructure.Gpx.Processors
     {
         internal static TimeSpan SegmentDuration(IList<TrackPoint> trackPoints)
         {
-            if (trackPoints is null)
+            if (trackPoints.Count == 0)
             {
                 return TimeSpan.Zero;
             }
@@ -23,9 +20,9 @@ namespace Heracles.Infrastructure.Gpx.Processors
             return duration;
         }
 
-        internal static TimeSpan TrackDuration(IEnumerable<TrackSegment> trackSegments)
+        internal static TimeSpan TrackDuration(IList<TrackSegment> trackSegments)
         {
-            if (trackSegments is null)
+            if (trackSegments.Count == 0)
             {
                 return TimeSpan.Zero;
             }

@@ -10,16 +10,9 @@ namespace Heracles.Infrastructure.UnitTests.Gpx.Processors
     public class DistanceProcessorTests
     {
         [Test]
-        public void TrackDistance_NullSegments_ReturnsZeroDistance()
-        {
-            var result = DistanceProcessor.TrackDistance(null);
-
-            result.Should().Be(0);
-        }
-        [Test]
         public void TrackDistance_ZeroSegments_ReturnsZeroDistance()
         {
-            var result = DistanceProcessor.TrackDistance(Enumerable.Empty<TrackSegment>());
+            var result = DistanceProcessor.TrackDistance([]);
 
             result.Should().Be(0);
         }
@@ -49,19 +42,11 @@ namespace Heracles.Infrastructure.UnitTests.Gpx.Processors
 
             result.Should().Be(25);
         }
-
-        [Test]
-        public void SegmentDistance_NullTrackPoints_ReturnsZeroDistance()
-        {
-            var result = DistanceProcessor.SegmentDistance(null);
-
-            result.Should().Be(0);
-        }
-
+        
         [Test]
         public void SegmentDistance_EmptyTrackPoints_ReturnsZeroDistance()
         {
-            var result = DistanceProcessor.SegmentDistance(Enumerable.Empty<TrackPoint>());
+            var result = DistanceProcessor.SegmentDistance([]);
 
             result.Should().Be(0);
         }

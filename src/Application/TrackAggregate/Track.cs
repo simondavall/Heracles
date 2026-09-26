@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Heracles.Application.Enums;
-using Heracles.Domain;
-using Heracles.Domain.Interfaces;
 
 namespace Heracles.Application.TrackAggregate
 {
-    public class Track : BaseEntity<Guid>, IAggregateRoot
+    public class Track
     {
-        public Track()
-        {
-            Id = Guid.NewGuid();
-        }
-
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string Name { get; set; }
         public DateTime Time { get; set; } = DateTime.UtcNow;
         public double Distance { get; set; }

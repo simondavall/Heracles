@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Heracles.Application.TrackAggregate;
+﻿using Heracles.Application.TrackAggregate;
 
 namespace Heracles.Infrastructure.Gpx.Processors
 {
     public static class DistanceProcessor
     {
-        internal static double SegmentDistance(IEnumerable<TrackPoint> trackPoints)
+        internal static double SegmentDistance(List<TrackPoint> trackPoints)
         {
-            if (trackPoints is null)
+            if (trackPoints.Count == 0)
             {
                 return 0;
             }
 
             double distance = 0;
-            TrackPoint previousTrackPoint = null;
+            TrackPoint? previousTrackPoint = null;
 
             foreach (var trackPoint in trackPoints)
             {
@@ -33,9 +30,9 @@ namespace Heracles.Infrastructure.Gpx.Processors
             return distance;
         }
 
-        internal static double TrackDistance(IEnumerable<TrackSegment> trackSegments)
+        internal static double TrackDistance(List<TrackSegment> trackSegments)
         {
-            if (trackSegments is null)
+            if (trackSegments.Count == 0)
             {
                 return 0;
             }
@@ -47,7 +44,7 @@ namespace Heracles.Infrastructure.Gpx.Processors
 
         private static double GetDistanceFromLatLonInKm(double lat1, double lon1, double lat2, double lon2)
         {
-            var earthRadius = 6371; // Radius of the earth in km
+            const int earthRadius = 6371; // Radius of the earth in km
             var dLat = DegreesToRadians(lat2 - lat1);
             var dLon = DegreesToRadians(lon2 - lon1);
             var a =
