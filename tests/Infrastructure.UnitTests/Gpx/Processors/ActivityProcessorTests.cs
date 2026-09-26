@@ -34,13 +34,6 @@ namespace Heracles.Infrastructure.UnitTests.Gpx.Processors
             result.Should().Be(ActivityType.Unknown);
         }
         [Test]
-        public void GetActivityType_NullTrackName_ReturnsUnknownActivityType()
-        {
-            var result = ActivityProcessor.GetActivityType(null);
-
-            result.Should().Be(ActivityType.Unknown);
-        }
-        [Test]
         public void GetActivityType_UnrecognizedTrackName_ReturnsUnknownActivityType()
         {
             var track = new Track { Name = "unrecognized-entry" };

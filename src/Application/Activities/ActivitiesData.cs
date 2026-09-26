@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Heracles.Application.Points;
 using Newtonsoft.Json;
 
 namespace Heracles.Application.Activities;
@@ -36,9 +35,4 @@ namespace Heracles.Application.Activities;
      {
          public int ActivityYear { get; set; }
          public int Count { get; set; }
-     }
-     
-     public class ActivityInfo
-     {
-         public IList<Point> Points { get; set; }
      }

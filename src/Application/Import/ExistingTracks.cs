@@ -2,39 +2,39 @@
 using System.Threading.Tasks;
 using Heracles.Application.Data;
 
-namespace Heracles.Application.Import
+namespace Heracles.Application.Import;
+
+public interface IExistingTracks
 {
-    public class ExistingTracks : IExistingTracks
-    {
-        private readonly ITrackRepository _trackRepository;
+    void AddTrack(string trackName);
+    bool TrackExists(string trackName);
+}
 
-        private ExistingTracks(ITrackRepository trackRepository)
-        {
-            _trackRepository = trackRepository;
-        }
+public class ExistingTracks : IExistingTracks
+{
+    private readonly ITrackRepository _trackRepository;
 
-        public static async Task<ExistingTracks> CreateAsync(ITrackRepository trackRepository)
-        {
-            var existingTracks = new ExistingTracks(trackRepository);
-            await existingTracks.InitializeAsync();
-            return existingTracks;
-        }
+    private ExistingTracks(ITrackRepository trackRepository) {
+        _trackRepository = trackRepository;
+    }
 
-        private IList<string> Tracks { get; set; } 
+    public static async Task<ExistingTracks> CreateAsync(ITrackRepository trackRepository) {
+        var existingTracks = new ExistingTracks(trackRepository);
+        await existingTracks.InitializeAsync();
+        return existingTracks;
+    }
 
-        public void AddTrack(string trackName)
-        {
-            Tracks.Add(trackName);
-        }
+    private IList<string> Tracks { get; set; }
 
-        private async Task InitializeAsync()
-        {
-            Tracks = await _trackRepository.GetExistingTracksAsync() ?? new List<string>();
-        }
+    public void AddTrack(string trackName) {
+        Tracks.Add(trackName);
+    }
 
-        public bool TrackExists(string trackName)
-        {
-            return Tracks.Contains(trackName);
-        }
+    private async Task InitializeAsync() {
+        Tracks = await _trackRepository.GetExistingTracksAsync() ?? new List<string>();
+    }
+
+    public bool TrackExists(string trackName) {
+        return Tracks.Contains(trackName);
     }
 }
