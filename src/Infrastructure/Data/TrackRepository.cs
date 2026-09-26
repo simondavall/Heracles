@@ -1,11 +1,9 @@
 ﻿using System.Data.Common;
 using EFCore.BulkExtensions;
-using Heracles.Application.Entities;
-using Heracles.Application.Enums;
-using Heracles.Application.Interfaces;
-using Heracles.Application.Services.Import;
-using Heracles.Application.Services.Import.Progress;
-using Heracles.Application.TrackAggregate;
+using Heracles.Application.Activities;
+using Heracles.Application.Data;
+using Heracles.Application.Import;
+using Heracles.Application.Import.Progress;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

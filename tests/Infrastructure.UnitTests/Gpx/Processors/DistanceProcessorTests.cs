@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Heracles.Application.TrackAggregate;
+using Heracles.Application.Data;
 using Heracles.Infrastructure.Gpx.Processors;
 using NUnit.Framework;
 

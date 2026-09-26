@@ -1,5 +1,5 @@
-﻿using Heracles.Application.Interfaces;
-using Heracles.Application.TrackAggregate;
+﻿using Heracles.Application.Activities;
+using Heracles.Application.Data;
 using Microsoft.AspNetCore.Components;
 
 namespace Heracles.Web.Components.Pages;

@@ -4,11 +4,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Heracles.Application.Interfaces;
-using Heracles.Application.Resources;
-using Heracles.Application.Services.Import;
-using Heracles.Application.Services.Import.Progress;
-using Heracles.Application.TrackAggregate;
+using Heracles.Application.Data;
+using Heracles.Application.Import;
+using Heracles.Application.Import.Progress;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -195,7 +193,7 @@ public class ImportServiceTests
         result.FailedFiles.Should().ContainSingle();
 
         result.FailedFiles[0].Reason.Should()
-            .Be(ImportServiceStrings.FileCouldNotBeProcessed);
+            .Be(ImportServiceStrings.NoTrackFound);
 
         VerifyPersistenceNeverCalled();
     }

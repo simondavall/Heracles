@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using Heracles.Application.TrackAggregate;
+using Heracles.Application.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Heracles.Infrastructure.Data
