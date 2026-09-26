@@ -1,34 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Heracles.Application.Activities;
 
      public class ActivityListItem
      {
-         public string Month { get; set; }
-         public string Distance { get; set; }
-         public string DayOfMonth { get; set; }
-         public string Year { get; set; }
+         public required string Month { get; set; }
+         public required string Distance { get; set; }
+         public required string DayOfMonth { get; set; }
+         public required string Year { get; set; }
          [JsonProperty("activity_id")]
-         public Guid ActivityId { get; set; }
+         public required Guid ActivityId { get; set; }
 
-         public string DistanceUnits { get; set; }
-         public string ElapsedTime { get; set; }
-         public bool Live { get; set; }
-         public string MainText { get; set; }
+         public required string DistanceUnits { get; set; }
+         public required string ElapsedTime { get; set; }
+         public required bool Live { get; set; }
+         public required string MainText { get; set; }
 
-         public string MonthNum { get; set; }
-         public string Type { get; set; }
-         public string Username { get; set; }
-         public bool IsSelected { get; set; }
+         public required string MonthNum { get; set; }
+         public required string Type { get; set; }
+         public required string Username { get; set; }
+         public required bool IsSelected { get; set; }
      }
      
      public class ActivityListMonth
      {
          public int ActivityYearMonth { get; set; }
          public int Count { get; set; }
-         public List<ActivityListItem> Activities { get; set; }
+         public List<ActivityListItem> Activities { get; set; } = [];
      }
      
      public class ActivityListYear

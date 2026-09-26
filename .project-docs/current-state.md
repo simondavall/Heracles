@@ -9,11 +9,11 @@ where development should continue.
 
 # Current milestone
 
-- Milestone 4.1 – Reports
+- Enhancements
 
 # Current task
 
-- Inventory existing reports.
+- Change database from SQL Server to sqlite3
 
 # Remaining milestone tasks
 
@@ -218,3 +218,11 @@ where development should continue.
 - Implemented operation-level error reporting for persistence failures.
 - Implemented theme-aware import presentation using MudBlazor and isolated CSS.
 - Successfully verified an import containing 180 files in a single operation.
+- Replaced SQL Server with SQLite as the exclusive activity database provider.
+- Removed SQL Server provider dependencies and obsolete SQL Server migrations.
+- Generated a new initial SQLite migration.
+- Updated Infrastructure registration to consume validated HeraclesSettings instead of IConfiguration.
+- Removed the obsolete HeraclesAuthDb configuration.
+- Introduced an EF Core design-time context factory for migration generation.
+- Created and verified the SQLite database.
+- Successfully reimported GPX activity data.

@@ -16,6 +16,7 @@ namespace Heracles.Infrastructure.UnitTests.Gpx.Processors
         {
             _track = new Track
             {
+                Name = string.Empty,
                 Duration = new TimeSpan(0, 0, 30, 0),
                 Distance = 6
             };

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Heracles.Application.Data
+﻿namespace Heracles.Application.Data
 {
     public class TrackPoint
     {

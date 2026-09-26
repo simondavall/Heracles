@@ -28,10 +28,11 @@ builder.Services.AddSerilog((services, configuration) => configuration
     .ReadFrom.Services(services));
 
 var settings = HeraclesSettings.Create(builder.Configuration);
+
 builder.Services.AddSingleton(settings.Mapbox);
 builder.Services.AddSingleton(settings.Import);
 
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddInfrastructure(settings);
 builder.Services.AddApplication();
 
 builder.Services.AddHeraclesDataProtection(settings.DataProtection);

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Heracles.Application.Data;
+﻿using Heracles.Application.Data;
 
 namespace Heracles.Application.Import;
 
@@ -24,7 +22,7 @@ public class ExistingTracks : IExistingTracks
         return existingTracks;
     }
 
-    private IList<string> Tracks { get; set; }
+    private IList<string> Tracks { get; set; } = [];
 
     public void AddTrack(string trackName) {
         Tracks.Add(trackName);

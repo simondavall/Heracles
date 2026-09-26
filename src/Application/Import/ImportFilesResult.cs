@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Heracles.Application.Data;
+﻿using Heracles.Application.Data;
 
 namespace Heracles.Application.Import
 {

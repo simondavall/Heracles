@@ -288,3 +288,40 @@ Defer configurable map presentation and distance units to a separate application
 - Generating complete marker images simplifies the presentation of distance values and unit labels.
 - SVG generation provides a straightforward path to future user-configurable marker colours.
 - Fixed defaults avoid introducing application-wide settings infrastructure before it is required.
+
+## Replace SQL Server with SQLite
+(26-09-2026)
+
+### Decision
+
+Replace SQL Server with SQLite as the exclusive database provider for Heracles activity storage.
+
+The existing MVC Web application has been decommissioned. Backward compatibility with its database configuration and Infrastructure registration contract is no longer required.
+
+Infrastructure registration now consumes validated HeraclesSettings rather than IConfiguration.
+
+Configure the SQLite database location through DatabaseSettings.DatabasePath. Require a fully qualified filesystem path, including the database filename.
+
+Remove the obsolete HeraclesAuthDb configuration and SQL Server provider dependencies.
+
+Replace the existing SQL Server migrations with a new initial SQLite migration. Existing SQL Server data is not migrated; activity data is reimported from the original GPX files.
+
+Retain IDbContextFactory<HeraclesDbContext> and the existing Application repository interfaces.
+
+Retain transactional bulk persistence using EFCore.BulkExtensions, including existing import progress reporting and cancellation behaviour.
+
+Use entity data annotations for straightforward property constraints. Remove the redundant TrackConfiguration class.
+
+Introduce an EF Core design-time context factory to support migration generation independently of Heracles.Web application startup.
+
+### Rationale
+
+- SQLite provides portable file-based activity storage and simplifies deployment.
+- Decommissioning the legacy MVC application removes the need to maintain its database-provider and configuration compatibility.
+- Strongly typed configuration maintains the established application configuration pattern.
+- An explicitly configured absolute database path provides predictable database placement across environments.
+- Reimporting the original GPX files avoids unnecessary database migration complexity.
+- Retaining the existing repository interfaces and database-context factory preserves the established application architecture.
+- Retaining bulk insertion preserves the existing efficient import approach.
+- Data annotations place straightforward constraints alongside the properties they describe.
+- A dedicated design-time factory allows EF Core migrations to be generated without requiring unrelated application configuration.

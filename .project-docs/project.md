@@ -37,7 +37,8 @@ The primary goals of the project are:
 ## Data
 
 - Entity Framework Core
-- SQL Server
+- SQLite
+- EFCore.BulkExtensions
 
 ## Frontend
 
@@ -82,9 +83,7 @@ Heracles
 │
 ├── src
 │   ├── Application
-│   ├── Domain
 │   ├── Infrastructure
-│   ├── Web
 │   └── Heracles.Web
 │       └── Components
 │           ├── Features

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Heracles.Application.Import.Progress
+﻿namespace Heracles.Application.Import.Progress
 {
     public static class ProgressHelper
     {
