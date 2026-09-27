@@ -6,6 +6,7 @@ using Heracles.Infrastructure.Data;
 using Heracles.Web.Components;
 using Heracles.Web.Components.Features.Authentication;
 using Heracles.Web.Components.Features.DataProtection;
+using Heracles.Web.Components.Features.HostApplicationLifetime;
 using Heracles.Web.Components.Features.UserState;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -49,14 +50,9 @@ builder.Services.AddRazorComponents()
 
 var app = builder.Build();
 
-await using (var scope = app.Services.CreateAsyncScope()) {
-    var contextFactory = scope.ServiceProvider
-        .GetRequiredService<IDbContextFactory<HeraclesDbContext>>();
+app.UseHostApplicationLifetime();
 
-    await using var context = await contextFactory.CreateDbContextAsync();
-
-    await context.Database.MigrateAsync();
-}
+await app.UseMigrationsAsync();
 
 if (!app.Environment.IsDevelopment()) {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);

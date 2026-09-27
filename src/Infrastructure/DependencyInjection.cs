@@ -16,9 +16,7 @@ namespace Heracles.Infrastructure
     {
         public static void AddInfrastructure(this IServiceCollection services, HeraclesSettings settings) {
             var connectionString = new SqliteConnectionStringBuilder {
-                DataSource = settings.DatabaseSettings.DatabasePath, 
-                Mode = SqliteOpenMode.ReadWriteCreate, 
-                ForeignKeys = true
+                DataSource = settings.DatabaseSettings.DatabasePath, Mode = SqliteOpenMode.ReadWriteCreate, ForeignKeys = true
             }.ToString();
 
             services.AddDbContextFactory<HeraclesDbContext>(options => options.UseSqlite(connectionString));
@@ -32,6 +30,14 @@ namespace Heracles.Infrastructure
                 app.UseMigrationsEndPoint();
 
             return app;
+        }
+
+        public static async Task UseMigrationsAsync(this WebApplication app) {
+            await using var scope = app.Services.CreateAsyncScope();
+            var contextFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<HeraclesDbContext>>();
+
+            await using var context = await contextFactory.CreateDbContextAsync();
+            await context.Database.MigrateAsync();
         }
     }
 }
