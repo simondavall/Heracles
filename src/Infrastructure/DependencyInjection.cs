@@ -1,8 +1,10 @@
 ﻿using Heracles.Application.Configuration;
 using Heracles.Application.Data;
 using Heracles.Application.Import;
+using Heracles.Application.Weather;
 using Heracles.Infrastructure.Data;
 using Heracles.Infrastructure.Gpx;
+using Heracles.Infrastructure.Weather;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Data.Sqlite;
@@ -25,6 +27,9 @@ namespace Heracles.Infrastructure
 
             services.AddScoped<ITrackRepository, TrackRepository>();
             services.AddTransient<IGpxService, GpxService>();
+            
+            services.AddScoped<IWeatherRepository, WeatherRepository>();
+            services.AddHttpClient<IWeatherProvider, VisualCrossingWeatherProvider>();
         }
 
         public static IApplicationBuilder UseMigrationsEndPoint(IApplicationBuilder app, IWebHostEnvironment env) {
