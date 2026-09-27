@@ -2,14 +2,12 @@ using DotNetEnv;
 using Heracles.Application;
 using Heracles.Application.Configuration;
 using Heracles.Infrastructure;
-using Heracles.Infrastructure.Data;
 using Heracles.Web.Components;
 using Heracles.Web.Components.Features.Authentication;
 using Heracles.Web.Components.Features.DataProtection;
 using Heracles.Web.Components.Features.HostApplicationLifetime;
 using Heracles.Web.Components.Features.UserState;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using Serilog;
 

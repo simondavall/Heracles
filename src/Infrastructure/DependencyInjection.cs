@@ -16,7 +16,9 @@ namespace Heracles.Infrastructure
     {
         public static void AddInfrastructure(this IServiceCollection services, HeraclesSettings settings) {
             var connectionString = new SqliteConnectionStringBuilder {
-                DataSource = settings.DatabaseSettings.DatabasePath, Mode = SqliteOpenMode.ReadWriteCreate, ForeignKeys = true
+                DataSource = settings.DatabaseSettings.DatabasePath, 
+                Mode = SqliteOpenMode.ReadWriteCreate, 
+                ForeignKeys = true
             }.ToString();
 
             services.AddDbContextFactory<HeraclesDbContext>(options => options.UseSqlite(connectionString));
