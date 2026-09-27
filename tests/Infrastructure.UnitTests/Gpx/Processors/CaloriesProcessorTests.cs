@@ -1,5 +1,4 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Heracles.Application.Activities;
 using Heracles.Application.Data;
 using Heracles.Infrastructure.Gpx.Processors;

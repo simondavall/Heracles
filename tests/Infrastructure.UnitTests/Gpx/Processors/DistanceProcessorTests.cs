@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Heracles.Application.Data;
 using Heracles.Infrastructure.Gpx.Processors;
 using NUnit.Framework;

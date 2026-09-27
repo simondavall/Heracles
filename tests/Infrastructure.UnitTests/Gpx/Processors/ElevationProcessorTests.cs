@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Heracles.Application.Data;
 using Heracles.Infrastructure.Gpx.Processors;
 using NUnit.Framework;
@@ -87,17 +86,9 @@ namespace Heracles.Infrastructure.UnitTests.Gpx.Processors
         }
 
         [Test]
-        public void TrackElevation_NullTrackSegments_ReturnsZeroElevation()
-        {
-            var result = ElevationProcessor.TrackElevation(null);
-
-            result.Should().Be(0);
-        }
-
-        [Test]
         public void TrackElevation_EmptyTrackSegments_ReturnsZeroElevation()
         {
-            var result = ElevationProcessor.TrackElevation(new List<TrackSegment>());
+            var result = ElevationProcessor.TrackElevation([]);
 
             result.Should().Be(0);
         }

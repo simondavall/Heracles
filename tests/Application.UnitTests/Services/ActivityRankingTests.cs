@@ -1,5 +1,4 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Heracles.Application.Activities;
 using Heracles.Application.Data;
 using NUnit.Framework;
@@ -9,7 +8,7 @@ namespace Heracles.Application.UnitTests.Services
     [TestFixture]
     public class ActivityRankingTests
     {
-        private Track[] _tracks;
+        private Track[] _tracks = [];
 
         [OneTimeSetUp]
         public void OneTimeSetUp()

@@ -3,8 +3,6 @@
     <PropertyGroup>
         <AssemblyName>Heracles.Infrastructure</AssemblyName>
         <RootNamespace>Heracles.Infrastructure</RootNamespace>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
