@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using Heracles.Application.Configuration;
 using Heracles.Application.Weather;
+using Microsoft.Extensions.Logging;
 
 namespace Heracles.Infrastructure.Weather;
 
@@ -10,59 +11,56 @@ public sealed class VisualCrossingWeatherProvider : IWeatherProvider
 {
     private readonly HttpClient _httpClient;
     private readonly WeatherApiSettings _settings;
+    private readonly ILogger<VisualCrossingWeatherProvider> _logger;
 
-    public VisualCrossingWeatherProvider(HttpClient httpClient, WeatherApiSettings settings) {
+    public VisualCrossingWeatherProvider(HttpClient httpClient, WeatherApiSettings settings, ILogger<VisualCrossingWeatherProvider> logger) {
         _httpClient = httpClient;
         _settings = settings;
+        _logger = logger;
     }
 
     public async Task<WeatherObservation?> GetHistoricalWeatherAsync(double latitude,
         double longitude,
         DateTime timestampUtc,
         CancellationToken cancellationToken = default) {
-        var utc = timestampUtc.ToUniversalTime();
-
-        // Request surrounding dates to accommodate the
-        // difference between UTC and the location's timezone.
-        var startDate = utc.Date.AddDays(-1);
-        var endDate = utc.Date.AddDays(1);
+        var utc = timestampUtc.Kind switch {
+            DateTimeKind.Utc => timestampUtc,
+            DateTimeKind.Unspecified => DateTime.SpecifyKind(
+                timestampUtc,
+                DateTimeKind.Utc),
+            _ => timestampUtc.ToUniversalTime()
+        };
 
         var location = string.Create(CultureInfo.InvariantCulture, $"{latitude:F6},{longitude:F6}");
-
+        var dateTime = utc.ToString("yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture);
         var endpoint = _settings.Uri.ToString().TrimEnd('/');
 
-        var requestUri =
-            $"{endpoint}/{location}/"
-            + $"{startDate:yyyy-MM-dd}/"
-            + $"{endDate:yyyy-MM-dd}"
+        var requestUriWithoutKey =
+            $"{endpoint}/{location}/{dateTime}"
             + "?unitGroup=metric"
-            + "&include=hours"
-            + "&contentType=json"
-            + $"&key={Uri.EscapeDataString(_settings.Key)}";
+            + "&timezone=Z"
+            + "&include=current"
+            + "&contentType=json";
+        
+        var requestUri = requestUriWithoutKey + $"&key={Uri.EscapeDataString(_settings.Key)}";
+
+        _logger.LogInformation("Calling WeatherApi with {WeatherApiRequest}", requestUriWithoutKey);
 
         using var response = await _httpClient.GetAsync(requestUri, cancellationToken);
-
         response.EnsureSuccessStatusCode();
-
+        
         var result = await response.Content.ReadFromJsonAsync<VisualCrossingResponse>(cancellationToken);
 
-        if (result?.Days is null)
-            return null;
-
-        var targetEpoch = new DateTimeOffset(utc)
-            .ToUnixTimeSeconds();
-
-        var observation = result
-            .Days
-            .Where(day => day.Hours is not null)
-            .SelectMany(day => day.Hours!)
-            .Where(hour => hour.DatetimeEpoch.HasValue)
-            .OrderBy(hour => Math.Abs(hour.DatetimeEpoch!.Value - targetEpoch))
-            .FirstOrDefault();
+        _logger.LogInformation("Response from WeatherApi: {WeatherApiResponse}", result);
+        
+        var queryCost = result?.QueryCost;
+        var observation = result?.CurrentConditions;
 
         if (observation?.DatetimeEpoch is null)
             return null;
 
+        _logger.LogInformation("Query cost of api call: {QueryCost}", queryCost);
+        
         return new WeatherObservation(
             observation.Temp,
             observation.FeelsLike,
@@ -73,19 +71,16 @@ public sealed class VisualCrossingWeatherProvider : IWeatherProvider
             DateTimeOffset.FromUnixTimeSeconds(observation.DatetimeEpoch.Value).UtcDateTime);
     }
 
-    private sealed class VisualCrossingResponse
+    private sealed record VisualCrossingResponse
     {
-        [JsonPropertyName("days")]
-        public List<VisualCrossingDay>? Days { get; set; }
+        [JsonPropertyName("queryCost")]
+        public int? QueryCost { get; set; }
+        
+        [JsonPropertyName("currentConditions")]
+        public VisualCrossingCurrentConditions? CurrentConditions { get; set; }
     }
 
-    private sealed class VisualCrossingDay
-    {
-        [JsonPropertyName("hours")]
-        public List<VisualCrossingHour>? Hours { get; set; }
-    }
-
-    private sealed class VisualCrossingHour
+    private sealed record VisualCrossingCurrentConditions
     {
         [JsonPropertyName("datetimeEpoch")]
         public long? DatetimeEpoch { get; set; }
