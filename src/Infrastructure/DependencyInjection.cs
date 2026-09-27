@@ -33,5 +33,13 @@ namespace Heracles.Infrastructure
 
             return app;
         }
+
+        public static async Task UseMigrationsAsync(this WebApplication app) {
+            await using var scope = app.Services.CreateAsyncScope();
+            var contextFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<HeraclesDbContext>>();
+
+            await using var context = await contextFactory.CreateDbContextAsync();
+            await context.Database.MigrateAsync();
+        }
     }
 }

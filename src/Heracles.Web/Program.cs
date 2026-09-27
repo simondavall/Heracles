@@ -5,6 +5,7 @@ using Heracles.Infrastructure;
 using Heracles.Web.Components;
 using Heracles.Web.Components.Features.Authentication;
 using Heracles.Web.Components.Features.DataProtection;
+using Heracles.Web.Components.Features.HostApplicationLifetime;
 using Heracles.Web.Components.Features.UserState;
 using Microsoft.AspNetCore.Authorization;
 using MudBlazor.Services;
@@ -46,6 +47,10 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 var app = builder.Build();
+
+app.UseHostApplicationLifetime();
+
+await app.UseMigrationsAsync();
 
 if (!app.Environment.IsDevelopment()) {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
