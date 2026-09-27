@@ -5,19 +5,22 @@ where development should continue.
 
 # Current phase
 
-- Phase 4 – Dashboard and Reporting
+- Phase 4 – Activity Details Modules
 
 # Current milestone
 
-- Enhancements
+- Milestone 4.1 – Modules
 
 # Current task
 
-- Change database from SQL Server to sqlite3
+- Add weather details
 
 # Remaining milestone tasks
 
-- None
+- Add ranking listing
+- Add splits
+- Add pace chart
+- Add elevation chart
 
 # Completed work
 

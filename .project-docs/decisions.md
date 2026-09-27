@@ -43,13 +43,6 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 
 - Use MudBlazor theming, CSS isolation and application-level styling to implement the Heracles visual design.
 - Use colocated `.razor.css` files for component-specific styling.
-- Keep application-wide styling under `wwwroot`.
-- Define application colours through the Heracles theme and semantic palette rather than feature-specific literal colours where practical.
-
-# Styling
-
-- Use MudBlazor theming, CSS isolation and application-level styling to implement the Heracles visual design.
-- Use colocated `.razor.css` files for component-specific styling.
 - Keep application-wide styling under `wwwroot` for styles genuinely shared by multiple components.
 - Do not move component-specific styling into application-wide CSS solely to work around Blazor CSS isolation.
 - Prefer MudBlazor theme and component APIs when they directly represent the required presentation.
@@ -98,9 +91,8 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 - Explicitly allow anonymous access only where required.
 - Provide authentication state to Blazor components through cascading authentication state.
 - Keep Heracles.Web authentication configuration at the application composition root.
-- Keep legacy ASP.NET Core Identity registration separate from common Infrastructure registration.
-- Require application hosts to explicitly opt into host-specific authentication infrastructure.
-- Retain the existing MVC Web application's legacy Identity implementation while it remains available for reference.
+- Keep authentication registration separate from common Infrastructure registration.
+- Require application hosts to explicitly configure their authentication infrastructure.
 
 # Application Configuration
 

@@ -250,9 +250,20 @@ The complete import operation is coordinated through the Application layer, with
 
 ---
 
-# Phase 4 – Dashboard and Reporting
+# Phase 4 – Activity Details Modules
 
-## Milestone 4.1 – Reports
+## Milestone 4.1 – Modules
+
+- Add weather details
+- Add ranking listing
+- Add splits
+- Add pace chart
+- Add elevation chart
+
+
+# Phase 5 – Dashboard and Reporting
+
+## Milestone 5.1 – Reports
 
 - Inventory existing reports.
 - Establish shared report components.
@@ -270,7 +281,7 @@ Existing Heracles reporting capabilities are available through Heracles.Web.
 
 ---
 
-## Milestone 4.2 – Dashboard
+## Milestone 5.2 – Dashboard
 
 - Inventory the existing dashboard functionality.
 - Identify dashboard information to preserve.

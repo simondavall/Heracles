@@ -107,6 +107,16 @@ Infrastructure database registration continues to receive `IConfiguration` while
 - Reporting all detected configuration failures together provides more useful startup diagnostics than failing on the first invalid value.
 - Retaining the existing Infrastructure registration contract avoids changes to the legacy Web application during the Heracles.Web migration.
 
+### Subsequent development
+
+On 26-09-2026, the legacy MVC Web application was decommissioned and SQL Server was replaced with SQLite.
+
+Infrastructure registration was subsequently updated to consume validated `HeraclesSettings` instead of`IConfiguration`.
+
+The original compatibility requirement documented above is therefore superseded.
+
+See "Replace SQL Server with SQLite" (26-09-2026).
+
 ## Persist lightweight user state in browser LocalStorage
 (17-09-2026)
 
@@ -209,39 +219,6 @@ Distance markers are deferred to a separate task within the same milestone.
 - Fade transitions conceal abrupt geographic viewport changes.
 - JavaScript isolation keeps third-party integration contained within the owning component.
 - Separating distance markers allows their calculation and presentation requirements to be addressed independently.
-
-## Integrate Mapbox through an isolated Activity Map component
-
-(24-09-2026)
-
-### Decision
-
-Integrate Mapbox GL JS through a dedicated Activity Map component within the Activity Details feature.
-
-Use colocated JavaScript and CSS for component-specific functionality and presentation.
-
-The component receives the selected activity directly and transforms its existing geographic data into a focused map presentation contract.
-
-Represent independent recording segments using GeoJSON MultiLineString geometry.
-
-Maintain separate geographic markers for activity start, finish, pause and resume events.
-
-Retain the Mapbox instance when navigating between activities, updating its geographic data and viewport rather than recreating it.
-
-Apply fade transitions when switching activities.
-
-Manage Mapbox initialisation, updates and disposal explicitly.
-
-### Rationale
-
-- Preserve the existing Application service integration.
-- Avoid introducing unnecessary HTTP requests.
-- Keep Mapbox-specific integration isolated from other components.
-- Prevent artificial geographic connections across recording pauses.
-- Separate route presentation from geographic event markers.
-- Avoid unnecessary map recreation during activity navigation.
-- Preserve a consistent visual experience when switching activities.
-- Maintain explicit ownership of JavaScript resources and lifecycle.
 
 ## Calculate and render activity distance markers within the Activity Map feature
 
