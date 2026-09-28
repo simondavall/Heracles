@@ -10,14 +10,14 @@ public interface IWeatherService
 
 public sealed class WeatherService : IWeatherService
 {
-    private readonly IWeatherRepository _repository;
-    private readonly IWeatherProvider _provider;
+    private readonly IWeatherRepository _weatherRepository;
+    private readonly IWeatherProvider _weatherProvider;
     private readonly ILogger<WeatherService> _logger;
 
-    public WeatherService(IWeatherRepository repository, IWeatherProvider provider, ILogger<WeatherService> logger)
+    public WeatherService(IWeatherRepository weatherWeatherRepository, IWeatherProvider weatherWeatherProvider, ILogger<WeatherService> logger)
     {
-        _repository = repository;
-        _provider = provider;
+        _weatherRepository = weatherWeatherRepository;
+        _weatherProvider = weatherWeatherProvider;
         _logger = logger;
     }
 
@@ -25,7 +25,7 @@ public sealed class WeatherService : IWeatherService
     {
         ArgumentNullException.ThrowIfNull(track);
 
-        var existing = await _repository.GetAsync(track.Id, cancellationToken);
+        var existing = await _weatherRepository.GetAsync(track.Id, cancellationToken);
 
         if (existing is not null)
             return existing;
@@ -38,27 +38,18 @@ public sealed class WeatherService : IWeatherService
         if (firstPoint is null)
         {
             _logger.LogWarning("Activity {TrackId} has no GPS points", track.Id);
-
             return null;
         }
-
-        // The GPX reader normalises recorded timestamps to UTC.
-        // SQLite may return the persisted value with Kind=Unspecified.
-        var timestampUtc = firstPoint.Time.Kind switch
-        {
-            DateTimeKind.Utc => firstPoint.Time,
-            DateTimeKind.Unspecified => DateTime.SpecifyKind(firstPoint.Time, DateTimeKind.Utc),
-            _ => firstPoint.Time.ToUniversalTime()
-        };
+        
+        var midPointTime = firstPoint.Time.Add(track.Duration / 2);
         
         try
         {
-            // Find the weather for the mid-point of the activity
             var observation =
-                await _provider.GetHistoricalWeatherAsync(
+                await _weatherProvider.GetHistoricalWeatherAsync(
                     firstPoint.Latitude,
                     firstPoint.Longitude,
-                    timestampUtc.Add(track.Duration / 2),
+                    midPointTime,
                     cancellationToken);
 
             if (observation is null)
@@ -73,7 +64,7 @@ public sealed class WeatherService : IWeatherService
                 Conditions = observation.Conditions
             };
 
-            await _repository.SaveAsync(weather, cancellationToken);
+            await _weatherRepository.SaveAsync(weather, cancellationToken);
 
             return weather;
         }
