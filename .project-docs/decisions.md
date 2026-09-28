@@ -43,13 +43,6 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 
 - Use MudBlazor theming, CSS isolation and application-level styling to implement the Heracles visual design.
 - Use colocated `.razor.css` files for component-specific styling.
-- Keep application-wide styling under `wwwroot`.
-- Define application colours through the Heracles theme and semantic palette rather than feature-specific literal colours where practical.
-
-# Styling
-
-- Use MudBlazor theming, CSS isolation and application-level styling to implement the Heracles visual design.
-- Use colocated `.razor.css` files for component-specific styling.
 - Keep application-wide styling under `wwwroot` for styles genuinely shared by multiple components.
 - Do not move component-specific styling into application-wide CSS solely to work around Blazor CSS isolation.
 - Prefer MudBlazor theme and component APIs when they directly represent the required presentation.
@@ -98,9 +91,8 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 - Explicitly allow anonymous access only where required.
 - Provide authentication state to Blazor components through cascading authentication state.
 - Keep Heracles.Web authentication configuration at the application composition root.
-- Keep legacy ASP.NET Core Identity registration separate from common Infrastructure registration.
-- Require application hosts to explicitly opt into host-specific authentication infrastructure.
-- Retain the existing MVC Web application's legacy Identity implementation while it remains available for reference.
+- Keep authentication registration separate from common Infrastructure registration.
+- Require application hosts to explicitly configure their authentication infrastructure.
 
 # Application Configuration
 
@@ -197,3 +189,19 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 - Support cancellation and prevent overlapping operations within the Import page.
 - Report individual file-processing failures separately from operation-level persistence failures.
 - Report successful imports only after persistence has completed successfully.
+
+# Historical Weather
+
+- Retrieve historical weather through the Application weather service.
+- Define the external weather provider contract in Application.
+- Implement external weather integrations in Infrastructure.
+- Keep provider-specific weather codes and response formats within their respective Infrastructure implementations.
+- Translate provider-specific weather conditions into the common Application WeatherCode enumeration.
+- Keep weather presentation independent of the selected provider.
+- Use the first recorded GPS point as the weather lookup location.
+- Use the activity midpoint as the weather lookup timestamp.
+- Treat weather observations as approximate historical information.
+- Persist retrieved weather observations against their activities.
+- Reuse persisted observations rather than repeatedly requesting historical weather.
+- Retain cached observations when changing providers until a different cache policy is explicitly agreed.
+- Select the active weather provider through Infrastructure dependency injection.

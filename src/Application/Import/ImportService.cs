@@ -1,5 +1,4 @@
-﻿#nullable enable
-using Heracles.Application.Data;
+﻿using Heracles.Application.Data;
 using Heracles.Application.Import.Progress;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Logging;

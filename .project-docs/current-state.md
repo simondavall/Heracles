@@ -5,19 +5,22 @@ where development should continue.
 
 # Current phase
 
-- Phase 4 – Dashboard and Reporting
+- Phase 4 – Activity Details Modules
 
 # Current milestone
 
-- Enhancements
+- Milestone 4.1 – Modules
 
 # Current task
 
-- Change database from SQL Server to sqlite3
+- Add weather details
 
 # Remaining milestone tasks
 
-- None
+- Add ranking listing
+- Add splits
+- Add pace chart
+- Add elevation chart
 
 # Completed work
 
@@ -226,3 +229,21 @@ where development should continue.
 - Introduced an EF Core design-time context factory for migration generation.
 - Created and verified the SQLite database.
 - Successfully reimported GPX activity data.
+- Implemented historical weather retrieval for activities.
+- Integrated weather information into the Activity Title component.
+- Added weather condition icons and apparent-temperature presentation.
+- Introduced the Application weather service and provider abstraction.
+- Implemented historical weather retrieval through Visual Crossing.
+- Implemented an alternative historical weather provider using Open-Meteo.
+- Introduced a provider-independent WeatherCode enumeration.
+- Implemented provider-specific translation into the common weather model.
+- Selected the first recorded GPS point as the weather lookup location.
+- Selected the activity midpoint as the weather lookup timestamp.
+- Added persistent activity weather storage using SQLite.
+- Implemented retrieval of previously cached activity weather.
+- Established provider selection through Infrastructure dependency injection.
+- Added focused automated tests for WeatherService, OpenMeteoWeatherProvider
+  and VisualCrossingWeatherProvider.
+- Successfully executed the weather unit tests.
+- Verified the Visual Crossing historical hourly response against
+  actual activity data.

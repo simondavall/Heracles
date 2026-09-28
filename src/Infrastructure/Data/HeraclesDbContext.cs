@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Heracles.Application.Data;
+using Heracles.Application.Weather;
 using Microsoft.EntityFrameworkCore;
 
 namespace Heracles.Infrastructure.Data
@@ -12,6 +13,7 @@ namespace Heracles.Infrastructure.Data
         public DbSet<Track> Tracks { get; set; }
         public DbSet<TrackSegment> TrackSegments { get; set; }
         public DbSet<TrackPoint> TrackPoints { get; set; }
+        public DbSet<ActivityWeather> ActivityWeather { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken()) {
             return await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
@@ -19,6 +21,24 @@ namespace Heracles.Infrastructure.Data
 
         public override int SaveChanges() {
             return SaveChangesAsync().GetAwaiter().GetResult();
+        }
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<ActivityWeather>(entity =>
+            {
+                entity.ToTable("ActivityWeather");
+
+                entity.HasKey(weather => weather.TrackId);
+
+                entity.HasOne(weather => weather.Track)
+                    .WithOne()
+                    .HasForeignKey<ActivityWeather>(
+                        weather => weather.TrackId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
         }
     }
 }

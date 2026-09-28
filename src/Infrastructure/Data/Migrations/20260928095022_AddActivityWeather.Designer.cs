@@ -3,6 +3,7 @@ using System;
 using Heracles.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Heracles.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(HeraclesDbContext))]
-    partial class HeraclesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260928095022_AddActivityWeather")]
+    partial class AddActivityWeather
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.12");

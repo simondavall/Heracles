@@ -1,5 +1,4 @@
-﻿#nullable enable
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace Heracles.Application.Configuration;
 
@@ -7,25 +6,30 @@ public sealed record HeraclesSettings(
     DatabaseSettings DatabaseSettings,
     OpenIdConnectSettings OpenIdConnect,
     DataProtectionSettings DataProtection,
-    MapboxSettings Mapbox, ImportSettings Import)
+    MapboxSettings Mapbox,
+    ImportSettings Import,
+    WeatherApiSettings WeatherApi)
 {
     public static HeraclesSettings Create(IConfiguration configuration) {
         var errors = new List<string>();
 
-        var openIdConnectAuthority = GetAbsoluteUri(configuration, "OpenIdConnect:Authority", errors);
-        var openIdConnectClientId = GetRequiredString(configuration, "OpenIdConnect:ClientId", errors);
-        var openIdConnectClientSecret = GetRequiredString(configuration, "OpenIdConnect:ClientSecret", errors);
+        var oidcAuthority = GetAbsoluteUri(configuration, "OpenIdConnect:Authority", errors);
+        var oidcClientId = GetRequiredString(configuration, "OpenIdConnect:ClientId", errors);
+        var oidcClientSecret = GetRequiredString(configuration, "OpenIdConnect:ClientSecret", errors);
         
         var databasePath = GetAbsoluteFilePath(configuration, "Database:DatabasePath", errors);
         
-        var dataProtectionKeyPath = GetRequiredString(configuration, "DataProtection:KeyPath", errors);
-        var dataProtectionCertificatePath = GetRequiredString(configuration, "DataProtection:CertificatePath", errors);
-        var dataProtectionCertificatePassword = GetRequiredString(configuration, "DataProtection:CertificatePassword", errors);
+        var dpKeyPath = GetRequiredString(configuration, "DataProtection:KeyPath", errors);
+        var dpCertificatePath = GetRequiredString(configuration, "DataProtection:CertificatePath", errors);
+        var dpCertificatePassword = GetRequiredString(configuration, "DataProtection:CertificatePassword", errors);
 
         var mapboxAccessToken = GetRequiredString(configuration, "Mapbox:AccessToken", errors);
         
         var maximumFileCount = GetPositiveInt(configuration, "Import:MaximumFileCount", errors);
         var maximumCombinedSizeMb = GetPositiveInt(configuration, "Import:MaximumCombinedSizeMb", errors);
+        
+        var weatherApiKey = GetRequiredString(configuration, "WeatherApi:Key", errors);
+        var weatherApiUri = GetAbsoluteUri(configuration, "WeatherApi:Uri", errors);
         
         if (errors.Count > 0)
             throw new InvalidOperationException(
@@ -34,20 +38,12 @@ public sealed record HeraclesSettings(
                 + string.Join(Environment.NewLine, errors.Select(error => $" - {error}")));
         
         return new HeraclesSettings(
-            new DatabaseSettings(
-                databasePath!),
-            new OpenIdConnectSettings(
-                openIdConnectAuthority!,
-                openIdConnectClientId!,
-                openIdConnectClientSecret!),
-            new DataProtectionSettings(
-                dataProtectionKeyPath!,
-                dataProtectionCertificatePath!,
-                dataProtectionCertificatePassword!),
+            new DatabaseSettings(databasePath!),
+            new OpenIdConnectSettings(oidcAuthority!, oidcClientId!, oidcClientSecret!),
+            new DataProtectionSettings(dpKeyPath!, dpCertificatePath!, dpCertificatePassword!),
             new MapboxSettings(mapboxAccessToken!), 
-            new ImportSettings(
-                maximumFileCount!.Value, 
-                maximumCombinedSizeMb!.Value));
+            new ImportSettings(maximumFileCount!.Value, maximumCombinedSizeMb!.Value),
+            new WeatherApiSettings(weatherApiKey!, weatherApiUri!));
     }
 
     private static string? GetRequiredString(IConfiguration configuration, string key, List<string> errors) {
@@ -131,3 +127,7 @@ public sealed record MapboxSettings(
 public sealed record ImportSettings(
     int MaximumFileCount, 
     int MaximumCombinedSizeMb);
+    
+public sealed record WeatherApiSettings(
+    string Key,
+    Uri Uri);
