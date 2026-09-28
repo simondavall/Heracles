@@ -302,3 +302,53 @@ Introduce an EF Core design-time context factory to support migration generation
 - Retaining bulk insertion preserves the existing efficient import approach.
 - Data annotations place straightforward constraints alongside the properties they describe.
 - A dedicated design-time factory allows EF Core migrations to be generated without requiring unrelated application configuration.
+
+## Implement historical weather through interchangeable providers
+
+(28-09-2026)
+
+### Decision
+
+Implement historical weather retrieval through an Application weather
+service and a provider abstraction.
+
+Provide two Infrastructure implementations:
+
+- Visual Crossing.
+- Open-Meteo.
+
+Use a common Application weather observation contract and WeatherCode enumeration. Each provider translates 
+its external response and weather classifications into these common representations.
+
+Select the active provider through Infrastructure dependency injection at application startup.
+
+Use the first recorded GPS point as the lookup location and the activity midpoint as the lookup timestamp.
+
+Persist retrieved weather observations against their activities and reuse previously retrieved observations.
+
+Retain existing cached observations when changing providers.
+
+Display weather conditions and apparent temperature through the Activity Title component.
+
+### Rationale
+
+- Historical weather provides useful contextual information about recorded activities.
+- The weather information is approximate and does not require the precision of a dedicated meteorological 
+observation system.
+- The first recorded GPS point provides a suitable representative location for the activities currently 
+recorded in Heracles.
+- The activity midpoint provides a representative observation time and handles activities that cross hourly 
+observation boundaries.
+- Separating the provider contract from its implementations allows alternative weather services to be 
+evaluated without changing the Application service or Web presentation.
+- A common WeatherCode enumeration prevents provider-specific weather classifications from leaking into the 
+presentation layer.
+- Persisting retrieved observations reduces external API requests and allows previously retrieved weather to 
+be displayed without contacting the external provider.
+
+### Deferred considerations
+
+- Review whether provider changes should invalidate cached weather.
+- Review configuration-based provider selection at application startup.
+- Select the provider to use moving forward.
+- Implement the attribution required by the selected provider before release.

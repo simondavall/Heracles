@@ -6,6 +6,9 @@
 
 - Investigate initial theme flash (see Notes below)
 - User-configurable Activity Map settings. (see Notes)
+- Review weather cache behaviour when changing providers (see Notes).
+- Review configuration-based weather provider selection (see Notes).
+- Add OpenMeteo attribution before releasing.
 
 # Nice-to-have
 
@@ -19,6 +22,14 @@ Investigate and address the visible theme transition during initial rendering an
 Treat this as an initial rendering/lifecycle concern rather than extending the existing theme preference implementation.
 
 The solution should avoid duplicating theme ownership between startup JavaScript/CSS and MudBlazor.
+
+### Review weather cache behaviour when changing providers
+
+Currently cached weather is retained when switching between Open-Meteo and Visual Crossing. Review whether provider changes should invalidate previously cached observations. Preserve the existing cache behaviour until an explicit decision is made.
+
+### Review configuration-based weather provider selection
+
+Currently changing the active weather provider requires changing the Infrastructure DI registration and redeploying. Review selecting the provider through configuration at application startup, with provider-specific settings. Runtime switching and provider factories are not required by the current use case.
 
 ## User-configurable Activity Map settings
 

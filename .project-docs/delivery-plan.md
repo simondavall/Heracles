@@ -254,7 +254,17 @@ The complete import operation is coordinated through the Application layer, with
 
 ## Milestone 4.1 – Modules
 
-- Add weather details
+## Milestone 4.1 – Modules
+
+- ✓ Add weather details.
+    - ✓ Integrate historical weather into Activity Title.
+    - ✓ Implement the Application weather service.
+    - ✓ Implement historical weather retrieval through Visual Crossing.
+    - ✓ Implement historical weather retrieval through Open-Meteo.
+    - ✓ Establish a provider-independent weather observation model.
+    - ✓ Persist and reuse retrieved activity weather.
+    - ✓ Implement weather condition and apparent-temperature presentation.
+    - ✓ Verify weather retrieval and persistence through automated tests.
 - Add ranking listing
 - Add splits
 - Add pace chart

@@ -189,3 +189,19 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 - Support cancellation and prevent overlapping operations within the Import page.
 - Report individual file-processing failures separately from operation-level persistence failures.
 - Report successful imports only after persistence has completed successfully.
+
+# Historical Weather
+
+- Retrieve historical weather through the Application weather service.
+- Define the external weather provider contract in Application.
+- Implement external weather integrations in Infrastructure.
+- Keep provider-specific weather codes and response formats within their respective Infrastructure implementations.
+- Translate provider-specific weather conditions into the common Application WeatherCode enumeration.
+- Keep weather presentation independent of the selected provider.
+- Use the first recorded GPS point as the weather lookup location.
+- Use the activity midpoint as the weather lookup timestamp.
+- Treat weather observations as approximate historical information.
+- Persist retrieved weather observations against their activities.
+- Reuse persisted observations rather than repeatedly requesting historical weather.
+- Retain cached observations when changing providers until a different cache policy is explicitly agreed.
+- Select the active weather provider through Infrastructure dependency injection.
