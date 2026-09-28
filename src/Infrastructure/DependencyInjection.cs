@@ -29,7 +29,7 @@ namespace Heracles.Infrastructure
             services.AddTransient<IGpxService, GpxService>();
             
             services.AddScoped<IWeatherRepository, WeatherRepository>();
-            services.AddHttpClient<IWeatherProvider, OpenMeteoWeatherProvider>();
+            services.AddHttpClient<IWeatherProvider, VisualCrossingWeatherProvider>();
         }
 
         public static IApplicationBuilder UseMigrationsEndPoint(IApplicationBuilder app, IWebHostEnvironment env) {

@@ -10,6 +10,8 @@ public class ActivityWeather
     public double? FeelsLike { get; init; }
     [MaxLength(100)]
     public string? Conditions { get; init; }
+    public WeatherCode? WeatherCode { get; init; }
+    public DateTime ObservationTimeUtc { get; set; }
     
     public Track Track { get; init; } = null!;
 }

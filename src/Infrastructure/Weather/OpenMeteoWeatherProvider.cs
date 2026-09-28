@@ -19,19 +19,14 @@ public class OpenMeteoWeatherProvider : IWeatherProvider
         _logger = logger;
     }
 
-    public async Task<WeatherObservation?> GetHistoricalWeatherAsync(double latitude,
-        double longitude,
-        DateTime timestampUtc,
+    public async Task<WeatherObservation?> GetHistoricalWeatherAsync(double latitude, double longitude, DateTime datetime,
         CancellationToken cancellationToken = default) {
         
-        var utc = timestampUtc.Kind switch
+        var utc = datetime.Kind switch
         {
-            DateTimeKind.Utc => timestampUtc,
-
-            DateTimeKind.Unspecified =>
-                DateTime.SpecifyKind(timestampUtc, DateTimeKind.Utc),
-
-            _ => timestampUtc.ToUniversalTime()
+            DateTimeKind.Utc => datetime,
+            DateTimeKind.Unspecified => DateTime.SpecifyKind(datetime, DateTimeKind.Utc),
+            _ => datetime.ToUniversalTime()
         };
 
         var location = string.Create(CultureInfo.InvariantCulture, $"latitude={latitude:F6}&longitude={longitude:F6}");
@@ -89,7 +84,12 @@ public class OpenMeteoWeatherProvider : IWeatherProvider
             return null;
         }
 
-        var weatherObservation = new WeatherObservation(temperature, feelsLike, MapWeatherCode(weatherCode));
+        var weatherObservation = new WeatherObservation(
+            temperature, 
+            feelsLike, 
+            MapCodeToConditions(weatherCode), 
+            MapCodeToWeatherCode(weatherCode),
+            DateTime.SpecifyKind(observation.Time[index], DateTimeKind.Utc));
         
         _logger.LogInformation("Retrieved historical weather for {RequestedHour}: {WeatherObservation}", requestedHour, weatherObservation);
         
@@ -130,7 +130,7 @@ public class OpenMeteoWeatherProvider : IWeatherProvider
                && hourly.WeatherCode.Count == count;
     }
 
-    private static string MapWeatherCode(int? code) => code switch {
+    private static string MapCodeToConditions(int? code) => code switch {
         0 => "Clear sky",
         1 => "Mainly clear",
         2 => "Partly cloudy",
@@ -161,5 +161,22 @@ public class OpenMeteoWeatherProvider : IWeatherProvider
         97 => "Heavy thunderstorm",
         99 => "Thunderstorm with heavy hail",
         _ => "Unknown"
+    };
+    
+    private static WeatherCode MapCodeToWeatherCode(int? code) => code switch {
+        0 or 1 => WeatherCode.ClearDay,
+        2 => WeatherCode.PartlyCloudyDay,
+        3 => WeatherCode.Cloudy,
+        45 or 48 => WeatherCode.Fog,
+        51 or 53 or 55 or 56 or 57 => WeatherCode.ShowersDay,
+        61 or 63 or 65 or 66 or 67 => WeatherCode.Rain,
+        71 or 73 or 75 => WeatherCode.Snow,
+        77 => WeatherCode.SnowShowersDay,
+        80 => WeatherCode.ShowersDay,
+        81 or 82 => WeatherCode.Rain,
+        85 or 86 => WeatherCode.SnowShowersDay,
+        95 or 96 => WeatherCode.ThunderShowersDay,
+        97 or 99 => WeatherCode.ThunderRain,
+        _ => WeatherCode.Unknown
     };
 }

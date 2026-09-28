@@ -61,7 +61,9 @@ public sealed class WeatherService : IWeatherService
 
                 Temperature = observation.Temperature,
                 FeelsLike = observation.FeelsLike,
-                Conditions = observation.Conditions
+                Conditions = observation.Conditions,
+                WeatherCode = observation.WeatherCode,
+                ObservationTimeUtc = observation.ObservationTimeUtc
             };
 
             await _weatherRepository.SaveAsync(weather, cancellationToken);

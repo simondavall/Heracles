@@ -18,7 +18,9 @@ namespace Heracles.Infrastructure.Data.Migrations
                     TrackId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Temperature = table.Column<double>(type: "REAL", nullable: true),
                     FeelsLike = table.Column<double>(type: "REAL", nullable: true),
-                    Conditions = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true)
+                    Conditions = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
+                    WeatherCode = table.Column<int>(type: "INTEGER", nullable: true),
+                    ObservationTimeUtc = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

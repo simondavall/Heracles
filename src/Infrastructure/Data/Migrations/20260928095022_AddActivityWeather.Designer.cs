@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Heracles.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(HeraclesDbContext))]
-    [Migration("20260927193131_AddActivityWeather")]
+    [Migration("20260928095022_AddActivityWeather")]
     partial class AddActivityWeather
     {
         /// <inheritdoc />
@@ -134,8 +134,14 @@ namespace Heracles.Infrastructure.Data.Migrations
                     b.Property<double?>("FeelsLike")
                         .HasColumnType("REAL");
 
+                    b.Property<DateTime>("ObservationTimeUtc")
+                        .HasColumnType("TEXT");
+
                     b.Property<double?>("Temperature")
                         .HasColumnType("REAL");
+
+                    b.Property<int?>("WeatherCode")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("TrackId");
 

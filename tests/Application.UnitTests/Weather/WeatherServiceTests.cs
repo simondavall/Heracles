@@ -1,4 +1,4 @@
-﻿using Heracles.Application.Data;
+using Heracles.Application.Data;
 using Heracles.Application.Weather;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
@@ -9,6 +9,9 @@ public sealed class WeatherServiceTests
 {
     private static readonly DateTime StartTime =
         new(2024, 4, 22, 7, 58, 0, DateTimeKind.Utc);
+
+    private static readonly DateTime ObservationTime =
+        new(2024, 4, 22, 8, 0, 0, DateTimeKind.Utc);
 
     private const double StartLatitude = 51.5074;
     private const double StartLongitude = -0.1278;
@@ -35,7 +38,7 @@ public sealed class WeatherServiceTests
         var track = CreateTrack();
         var repository = new FakeWeatherRepository();
         var provider = new FakeWeatherProvider {
-            Observation = new WeatherObservation(12.5, 11.2, "Partly cloudy")
+            Observation = new WeatherObservation(12.5, 11.2, "Partly cloudy", WeatherCode.PartlyCloudyDay, ObservationTime)
         };
         var service = CreateService(repository, provider);
 
@@ -47,6 +50,9 @@ public sealed class WeatherServiceTests
         Assert.Equal(12.5, result.Temperature);
         Assert.Equal(11.2, result.FeelsLike);
         Assert.Equal("Partly cloudy", result.Conditions);
+        Assert.Equal(WeatherCode.PartlyCloudyDay, result.WeatherCode);
+        Assert.Equal(ObservationTime, result.ObservationTimeUtc);
+        Assert.Equal(DateTimeKind.Utc, result.ObservationTimeUtc.Kind);
 
         Assert.Equal(1, repository.GetCount);
         Assert.Equal(1, repository.SaveCount);
@@ -69,7 +75,7 @@ public sealed class WeatherServiceTests
 
         var repository = new FakeWeatherRepository();
         var provider = new FakeWeatherProvider {
-            Observation = new WeatherObservation(12.5, 11.2, "Partly cloudy")
+            Observation = new WeatherObservation(12.5, 11.2, "Partly cloudy", WeatherCode.PartlyCloudyDay, ObservationTime)
         };
         var service = CreateService(repository, provider);
 
@@ -87,7 +93,7 @@ public sealed class WeatherServiceTests
         var track = CreateTrack(startTime: startTime, duration: TimeSpan.FromMinutes(40));
         var repository = new FakeWeatherRepository();
         var provider = new FakeWeatherProvider {
-            Observation = new WeatherObservation(8.0, 6.5, "Clear sky")
+            Observation = new WeatherObservation(8.0, 6.5, "Clear sky", WeatherCode.ClearDay, ObservationTime)
         };
         var service = CreateService(repository, provider);
 
@@ -119,7 +125,7 @@ public sealed class WeatherServiceTests
         var repository = new FakeWeatherRepository();
 
         var provider = new FakeWeatherProvider {
-            Observation = new WeatherObservation(12.5, 11.2, "Partly cloudy")
+            Observation = new WeatherObservation(12.5, 11.2, "Partly cloudy", WeatherCode.PartlyCloudyDay, ObservationTime)
         };
 
         var service = CreateService(repository, provider);

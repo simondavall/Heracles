@@ -131,8 +131,14 @@ namespace Heracles.Infrastructure.Data.Migrations
                     b.Property<double?>("FeelsLike")
                         .HasColumnType("REAL");
 
+                    b.Property<DateTime>("ObservationTimeUtc")
+                        .HasColumnType("TEXT");
+
                     b.Property<double?>("Temperature")
                         .HasColumnType("REAL");
+
+                    b.Property<int?>("WeatherCode")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("TrackId");
 

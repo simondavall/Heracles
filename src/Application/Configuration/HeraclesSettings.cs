@@ -28,6 +28,7 @@ public sealed record HeraclesSettings(
         var maximumFileCount = GetPositiveInt(configuration, "Import:MaximumFileCount", errors);
         var maximumCombinedSizeMb = GetPositiveInt(configuration, "Import:MaximumCombinedSizeMb", errors);
         
+        var weatherApiKey = GetRequiredString(configuration, "WeatherApi:Key", errors);
         var weatherApiUri = GetAbsoluteUri(configuration, "WeatherApi:Uri", errors);
         
         if (errors.Count > 0)
@@ -42,7 +43,7 @@ public sealed record HeraclesSettings(
             new DataProtectionSettings(dpKeyPath!, dpCertificatePath!, dpCertificatePassword!),
             new MapboxSettings(mapboxAccessToken!), 
             new ImportSettings(maximumFileCount!.Value, maximumCombinedSizeMb!.Value),
-            new WeatherApiSettings(weatherApiUri!));
+            new WeatherApiSettings(weatherApiKey!, weatherApiUri!));
     }
 
     private static string? GetRequiredString(IConfiguration configuration, string key, List<string> errors) {
@@ -128,4 +129,5 @@ public sealed record ImportSettings(
     int MaximumCombinedSizeMb);
     
 public sealed record WeatherApiSettings(
+    string Key,
     Uri Uri);

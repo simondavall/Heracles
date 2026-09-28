@@ -1,6 +1,7 @@
-﻿using System.Net;
+using System.Net;
 using System.Text;
 using Heracles.Application.Configuration;
+using Heracles.Application.Weather;
 using Heracles.Infrastructure.Weather;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
@@ -53,6 +54,9 @@ public sealed class OpenMeteoWeatherProviderTests
         Assert.Equal(12.5, result.Temperature);
         Assert.Equal(11.2, result.FeelsLike);
         Assert.Equal("Partly cloudy", result.Conditions);
+        Assert.Equal(WeatherCode.PartlyCloudyDay, result.WeatherCode);
+        Assert.Equal(new DateTime(2024, 4, 22, 8, 0, 0, DateTimeKind.Utc), result.ObservationTimeUtc);
+        Assert.Equal(DateTimeKind.Utc, result.ObservationTimeUtc.Kind);
     }
 
     [Fact]
@@ -195,6 +199,7 @@ public sealed class OpenMeteoWeatherProviderTests
         
         Assert.NotNull(result);
         Assert.Equal("Unknown", result.Conditions);
+        Assert.Equal(WeatherCode.Unknown, result.WeatherCode);
     }
 
     [Fact]
@@ -247,7 +252,7 @@ public sealed class OpenMeteoWeatherProviderTests
 
         var httpClient = new HttpClient(handler);
 
-        var settings = new WeatherApiSettings(new Uri(Endpoint));
+        var settings = new WeatherApiSettings(string.Empty, new Uri(Endpoint));
 
         return new OpenMeteoWeatherProvider(
             httpClient,

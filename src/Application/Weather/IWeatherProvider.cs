@@ -5,12 +5,14 @@ public interface IWeatherProvider
     Task<WeatherObservation?> GetHistoricalWeatherAsync(
         double latitude,
         double longitude,
-        DateTime timestampUtc,
+        DateTime datetime,
         CancellationToken cancellationToken = default);
 }
 
 public sealed record WeatherObservation(
     double? Temperature,
     double? FeelsLike,
-    string? Conditions);
+    string? Conditions,
+    WeatherCode? WeatherCode,
+    DateTime ObservationTimeUtc);
 
