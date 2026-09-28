@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Heracles.Application.Data;
+using Heracles.Application.Weather;
 using Microsoft.EntityFrameworkCore;
 
 namespace Heracles.Infrastructure.Data
@@ -31,12 +32,6 @@ namespace Heracles.Infrastructure.Data
                 entity.ToTable("ActivityWeather");
 
                 entity.HasKey(weather => weather.TrackId);
-
-                // entity.Property(weather => weather.Conditions)
-                //     .HasMaxLength(200);
-                //
-                // entity.Property(weather => weather.Icon)
-                //     .HasMaxLength(100);
 
                 entity.HasOne(weather => weather.Track)
                     .WithOne()

@@ -12,9 +12,5 @@ public interface IWeatherProvider
 public sealed record WeatherObservation(
     double? Temperature,
     double? FeelsLike,
-    double? Humidity,
-    double? Pressure,
-    string? Conditions,
-    string? Icon,
-    DateTime ObservationTimeUtc);
+    string? Conditions);
 

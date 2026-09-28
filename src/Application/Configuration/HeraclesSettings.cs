@@ -1,5 +1,4 @@
-﻿#nullable enable
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace Heracles.Application.Configuration;
 
@@ -30,7 +29,6 @@ public sealed record HeraclesSettings(
         var maximumCombinedSizeMb = GetPositiveInt(configuration, "Import:MaximumCombinedSizeMb", errors);
         
         var weatherApiUri = GetAbsoluteUri(configuration, "WeatherApi:Uri", errors);
-        var weatherApiKey = GetRequiredString(configuration, "WeatherApi:Key", errors);
         
         if (errors.Count > 0)
             throw new InvalidOperationException(
@@ -44,7 +42,7 @@ public sealed record HeraclesSettings(
             new DataProtectionSettings(dpKeyPath!, dpCertificatePath!, dpCertificatePassword!),
             new MapboxSettings(mapboxAccessToken!), 
             new ImportSettings(maximumFileCount!.Value, maximumCombinedSizeMb!.Value),
-            new WeatherApiSettings(weatherApiUri!, weatherApiKey!));
+            new WeatherApiSettings(weatherApiUri!));
     }
 
     private static string? GetRequiredString(IConfiguration configuration, string key, List<string> errors) {
@@ -130,5 +128,4 @@ public sealed record ImportSettings(
     int MaximumCombinedSizeMb);
     
 public sealed record WeatherApiSettings(
-    Uri Uri,
-    string Key);
+    Uri Uri);

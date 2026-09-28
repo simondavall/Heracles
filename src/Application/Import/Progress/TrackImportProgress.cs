@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace Heracles.Application.Import.Progress;
+﻿namespace Heracles.Application.Import.Progress;
 
 public class TrackImportProgress
 {

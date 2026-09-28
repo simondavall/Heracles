@@ -17,39 +17,6 @@ namespace Heracles.Infrastructure.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.12");
 
-            modelBuilder.Entity("Heracles.Application.Data.ActivityWeather", b =>
-                {
-                    b.Property<Guid>("TrackId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Conditions")
-                        .HasMaxLength(200)
-                        .HasColumnType("TEXT");
-
-                    b.Property<double?>("FeelsLike")
-                        .HasColumnType("REAL");
-
-                    b.Property<double?>("Humidity")
-                        .HasColumnType("REAL");
-
-                    b.Property<string>("Icon")
-                        .HasMaxLength(100)
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("ObservationTimeUtc")
-                        .HasColumnType("TEXT");
-
-                    b.Property<double?>("Pressure")
-                        .HasColumnType("REAL");
-
-                    b.Property<double?>("Temperature")
-                        .HasColumnType("REAL");
-
-                    b.HasKey("TrackId");
-
-                    b.ToTable("ActivityWeather", (string)null);
-                });
-
             modelBuilder.Entity("Heracles.Application.Data.Track", b =>
                 {
                     b.Property<Guid>("Id")
@@ -152,15 +119,24 @@ namespace Heracles.Infrastructure.Data.Migrations
                     b.ToTable("TrackSegments");
                 });
 
-            modelBuilder.Entity("Heracles.Application.Data.ActivityWeather", b =>
+            modelBuilder.Entity("Heracles.Application.Weather.ActivityWeather", b =>
                 {
-                    b.HasOne("Heracles.Application.Data.Track", "Track")
-                        .WithOne()
-                        .HasForeignKey("Heracles.Application.Data.ActivityWeather", "TrackId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<Guid>("TrackId")
+                        .HasColumnType("TEXT");
 
-                    b.Navigation("Track");
+                    b.Property<string>("Conditions")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<double?>("FeelsLike")
+                        .HasColumnType("REAL");
+
+                    b.Property<double?>("Temperature")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("TrackId");
+
+                    b.ToTable("ActivityWeather", (string)null);
                 });
 
             modelBuilder.Entity("Heracles.Application.Data.TrackPoint", b =>
@@ -179,6 +155,17 @@ namespace Heracles.Infrastructure.Data.Migrations
                         .HasForeignKey("TrackId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Heracles.Application.Weather.ActivityWeather", b =>
+                {
+                    b.HasOne("Heracles.Application.Data.Track", "Track")
+                        .WithOne()
+                        .HasForeignKey("Heracles.Application.Weather.ActivityWeather", "TrackId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Track");
                 });
 
             modelBuilder.Entity("Heracles.Application.Data.Track", b =>

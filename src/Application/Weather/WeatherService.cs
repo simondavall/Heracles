@@ -29,12 +29,12 @@ public sealed class WeatherService : IWeatherService
 
         if (existing is not null)
             return existing;
-
+        
         var firstPoint = track.TrackSegments
             .OrderBy(segment => segment.Seq)
             .SelectMany(segment => segment.TrackPoints.OrderBy(point => point.Seq))
             .FirstOrDefault();
-
+        
         if (firstPoint is null)
         {
             _logger.LogWarning("Activity {TrackId} has no GPS points", track.Id);
@@ -50,14 +50,15 @@ public sealed class WeatherService : IWeatherService
             DateTimeKind.Unspecified => DateTime.SpecifyKind(firstPoint.Time, DateTimeKind.Utc),
             _ => firstPoint.Time.ToUniversalTime()
         };
-
+        
         try
         {
+            // Find the weather for the mid-point of the activity
             var observation =
                 await _provider.GetHistoricalWeatherAsync(
                     firstPoint.Latitude,
                     firstPoint.Longitude,
-                    timestampUtc,
+                    timestampUtc.Add(track.Duration / 2),
                     cancellationToken);
 
             if (observation is null)
@@ -69,13 +70,7 @@ public sealed class WeatherService : IWeatherService
 
                 Temperature = observation.Temperature,
                 FeelsLike = observation.FeelsLike,
-                Humidity = observation.Humidity,
-                Pressure = observation.Pressure,
-
-                Conditions = observation.Conditions,
-                Icon = observation.Icon,
-
-                ObservationTimeUtc = observation.ObservationTimeUtc
+                Conditions = observation.Conditions
             };
 
             await _repository.SaveAsync(weather, cancellationToken);
