@@ -13,11 +13,10 @@ where development should continue.
 
 # Current task
 
-- Add weather details
+- Add ranking listing
 
 # Remaining milestone tasks
 
-- Add ranking listing
 - Add splits
 - Add pace chart
 - Add elevation chart
@@ -242,8 +241,7 @@ where development should continue.
 - Added persistent activity weather storage using SQLite.
 - Implemented retrieval of previously cached activity weather.
 - Established provider selection through Infrastructure dependency injection.
-- Added focused automated tests for WeatherService, OpenMeteoWeatherProvider
-  and VisualCrossingWeatherProvider.
+- Added focused automated tests for WeatherService, OpenMeteoWeatherProvider and VisualCrossingWeatherProvider.
 - Successfully executed the weather unit tests.
-- Verified the Visual Crossing historical hourly response against
-  actual activity data.
+- Verified the Visual Crossing historical hourly response against actual activity data.
+- Added a set of weather images.
