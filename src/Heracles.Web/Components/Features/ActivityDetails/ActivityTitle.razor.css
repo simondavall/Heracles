@@ -41,8 +41,10 @@
 }
 
 .activity-weather-icon {
-    flex-shrink: 0;
-    color: var(--mud-palette-text-secondary);
+    height: 36px;
+    width: 36px;
+    flex: 0 0 36px;
+    object-fit: contain;
 }
 
 .activity-weather-details {
@@ -76,6 +78,12 @@
     .activity-title-weather {
         gap: 6px;
         padding-left: 12px;
+    }
+
+    .activity-weather-icon {
+        height: 32px;
+        width: 32px;
+        flex-basis: 32px;
     }
 
     .activity-weather-conditions {
