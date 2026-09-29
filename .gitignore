@@ -9,6 +9,7 @@
 .env
 .data-protection
 .staging
+.archive
 
 # User-specific files
 *.rsuser
