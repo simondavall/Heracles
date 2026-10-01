@@ -13,7 +13,7 @@ where development should continue.
 
 # Current task
 
-- Add Activity Type filtering to Activity Navigation
+- Add pace chart
 
 # Remaining milestone tasks
 
@@ -246,3 +246,11 @@ where development should continue.
 - Successfully executed the weather unit tests.
 - Verified the Visual Crossing historical hourly response against actual activity data.
 - Added a set of weather images.
+- Added Activity Type filtering to Activity Navigation.
+- Added a persisted Activity Type preference to the existing browser-local UserState.
+- Added an Activity Type selector with `All` representing the unfiltered activity view.
+- Populated available Activity Types dynamically from the distinct types present in activity data.
+- Added Activity Type filtering to activity year counts, month counts and activity lists.
+- Added Activity Type filtering to most-recent-activity retrieval.
+- Preserved explicit `/activity/{id}` routes independently of the persisted Activity Type filter.
+- Reset persisted Activity Type selections to `All` when the selected type is no longer present in activity data.
