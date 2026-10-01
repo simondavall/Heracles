@@ -88,6 +88,17 @@ namespace Heracles.Infrastructure.Data
             return deleteSucceeded;
         }
 
+        public async Task<IList<ActivityType>> GetActivityTypesAsync()
+        {
+            await using var dbContext = await _contextFactory.CreateDbContextAsync();
+
+            return await dbContext.Tracks
+                .Select(x => x.ActivityType)
+                .Distinct()
+                .OrderBy(x => x)
+                .ToListAsync();
+        }
+
         public async Task<Track?> GetTrackAsync(Guid trackId) {
             await using var dbContext = await _contextFactory.CreateDbContextAsync();
             var track = await dbContext.Tracks.FirstOrDefaultAsync(x => x.Id == trackId);

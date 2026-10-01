@@ -20,29 +20,6 @@ else
                 Activities
             </MudText>
         </header>
-
-        <div class="activity-navigation-filter">
-            <MudSelect T="ActivityType?"
-                       Value="_selectedActivityType"
-                       ValueChanged="ActivityTypeChangedAsync"
-                       Label="Activity Type"
-                       Variant="Variant.Outlined"
-                       Margin="Margin.Dense">
-
-                <MudSelectItem T="ActivityType?"
-                               Value="@((ActivityType?)null)">
-                    All
-                </MudSelectItem>
-
-                @foreach (var activityType in Enum.GetValues<ActivityType>())
-                {
-                    <MudSelectItem T="ActivityType?"
-                                   Value="@((ActivityType?)activityType)">
-                        @activityType
-                    </MudSelectItem>
-                }
-            </MudSelect>
-        </div>
         
         @if (_currentActivity is null || _years.Count == 0){
             <div class="activity-navigation-state">
@@ -52,6 +29,29 @@ else
             </div>
         }
         else {
+            <div class="activity-navigation-filter">
+                <MudSelect T="ActivityType?"
+                           Value="_selectedActivityType"
+                           ValueChanged="ActivityTypeChangedAsync"
+                           Label="Activity Type"
+                           Variant="Variant.Outlined"
+                           Margin="Margin.Dense">
+
+                    <MudSelectItem T="ActivityType?"
+                                   Value="@(null)">
+                        All
+                    </MudSelectItem>
+
+                    @foreach (var activityType in _activityTypes)
+                    {
+                        <MudSelectItem T="ActivityType?"
+                                       Value="@(activityType)">
+                            @activityType
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+            </div>
+            
             <MudExpansionPanels MultiExpansion="false"
                             Class="activity-years">
             @foreach (var year in _years)

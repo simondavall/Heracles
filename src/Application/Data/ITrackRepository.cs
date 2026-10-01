@@ -7,6 +7,7 @@ namespace Heracles.Application.Data
     public interface ITrackRepository
     {
         Task<bool> DeleteTrackAsync(Guid trackId);
+        Task<IList<ActivityType>> GetActivityTypesAsync();
         Task<Track?> GetTrackAsync(Guid trackId);
         Task<IList<string>> GetExistingTracksAsync();
         Task<Track?> GetFirstEverActivityAsync();

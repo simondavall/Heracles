@@ -24,6 +24,7 @@ public partial class ActivityNavigation
     private IList<ActivityListYear> _years = [];
     private IList<ActivityListMonth> _months = [];
     private List<ActivityListItem> _activities = [];
+    private IList<ActivityType> _activityTypes = [];
 
     private ActivityType? _selectedActivityType;
 
@@ -49,7 +50,16 @@ public partial class ActivityNavigation
 
         await UserStateService.LoadAsync();
 
+        _activityTypes = await ActivityService.GetActivityTypesAsync();
+        
         _selectedActivityType = UserStateService.State.ActivityType;
+        if (_selectedActivityType.HasValue && !_activityTypes.Contains(_selectedActivityType.Value))
+        {
+            _selectedActivityType = null;
+            UserStateService.State.ActivityType = null;
+            await UserStateService.SaveAsync();
+        }
+        
 
         await SetCurrentActivityAsync();
         await LoadNavigationAsync();

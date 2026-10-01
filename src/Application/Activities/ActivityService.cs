@@ -6,6 +6,7 @@ namespace Heracles.Application.Activities;
 public interface IActivityService
 {
     Task<bool> DeleteActivityAsync(Guid trackId);
+    Task<IList<ActivityType>> GetActivityTypesAsync();
     Task<Track?> GetActivityAsync(Guid trackId);
     Task<List<ActivityListItem>> GetActivitiesByDateAsync(DateTime startDate, Guid? trackId = null, ActivityType? activityType = null);
     Task<IList<ActivityListMonth>> GetActivitiesSummaryByMonthsAsync(Track track, ActivityType? activityType = null);
@@ -25,6 +26,11 @@ public class ActivityService : IActivityService
 
     public async Task<bool> DeleteActivityAsync(Guid trackId) {
         return await _trackRepository.DeleteTrackAsync(trackId);
+    }
+
+    public async Task<IList<ActivityType>> GetActivityTypesAsync()
+    {
+        return await _trackRepository.GetActivityTypesAsync();
     }
 
     public async Task<Track?> GetActivityAsync(Guid trackId) {
