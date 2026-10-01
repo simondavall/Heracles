@@ -254,8 +254,6 @@ The complete import operation is coordinated through the Application layer, with
 
 ## Milestone 4.1 – Modules
 
-## Milestone 4.1 – Modules
-
 - ✓ Add weather details.
     - ✓ Integrate historical weather into Activity Title.
     - ✓ Implement the Application weather service.
@@ -265,11 +263,11 @@ The complete import operation is coordinated through the Application layer, with
     - ✓ Persist and reuse retrieved activity weather.
     - ✓ Implement weather condition and apparent-temperature presentation.
     - ✓ Verify weather retrieval and persistence through automated tests.
-- Add ranking listing
-- Add splits
+- Add Activity Type filtering to Activity Navigation
 - Add pace chart
 - Add elevation chart
-
+- Add splits
+- Add ranking listing
 
 # Phase 5 – Dashboard and Reporting
 

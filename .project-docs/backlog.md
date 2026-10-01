@@ -9,6 +9,7 @@
 - Review weather cache behaviour when changing providers (see Notes).
 - Review configuration-based weather provider selection (see Notes).
 - Add OpenMeteo attribution before releasing.
+- Review browser-local UserState persistence mechanism (see Notes).
 
 # Nice-to-have
 
@@ -54,3 +55,26 @@ Determine the appropriate settings model and persistence mechanism
 as part of the application-wide settings implementation.
 
 This work is deferred and is not part of Milestone 2.3.
+
+### Review browser-local UserState persistence mechanism
+
+Review whether the existing custom JavaScript/localStorage UserState
+implementation should be replaced with a service-oriented implementation
+using Blazor ProtectedLocalStorage.
+
+The current UserState implementation remains the established mechanism and
+should continue to be used by new features until this review is undertaken.
+
+The review should consider:
+
+- removal of the custom JavaScript storage module;
+- encapsulating individual preferences behind an `IUserStateService`;
+- integration with the existing Data Protection infrastructure;
+- browser-storage availability during Blazor prerendering and initial render;
+- preservation of existing theme preference behaviour;
+- migration or compatibility of existing persisted UserState;
+- handling of missing, invalid and obsolete persisted values.
+
+Do not assume that ProtectedLocalStorage makes browser state available during
+server-side application startup. The Blazor rendering lifecycle and initial
+state-loading strategy must be considered as part of the task.

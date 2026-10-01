@@ -83,10 +83,11 @@ Complete the additional activity detail modules.
 **Includes**
 
 - Weather details.
-- Ranking listing.
-- Splits.
+- Activity Type filtering.
 - Pace chart.
 - Elevation chart.
+- Splits.
+- Ranking listing.
 
 **Deliverable**
 

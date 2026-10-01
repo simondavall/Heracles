@@ -13,13 +13,14 @@ where development should continue.
 
 # Current task
 
-- Add ranking listing
+- Add Activity Type filtering to Activity Navigation
 
 # Remaining milestone tasks
 
-- Add splits
 - Add pace chart
 - Add elevation chart
+- Add splits
+- Add ranking listing
 
 # Completed work
 
