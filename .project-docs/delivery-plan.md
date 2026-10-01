@@ -254,8 +254,6 @@ The complete import operation is coordinated through the Application layer, with
 
 ## Milestone 4.1 – Modules
 
-## Milestone 4.1 – Modules
-
 - ✓ Add weather details.
     - ✓ Integrate historical weather into Activity Title.
     - ✓ Implement the Application weather service.
@@ -265,11 +263,20 @@ The complete import operation is coordinated through the Application layer, with
     - ✓ Persist and reuse retrieved activity weather.
     - ✓ Implement weather condition and apparent-temperature presentation.
     - ✓ Verify weather retrieval and persistence through automated tests.
-- Add ranking listing
-- Add splits
+- ✓ Add Activity Type filtering to Activity Navigation.
+    - ✓ Add an Activity Type selector to Activity Navigation.
+    - ✓ Populate available Activity Types from distinct types present in activity data.
+    - ✓ Include `All` as the unfiltered selection.
+    - ✓ Persist the selected Activity Type through the existing browser-local UserState.
+    - ✓ Filter activity year, month and activity-list queries by Activity Type.
+    - ✓ Use the persisted Activity Type when selecting the most recent activity on application entry.
+    - ✓ Preserve explicit activity routes independently of the Activity Type filter.
+    - ✓ Keep Activity Navigation filtering independent of the currently displayed Activity Details.
+    - ✓ Reset a persisted Activity Type to `All` when that type is no longer present in activity data.
 - Add pace chart
 - Add elevation chart
-
+- Add splits
+- Add ranking listing
 
 # Phase 5 – Dashboard and Reporting
 

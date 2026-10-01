@@ -1,4 +1,5 @@
-﻿@if (_isLoading)
+﻿@using Heracles.Application.Activities
+@if (_isLoading)
 {
     <div class="activity-navigation-state">
         <MudProgressCircular Indeterminate="true"
@@ -10,15 +11,7 @@
         </MudText>
     </div>
 }
-else if (_currentActivity is null || _years.Count == 0)
-{
-    <div class="activity-navigation-state">
-        <MudText Typo="Typo.body2">
-            No Activities
-        </MudText>
-    </div>
-}
-else
+else 
 {
     <nav class="activity-navigation" aria-label="Activity navigation">
         <header class="activity-navigation-header">
@@ -28,7 +21,38 @@ else
             </MudText>
         </header>
         
-        <MudExpansionPanels MultiExpansion="false"
+        @if (_currentActivity is null || _years.Count == 0){
+            <div class="activity-navigation-state">
+                <MudText Typo="Typo.body2">
+                    No Activities
+                </MudText>
+            </div>
+        }
+        else {
+            <div class="activity-navigation-filter">
+                <MudSelect T="ActivityType?"
+                           Value="_selectedActivityType"
+                           ValueChanged="ActivityTypeChangedAsync"
+                           Label="Activity Type"
+                           Variant="Variant.Outlined"
+                           Margin="Margin.Dense">
+
+                    <MudSelectItem T="ActivityType?"
+                                   Value="@(null)">
+                        All
+                    </MudSelectItem>
+
+                    @foreach (var activityType in _activityTypes)
+                    {
+                        <MudSelectItem T="ActivityType?"
+                                       Value="@(activityType)">
+                            @activityType
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+            </div>
+            
+            <MudExpansionPanels MultiExpansion="false"
                             Class="activity-years">
             @foreach (var year in _years)
             {
@@ -131,5 +155,6 @@ else
                 </MudExpansionPanel>
             }
         </MudExpansionPanels>
+        }
     </nav>
 }

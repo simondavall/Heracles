@@ -88,6 +88,17 @@ namespace Heracles.Infrastructure.Data
             return deleteSucceeded;
         }
 
+        public async Task<IList<ActivityType>> GetActivityTypesAsync()
+        {
+            await using var dbContext = await _contextFactory.CreateDbContextAsync();
+
+            return await dbContext.Tracks
+                .Select(x => x.ActivityType)
+                .Distinct()
+                .OrderBy(x => x)
+                .ToListAsync();
+        }
+
         public async Task<Track?> GetTrackAsync(Guid trackId) {
             await using var dbContext = await _contextFactory.CreateDbContextAsync();
             var track = await dbContext.Tracks.FirstOrDefaultAsync(x => x.Id == trackId);
@@ -113,16 +124,31 @@ namespace Heracles.Infrastructure.Data
             return await dbContext.Tracks.OrderBy(x => x.Time).FirstOrDefaultAsync();
         }
 
-        public async Task<Track?> GetMostRecentTrackAsync() {
+        public async Task<Track?> GetMostRecentTrackAsync(ActivityType? activityType = null) {
             await using var dbContext = await _contextFactory.CreateDbContextAsync();
-            var track = await dbContext.Tracks.OrderByDescending(x => x.Time).FirstOrDefaultAsync();
-            if (track is null) {
-                return default;
-            }
 
-            track.TrackSegments = await dbContext.TrackSegments.Where(x => x.TrackId == track.Id).OrderBy(x => x.Seq).ToListAsync();
+            var query = dbContext.Tracks.AsQueryable();
+
+            if (activityType.HasValue)
+                query = query.Where(x => x.ActivityType == activityType.Value);
+
+            var track = await query
+                .OrderByDescending(x => x.Time)
+                .FirstOrDefaultAsync();
+
+            if (track is null)
+                return default;
+
+            track.TrackSegments = await dbContext.TrackSegments
+                .Where(x => x.TrackId == track.Id)
+                .OrderBy(x => x.Seq)
+                .ToListAsync();
+
             foreach (var segment in track.TrackSegments) {
-                segment.TrackPoints = await dbContext.TrackPoints.Where(x => x.TrackSegmentId == segment.Id).OrderBy(x => x.Seq).ToListAsync();
+                segment.TrackPoints = await dbContext.TrackPoints
+                    .Where(x => x.TrackSegmentId == segment.Id)
+                    .OrderBy(x => x.Seq)
+                    .ToListAsync();
             }
 
             return track;
@@ -136,39 +162,48 @@ namespace Heracles.Infrastructure.Data
                 .ToArrayAsync();
         }
 
-        public async Task<IList<Track>> GetTracksByDateRangeAsync(DateTime startDate, DateTime endDate) {
+        public async Task<IList<Track>> GetTracksByDateRangeAsync(DateTime startDate, DateTime endDate, ActivityType? activityType = null) {
             await using var dbContext = await _contextFactory.CreateDbContextAsync();
-            var result = await dbContext
-                .Tracks
-                .Where(t => t.Time > startDate & t.Time < endDate)
+
+            var query = dbContext.Tracks
+                .Where(t => t.Time > startDate & t.Time < endDate);
+
+            if (activityType.HasValue)
+                query = query.Where(t => t.ActivityType == activityType.Value);
+
+            return await query
                 .OrderByDescending(t => t.Time)
                 .ToListAsync();
-
-            return result;
         }
 
-        public async Task<IList<ActivityListMonth>> GetTrackSummaryByMonthsAsync() {
+        public async Task<IList<ActivityListMonth>> GetTrackSummaryByMonthsAsync(ActivityType? activityType = null) {
             await using var dbContext = await _contextFactory.CreateDbContextAsync();
-            var result = await dbContext
-                .Tracks
+
+            var query = dbContext.Tracks.AsQueryable();
+
+            if (activityType.HasValue)
+                query = query.Where(x => x.ActivityType == activityType.Value);
+
+            return await query
                 .GroupBy(x => x.Time.Year * 100 + x.Time.Month)
                 .Select(g => new ActivityListMonth { ActivityYearMonth = g.Key, Count = g.Count() })
                 .OrderByDescending(g => g.ActivityYearMonth)
                 .ToListAsync();
-
-            return result;
         }
 
-        public async Task<IList<ActivityListYear>> GetTrackSummaryByYearAsync() {
+        public async Task<IList<ActivityListYear>> GetTrackSummaryByYearAsync(ActivityType? activityType = null) {
             await using var dbContext = await _contextFactory.CreateDbContextAsync();
-            var result = await dbContext
-                .Tracks
+
+            var query = dbContext.Tracks.AsQueryable();
+
+            if (activityType.HasValue)
+                query = query.Where(x => x.ActivityType == activityType.Value);
+
+            return await query
                 .GroupBy(x => x.Time.Year)
                 .Select(g => new ActivityListYear { ActivityYear = g.Key, Count = g.Count() })
                 .OrderByDescending(g => g.ActivityYear)
                 .ToListAsync();
-
-            return result;
         }
 
         private static DbConnection GetConnection(DbConnection connection) {

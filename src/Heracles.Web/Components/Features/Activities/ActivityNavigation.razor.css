@@ -95,6 +95,16 @@
     text-transform: uppercase;
 }
 
+.activity-navigation-filter {
+    padding: 12px 16px;
+    background-color: var(--mud-palette-surface);
+    border-bottom: 1px solid var(--mud-palette-divider);
+}
+
+.activity-navigation-filter ::deep .mud-input-control {
+    margin: 0;
+}
+
 .activity-navigation ::deep .mud-expand-panel-header:hover .activity-heading {
     color: var(--mud-palette-primary);
 }
