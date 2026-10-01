@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using Heracles.Application.Activities;
 using Heracles.Application.Data;
+using Heracles.Web.Components.Features.UserState;
 using Microsoft.AspNetCore.Components;
 
 namespace Heracles.Web.Components.Features.Activities;
@@ -13,6 +14,9 @@ public partial class ActivityNavigation
     [Inject]
     private NavigationManager NavigationManager { get; set; } = null!;
 
+    [Inject]
+    private UserStateService UserStateService { get; set; } = null!;
+
     [Parameter]
     public Guid? ActivityId { get; set; }
 
@@ -21,46 +25,113 @@ public partial class ActivityNavigation
     private IList<ActivityListMonth> _months = [];
     private List<ActivityListItem> _activities = [];
 
+    private ActivityType? _selectedActivityType;
+
     private int? _expandedYear;
     private int? _expandedMonth;
     private Guid? _selectedActivityId;
 
     private bool _isLoading = true;
     private bool _isLoadingMonth;
+    private bool _initialized;
 
-    protected override async Task OnInitializedAsync() {
-        _currentActivity = await ActivityService.GetMostRecentActivityAsync();
-
-        if (_currentActivity is null) {
-            _isLoading = false;
+    protected override async Task OnParametersSetAsync() {
+        if (!_initialized)
             return;
+
+        await SetCurrentActivityAsync();
+        await SetNavigationSelectionAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if (!firstRender)
+            return;
+
+        await UserStateService.LoadAsync();
+
+        _selectedActivityType = UserStateService.State.ActivityType;
+
+        await SetCurrentActivityAsync();
+        await LoadNavigationAsync();
+
+        _initialized = true;
+        _isLoading = false;
+
+        StateHasChanged();
+    }
+
+    private async Task SetCurrentActivityAsync() {
+        _currentActivity = ActivityId.HasValue
+            ? await ActivityService.GetActivityAsync(ActivityId.Value)
+            : null;
+
+        _selectedActivityId = ActivityId;
+    }
+
+    private async Task LoadNavigationAsync() {
+        _years = [];
+        _months = [];
+        _activities = [];
+        _expandedYear = null;
+        _expandedMonth = null;
+
+        var referenceActivity = _currentActivity;
+
+        if (referenceActivity is null) {
+            referenceActivity = await ActivityService.GetMostRecentActivityAsync(_selectedActivityType);
         }
 
-        _selectedActivityId = ActivityId ?? _currentActivity.Id;
+        if (referenceActivity is null)
+            return;
 
-        var yearsTask = ActivityService.GetActivitiesSummaryByYearAsync(_currentActivity);
-        var monthsTask = ActivityService.GetActivitiesSummaryByMonthsAsync(_currentActivity);
+        var yearsTask = ActivityService.GetActivitiesSummaryByYearAsync(referenceActivity, _selectedActivityType);
+        var monthsTask = ActivityService.GetActivitiesSummaryByMonthsAsync(referenceActivity, _selectedActivityType);
 
         await Task.WhenAll(yearsTask, monthsTask);
 
         _years = await yearsTask;
         _months = await monthsTask;
 
-        _expandedYear = _currentActivity.Time.Year;
-        _expandedMonth = (_currentActivity.Time.Year * 100) + _currentActivity.Time.Month;
+        await SetNavigationSelectionAsync();
+    }
 
-        var currentMonth = _months.FirstOrDefault(
-            x => x.ActivityYearMonth == _expandedMonth);
+    private async Task SetNavigationSelectionAsync() {
+        _expandedYear = null;
+        _expandedMonth = null;
+        _activities = [];
+
+        if (_currentActivity is null)
+            return;
+
+        if (_selectedActivityType.HasValue && _currentActivity.ActivityType != _selectedActivityType.Value)
+            return;
+
+        _expandedYear = _currentActivity.Time.Year;
+        _expandedMonth = _currentActivity.Time.Year * 100 + _currentActivity.Time.Month;
+
+        var currentMonth = _months.FirstOrDefault(x => x.ActivityYearMonth == _expandedMonth);
 
         if (currentMonth is not null)
             await LoadMonthActivitiesAsync(currentMonth);
-
-        _isLoading = false;
     }
 
-    protected override void OnParametersSet() {
-        if (ActivityId.HasValue)
-            _selectedActivityId = ActivityId.Value;
+    private async Task ActivityTypeChangedAsync(ActivityType? activityType) {
+        if (_selectedActivityType == activityType)
+            return;
+
+        _selectedActivityType = activityType;
+
+        UserStateService.State.ActivityType = activityType;
+        await UserStateService.SaveAsync();
+
+        _isLoading = true;
+
+        try {
+            await LoadNavigationAsync();
+        }
+        finally {
+            _isLoading = false;
+        }
     }
 
     private IEnumerable<ActivityListMonth> GetMonths(int year) {
@@ -81,8 +152,7 @@ public partial class ActivityNavigation
         if (expanded) {
             _expandedYear = year;
 
-            if (_expandedMonth.HasValue &&
-                _expandedMonth.Value / 100 != year) {
+            if (_expandedMonth.HasValue && _expandedMonth.Value / 100 != year) {
                 _expandedMonth = null;
                 _activities = [];
             }
@@ -96,9 +166,7 @@ public partial class ActivityNavigation
         return Task.CompletedTask;
     }
 
-    private async Task MonthExpandedChangedAsync(
-        ActivityListMonth month,
-        bool expanded) {
+    private async Task MonthExpandedChangedAsync(ActivityListMonth month, bool expanded) {
         if (!expanded) {
             if (_expandedMonth == month.ActivityYearMonth) {
                 _expandedMonth = null;
@@ -124,7 +192,8 @@ public partial class ActivityNavigation
 
             _activities = await ActivityService.GetActivitiesByDateAsync(
                 GetMonthDate(month.ActivityYearMonth),
-                _selectedActivityId);
+                _selectedActivityId,
+                _selectedActivityType);
         }
         finally {
             _isLoadingMonth = false;
@@ -137,10 +206,7 @@ public partial class ActivityNavigation
     }
 
     private static DateTime GetMonthDate(int activityYearMonth) {
-        return new DateTime(
-            activityYearMonth / 100,
-            activityYearMonth % 100,
-            1);
+        return new DateTime(activityYearMonth / 100, activityYearMonth % 100, 1);
     }
 
     private static string GetMonthName(int activityYearMonth) {
@@ -153,7 +219,7 @@ public partial class ActivityNavigation
             ? "activity-list-item selected"
             : "activity-list-item";
     }
-    
+
     private string GetYearHeadingClass(int year) {
         return IsYearExpanded(year)
             ? "activity-heading activity-year-heading selected"

@@ -9,12 +9,17 @@ public sealed class UserStateService(IJSRuntime jsRuntime) : IAsyncDisposable
     private const string ModulePath = "./js/userState.js";
 
     private readonly IJSRuntime _jsRuntime = jsRuntime;
-
     private IJSObjectReference? _module;
-
+    private Task? _loadTask;
+    
     public UserState State { get; private set; } = new();
 
-    public async Task LoadAsync()
+    public Task LoadAsync()
+    {
+        return _loadTask ??= LoadStateAsync();
+    }
+
+    private async Task LoadStateAsync()
     {
         var module = await GetModuleAsync();
         var json = await module.InvokeAsync<string?>("get", StorageKey);

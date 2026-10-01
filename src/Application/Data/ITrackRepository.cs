@@ -10,11 +10,11 @@ namespace Heracles.Application.Data
         Task<Track?> GetTrackAsync(Guid trackId);
         Task<IList<string>> GetExistingTracksAsync();
         Task<Track?> GetFirstEverActivityAsync();
-        Task<Track?> GetMostRecentTrackAsync();
+        Task<Track?> GetMostRecentTrackAsync(ActivityType? activityType = null);
         Task<Track[]> GetTracksInRangeAsync(double upperBounds, double lowerBounds, ActivityType activityType);
-        Task<IList<Track>> GetTracksByDateRangeAsync(DateTime startDate, DateTime endDate);
-        Task<IList<ActivityListMonth>> GetTrackSummaryByMonthsAsync();
-        Task<IList<ActivityListYear>> GetTrackSummaryByYearAsync();
+        Task<IList<Track>> GetTracksByDateRangeAsync(DateTime startDate, DateTime endDate, ActivityType? activityType = null);
+        Task<IList<ActivityListMonth>> GetTrackSummaryByMonthsAsync(ActivityType? activityType = null);
+        Task<IList<ActivityListYear>> GetTrackSummaryByYearAsync(ActivityType? activityType = null);
         Task SaveImportedFilesAsync(ImportFilesResult importFilesResult, TrackImportProgress trackProgress, CancellationToken cancellationToken);
     }
 }
