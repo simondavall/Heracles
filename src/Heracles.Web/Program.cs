@@ -3,6 +3,7 @@ using Heracles.Application;
 using Heracles.Application.Configuration;
 using Heracles.Infrastructure;
 using Heracles.Web.Components;
+using Heracles.Web.Components.Features.ActivityDetails;
 using Heracles.Web.Components.Features.Authentication;
 using Heracles.Web.Components.Features.DataProtection;
 using Heracles.Web.Components.Features.HostApplicationLifetime;
@@ -37,6 +38,7 @@ builder.Services.AddHeraclesDataProtection(settings.DataProtection);
 builder.Services.AddHeraclesAuthentication(settings.OpenIdConnect);
 
 builder.Services.AddScoped<UserStateService>();
+builder.Services.AddScoped<ActivityDetailsInteractionService>();
 
 builder.Services.AddMudServices();
 

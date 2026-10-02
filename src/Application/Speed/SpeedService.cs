@@ -28,16 +28,12 @@ public sealed class SpeedService : ISpeedService
         return CalculateObservations(trackPointData);
     }
 
-    private IReadOnlyList<SpeedObservation> CalculateObservations(IReadOnlyList<TrackPointData> trackPointData) {
+    private IReadOnlyList<SpeedObservation> CalculateObservations(
+        IReadOnlyList<TrackPointData> trackPointData) {
         var observations = new List<SpeedObservation>();
 
-        for (var centre = 0; centre < trackPointData.Count; centre += _settings.Stride)
+        for (var centre = 0; centre < trackPointData.Count; centre++)
             AddObservation(trackPointData, centre, observations);
-
-        var lastIndex = trackPointData.Count - 1;
-
-        if (lastIndex % _settings.Stride != 0)
-            AddObservation(trackPointData, lastIndex, observations);
 
         return observations;
     }
@@ -54,10 +50,15 @@ public sealed class SpeedService : ISpeedService
         const int secondsPerHour = 3600;
         var kilometresPerHour = distance / elapsedSeconds * secondsPerHour;
 
-        observations.Add(new SpeedObservation(trackPointData[centre].CumulativeDistance, kilometresPerHour));
+        observations.Add(
+            new SpeedObservation(
+                trackPointData[centre].TrackPointId,
+                trackPointData[centre].CumulativeDistance,
+                kilometresPerHour));
     }
 }
 
 public sealed record SpeedObservation(
+    int TrackPointId,
     double Distance,
     double KilometresPerHour);

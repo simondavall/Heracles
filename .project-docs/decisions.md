@@ -226,10 +226,12 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 - Calculate activity pace from shared TrackPointData using cumulative geographic distance and cumulative active elapsed time.
 - Allow pace calculation windows to span recording-segment boundaries after pause time and inter-segment distance have been removed from the cumulative representation.
 - Calculate rolling pace from differences in cumulative distance and cumulative active time rather than averaging individual point-to-point pace values.
-- Configure rolling pace calculation using application-wide WindowRadius and Stride settings.
-- Keep WindowRadius and Stride independent of persisted TrackPointData so presentation calculations can be tuned without regenerating persisted data.
+- Configure rolling pace calculation using an application-wide WindowRadius setting.
+- Keep WindowRadius independent of persisted TrackPointData so presentation calculations can be tuned without regenerating persisted data.
+- Calculate a pace observation at every eligible TrackPointData centre.
 - Use shrinking centred windows at the beginning and end of an activity.
-- Ensure the final activity point is represented independently of whether it falls naturally on the configured stride.
+- Retain the centre TrackPointId on each calculated pace observation.
+- Omit an observation when its calculation window does not contain positive distance and positive elapsed time.
 - Integrate Chart.js through a colocated JavaScript ES module owned by the pace-chart Blazor component.
 - Keep Chart.js-specific concerns within Web presentation and keep pace calculation independent of chart presentation.
 
@@ -246,9 +248,12 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 
 - Calculate activity speed from shared TrackPointData using cumulative geographic distance and cumulative active elapsed time.
 - Calculate speed independently from pace rather than converting calculated pace observations into speed observations.
-- Use the same application-wide WindowRadius and Stride settings for pace and speed calculation.
-- Apply the same centred rolling-window, shrinking-boundary and final-point behaviour used for pace calculation.
+- Configure rolling speed calculation using its application-wide WindowRadius setting.
+- Calculate a speed observation at every eligible TrackPointData centre.
+- Apply the same centred rolling-window and shrinking-boundary behaviour used for pace calculation.
 - Allow speed calculation windows to span recording-segment boundaries after pause time and inter-segment distance have been removed from TrackPointData.
+- Retain the centre TrackPointId on each calculated speed observation.
+- Omit an observation when its calculation window does not contain positive distance and positive elapsed time.
 - Do not persist calculated speed observations.
 - Do not extend TrackPointData specifically for speed calculation.
 - Display speed in kilometres per hour.
@@ -257,3 +262,18 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 - Keep the Elevation chart independent of Pace/Speed selection and display it for all activity types.
 - Integrate Chart.js through a colocated JavaScript ES module owned by the speed-chart Blazor component.
 - Keep Chart.js-specific concerns within Web presentation and keep speed calculation independent of chart presentation.
+
+# Activity Details Interaction
+
+- Use source TrackPointId as the common interaction identity between Activity Details charts and the Activity Map.
+- Keep synchronized interaction state within Heracles.Web because it is presentation state rather than application-domain state.
+- Use scoped Activity Details interaction state to coordinate sibling presentation components.
+- Publish chart hover selection as TrackPointId rather than cumulative distance.
+- Synchronize Pace/Speed and Elevation chart selection using exact TrackPointId matching.
+- Do not substitute a neighbouring Pace/Speed observation when the selected TrackPointId has no valid Pace/Speed observation.
+- Display synchronized chart selection using the chart tooltip and a vertical crosshair.
+- Resolve Activity Map selection directly from the source TrackPointId and use the recorded longitude and latitude.
+- Do not calculate or interpolate geographic position for synchronized map selection.
+- Keep the Activity Map passive; chart interaction drives map selection, while map interaction does not drive chart selection.
+- Clear synchronized interaction when chart hover ends or the selected activity changes.
+- Keep Chart.js and Mapbox-specific synchronized presentation behaviour within their owning Web components and colocated JavaScript modules.

@@ -30,13 +30,8 @@ public sealed class PaceService : IPaceService
     private IReadOnlyList<PaceObservation> CalculateObservations(IReadOnlyList<TrackPointData> trackPointData) {
         var observations = new List<PaceObservation>();
 
-        for (var centre = 0; centre < trackPointData.Count; centre += _settings.Stride)
+        for (var centre = 0; centre < trackPointData.Count; centre++)
             AddObservation(trackPointData, centre, observations);
-
-        var lastIndex = trackPointData.Count - 1;
-
-        if (lastIndex % _settings.Stride != 0)
-            AddObservation(trackPointData, lastIndex, observations);
 
         return observations;
     }
@@ -49,11 +44,16 @@ public sealed class PaceService : IPaceService
         var elapsedSeconds = trackPointData[end].CumulativeTime - trackPointData[start].CumulativeTime;
         if (distance <= 0 || elapsedSeconds <= 0)
             return;
-
-        observations.Add(new PaceObservation(trackPointData[centre].CumulativeDistance, elapsedSeconds / distance));
+        
+        observations.Add(
+            new PaceObservation(
+                trackPointData[centre].TrackPointId,
+                trackPointData[centre].CumulativeDistance,
+                elapsedSeconds / distance));
     }
 }
 
 public sealed record PaceObservation(
+    int TrackPointId,
     double Distance,
     double SecondsPerKilometre);

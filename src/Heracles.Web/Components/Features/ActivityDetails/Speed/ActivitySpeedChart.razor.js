@@ -1,16 +1,60 @@
 ﻿let chartJsPromise = null;
 
-export async function createSpeedChart(canvas, data) {
+const crosshairPlugin = {
+    id: "activityCrosshair",
+
+    afterDatasetsDraw(chart) {
+        const active = chart.getActiveElements();
+
+        if (active.length === 0)
+            return;
+
+        const point = active[0].element;
+        const area = chart.chartArea;
+
+        const context = chart.ctx;
+
+        context.save();
+
+        context.beginPath();
+        context.moveTo(
+            point.x,
+            area.top
+        );
+        context.lineTo(
+            point.x,
+            area.bottom
+        );
+
+        context.lineWidth = 1;
+        context.strokeStyle = getThemeColours().text;
+
+        context.globalAlpha = 0.35;
+        context.stroke();
+
+        context.restore();
+    }
+};
+
+export async function createSpeedChart(canvas, data, dotNetReference) {
 
     await ensureChartJs();
 
     let disposed = false;
+    let selectedTrackPointId = null;
+    let hoveredTrackPointId = null;
 
     const chart = new Chart(
         canvas,
-        createConfiguration(data)
+        createConfiguration(
+            data,
+            dotNetReference,
+            () => disposed,
+            trackPointId => { hoveredTrackPointId = trackPointId; },
+            () => hoveredTrackPointId
+        )
     );
-
+    
     let darkTheme = isDarkTheme();
 
     const themeObserver =
@@ -55,9 +99,15 @@ export async function createSpeedChart(canvas, data) {
         update(data) {
             chart.data.datasets[0].data = createPoints(data);
             chart.options.scales.x.max = getMaximumDistance(data);
+            selectTrackPoint(chart, selectedTrackPointId);
             chart.update();
         },
 
+        selectTrackPoint(trackPointId) {
+            selectedTrackPointId = trackPointId;
+            selectTrackPoint(chart, trackPointId);
+        },
+        
         dispose() {
             if (disposed)
                 return;
@@ -70,9 +120,19 @@ export async function createSpeedChart(canvas, data) {
     };
 }
 
-function createConfiguration(data) {
+function createConfiguration(
+    data,
+    dotNetReference,
+    isDisposed,
+    setHoveredTrackPointId,
+    getHoveredTrackPointId) {
+    
     const configuration = {
         type: "line",
+        
+        plugins: [
+            crosshairPlugin
+        ],
 
         data: {
             datasets: [
@@ -96,7 +156,40 @@ function createConfiguration(data) {
                 mode: "nearest",
                 intersect: false
             },
+            
+            onHover(event, activeElements, chart) {
+                if (isDisposed())
+                    return;
 
+                if (activeElements.length === 0) {
+                    if (getHoveredTrackPointId() !== null) {
+                        setHoveredTrackPointId(null);
+                        void dotNetReference.invokeMethodAsync("ClearTrackPoint");
+                    }
+
+                    return;
+                }
+
+                const point = chart.data.datasets[0].data[activeElements[0].index];
+
+                if (point.trackPointId === getHoveredTrackPointId())
+                    return;
+
+                setHoveredTrackPointId(point.trackPointId);
+
+                void dotNetReference.invokeMethodAsync("SelectTrackPoint", point.trackPointId
+                );
+            },
+
+            onLeave() {
+                if (isDisposed() || getHoveredTrackPointId() === null)
+                    return;
+
+                setHoveredTrackPointId(null);
+
+                void dotNetReference.invokeMethodAsync("ClearTrackPoint");
+            },
+            
             plugins: {
                 legend: {
                     display: false
@@ -163,6 +256,7 @@ function createConfiguration(data) {
 
 function createPoints(data) {
     return data.points.map(point => ({
+        trackPointId: point.trackPointId,
         x: point.distance,
         y: point.speed
     }));
@@ -184,6 +278,51 @@ function formatSpeed(speed) {
         return "";
 
     return Number(speed).toFixed(1);
+}
+
+function selectTrackPoint(chart, trackPointId) {
+    if (trackPointId === null) {
+        chart.setActiveElements([]);
+        chart.tooltip.setActiveElements(
+            [],
+            { x: 0, y: 0 }
+        );
+        chart.update("none");
+        return;
+    }
+
+    const index = chart.data.datasets[0].data.findIndex(point => point.trackPointId === trackPointId);
+
+    if (index < 0) {
+        chart.setActiveElements([]);
+        chart.tooltip.setActiveElements(
+            [],
+            { x: 0, y: 0 }
+        );
+        chart.update("none");
+        return;
+    }
+
+    const activeElement = {
+        datasetIndex: 0,
+        index
+    };
+
+    const point = chart.getDatasetMeta(0).data[index];
+
+    chart.setActiveElements([
+        activeElement
+    ]);
+
+    chart.tooltip.setActiveElements(
+        [activeElement],
+        {
+            x: point.x,
+            y: point.y
+        }
+    );
+
+    chart.update("none");
 }
 
 function applyTheme(chart) {

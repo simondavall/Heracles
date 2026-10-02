@@ -298,3 +298,21 @@ where development should continue.
 - Added configurable minimum elevation-chart range through ElevationSettings.
 - Applied the configured minimum range when an activity's recorded elevation variation is smaller than the minimum.
 - Centred the minimum elevation range around the midpoint of the activity's recorded elevation range.
+- Added synchronized interaction between Activity Details charts and the Activity Map.
+- Established source TrackPointId as the common presentation interaction identity across Pace, Speed, Elevation and Activity Map.
+- Added TrackPointId to Pace and Speed observations and to Pace, Speed and Elevation chart points.
+- Removed the Pace and Speed Stride settings because persisted TrackPointData removes the need to reduce rolling-calculation sampling.
+- Changed PaceService and SpeedService to calculate observations at every eligible TrackPointData centre while retaining their existing configurable WindowRadius values.
+- Removed the obsolete special handling that explicitly included the final Pace/Speed observation when stride sampling did not reach it.
+- Retained the existing behaviour of omitting Pace/Speed observations when their rolling calculation window has no valid distance or elapsed time.
+- Added scoped Activity Details interaction state in Heracles.Web to coordinate presentation components without introducing interaction concerns into Application.
+- Added synchronized Pace/Speed and Elevation chart hover state using exact TrackPointId matching.
+- Added synchronized Chart.js tooltips and vertical crosshairs.
+- Kept missing synchronized Pace/Speed observations unselected rather than substituting a neighbouring chart point.
+- Added a temporary Activity Map selection marker at the exact recorded longitude and latitude of the synchronized TrackPoint.
+- Kept the Activity Map passive so chart interaction drives the map without introducing map-to-chart interaction.
+- Cleared synchronized interaction state when chart hover ends and when the selected activity changes.
+- Preserved existing Activity Map route, distance-marker, start/finish/pause/resume marker and transition behaviour.
+- Preserved existing chart responsive presentation and live light/dark theme behaviour.
+- Updated PaceService and SpeedService tests for per-track-point observation generation and TrackPointId propagation.
+- Verified synchronized interaction for non-Cycling Pace activities and Cycling Speed activities, including Elevation and Activity Map synchronization, missing observations, activity navigation, responsive presentation and theme changes.

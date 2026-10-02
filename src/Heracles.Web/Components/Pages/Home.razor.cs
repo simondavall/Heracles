@@ -1,5 +1,6 @@
 ﻿using Heracles.Application.Activities;
 using Heracles.Application.Data;
+using Heracles.Web.Components.Features.ActivityDetails;
 using Heracles.Web.Components.Features.UserState;
 using Microsoft.AspNetCore.Components;
 
@@ -9,13 +10,13 @@ public partial class Home
 {
     [Inject]
     private IActivityService ActivityService { get; set; } = null!;
-
     [Inject]
     private NavigationManager NavigationManager { get; set; } = null!;
-
     [Inject]
     private UserStateService UserStateService { get; set; } = null!;
-
+    [Inject]
+    private ActivityDetailsInteractionService InteractionService { get; set; } = null!;
+    
     [Parameter]
     public Guid? ActivityId { get; set; }
 
@@ -25,6 +26,8 @@ public partial class Home
     protected override async Task OnParametersSetAsync() {
         if (!ActivityId.HasValue)
             return;
+
+        InteractionService.Clear();
 
         _activity = await ActivityService.GetActivityAsync(ActivityId.Value);
     }

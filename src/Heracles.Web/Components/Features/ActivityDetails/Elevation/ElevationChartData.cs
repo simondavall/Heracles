@@ -6,5 +6,6 @@ internal sealed record ElevationChartData(
     double? MaximumElevation);
 
 internal sealed record ElevationChartPoint(
+    int TrackPointId,
     double Distance,
     double Elevation);
