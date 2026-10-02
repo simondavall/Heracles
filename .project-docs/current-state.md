@@ -295,3 +295,6 @@ where development should continue.
 - Retained the Pace chart for all non-Cycling activities.
 - Added focused automated tests for SpeedService covering calculation, calculation boundaries, final-point inclusion and invalid calculation windows.
 - Verified speed calculation, conditional Pace/Speed presentation, activity navigation, Elevation presentation, responsive presentation and live light/dark theme behaviour.
+- Added configurable minimum elevation-chart range through ElevationSettings.
+- Applied the configured minimum range when an activity's recorded elevation variation is smaller than the minimum.
+- Centred the minimum elevation range around the midpoint of the activity's recorded elevation range.
