@@ -1,10 +1,12 @@
 ﻿@page "/"
 @page "/activity/{ActivityId:guid}"
 
+@using Heracles.Application.Activities
 @using Heracles.Web.Components.Features.ActivityDetails
 @using Heracles.Web.Components.Features.ActivityDetails.Elevation
 @using Heracles.Web.Components.Features.ActivityDetails.Map
 @using Heracles.Web.Components.Features.ActivityDetails.Pace
+@using Heracles.Web.Components.Features.ActivityDetails.Speed
 
 <PageTitle>Heracles</PageTitle>
 
@@ -17,7 +19,16 @@
             <ActivityTitle Track="@_activity" />
             <MetricsBar Track="@_activity" />
             <ActivityMap Track="@_activity" />
-            <ActivityPaceChart Track="@_activity" />
+            
+            @if (_activity.ActivityType == ActivityType.Cycling)
+            {
+                <ActivitySpeedChart Track="@_activity" />
+            }
+            else
+            {
+                <ActivityPaceChart Track="@_activity" />
+            }
+            
             <ActivityElevationChart Track="@_activity" />
         }
     </main>
