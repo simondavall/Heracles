@@ -241,3 +241,19 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 - Represent every recorded track point in the elevation series.
 - Integrate Chart.js through a colocated JavaScript ES module owned by the elevation-chart Blazor component.
 - Keep Chart.js-specific concerns within Web presentation and keep elevation data preparation independent of chart presentation.
+
+# Activity Speed
+
+- Calculate activity speed from shared TrackPointData using cumulative geographic distance and cumulative active elapsed time.
+- Calculate speed independently from pace rather than converting calculated pace observations into speed observations.
+- Use the same application-wide WindowRadius and Stride settings for pace and speed calculation.
+- Apply the same centred rolling-window, shrinking-boundary and final-point behaviour used for pace calculation.
+- Allow speed calculation windows to span recording-segment boundaries after pause time and inter-segment distance have been removed from TrackPointData.
+- Do not persist calculated speed observations.
+- Do not extend TrackPointData specifically for speed calculation.
+- Display speed in kilometres per hour.
+- Display the Speed chart instead of the Pace chart for Cycling activities.
+- Display the Pace chart for non-Cycling activities.
+- Keep the Elevation chart independent of Pace/Speed selection and display it for all activity types.
+- Integrate Chart.js through a colocated JavaScript ES module owned by the speed-chart Blazor component.
+- Keep Chart.js-specific concerns within Web presentation and keep speed calculation independent of chart presentation.

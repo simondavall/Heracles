@@ -9,7 +9,8 @@ public sealed record HeraclesSettings(
     MapboxSettings Mapbox,
     ImportSettings Import,
     WeatherApiSettings WeatherApi,
-    PaceSettings Pace)
+    PaceSettings Pace,
+    SpeedSettings Speed)
 {
     public static HeraclesSettings Create(IConfiguration configuration) {
         var errors = new List<string>();
@@ -35,6 +36,9 @@ public sealed record HeraclesSettings(
         var paceWindowRadius = GetPositiveInt(configuration, "Pace:WindowRadius", errors);
         var paceStride = GetPositiveInt(configuration, "Pace:Stride", errors);
         
+        var speedWindowRadius = GetPositiveInt(configuration, "Speed:WindowRadius", errors);
+        var speedStride = GetPositiveInt(configuration, "Speed:Stride", errors);
+        
         if (errors.Count > 0)
             throw new InvalidOperationException(
                 "Invalid Heracles configuration:"
@@ -48,7 +52,8 @@ public sealed record HeraclesSettings(
             new MapboxSettings(mapboxAccessToken!), 
             new ImportSettings(maximumFileCount!.Value, maximumCombinedSizeMb!.Value),
             new WeatherApiSettings(weatherApiKey!, weatherApiUri!),
-            new PaceSettings(paceWindowRadius!.Value, paceStride!.Value));
+            new PaceSettings(paceWindowRadius!.Value, paceStride!.Value),
+            new SpeedSettings(speedWindowRadius!.Value, speedStride!.Value));
     }
 
     private static string? GetRequiredString(IConfiguration configuration, string key, List<string> errors) {
@@ -138,5 +143,9 @@ public sealed record WeatherApiSettings(
     Uri Uri);
     
 public sealed record PaceSettings(
+    int WindowRadius,
+    int Stride);
+    
+public sealed record SpeedSettings(
     int WindowRadius,
     int Stride);
