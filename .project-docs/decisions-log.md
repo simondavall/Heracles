@@ -346,9 +346,39 @@ presentation layer.
 - Persisting retrieved observations reduces external API requests and allows previously retrieved weather to 
 be displayed without contacting the external provider.
 
-### Deferred considerations
+## Persist cumulative activity data for rolling pace calculation
+(02-10-2026)
 
-- Review whether provider changes should invalidate cached weather.
-- Review configuration-based provider selection at application startup.
-- Select the provider to use moving forward.
-- Implement the attribution required by the selected provider before release.
+### Decision
+
+Calculate activity pace from cumulative geographic distance and cumulative active elapsed time derived from the recorded GPS track points.
+
+Persist one PaceData row for each source TrackPoint. Use `(TrackId, Seq)` as the primary key, where Seq is a zero-based activity-wide sequence independent of the segment-local TrackPoint sequence. Retain TrackPointId as the unique relationship to the source point.
+
+Store cumulative distance at full calculation precision and cumulative active elapsed time in whole seconds, matching the precision of the imported GPX timestamps.
+
+Generate PaceData lazily through the Application pace service. Reuse a complete persisted data set when available; otherwise calculate and persist the complete derived series through the Infrastructure pace repository.
+
+Treat recording-segment boundaries as pauses. Do not add geographic distance or elapsed time between the final point of one segment and the first point of the next. The cumulative series therefore remains continuous while excluding the pause.
+
+Calculate displayed pace using configurable centred rolling windows over the persisted cumulative series. Calculate each observation from the difference in cumulative distance and cumulative active time between the window boundaries.
+
+Use WindowRadius and Stride as application-wide pace calculation settings. Shrink the calculation window at the beginning and end of an activity and explicitly include the final activity point when it does not fall naturally on the configured stride.
+
+Treat persisted PaceData as regenerable derived data. If the cumulative-data calculation changes in future, delete the existing derived rows and regenerate them lazily rather than introducing calculation-version metadata.
+
+Render the pace series using Chart.js behind a colocated JavaScript ES module owned by the ActivityPaceChart Blazor component. Keep chart-library concerns within Web presentation.
+
+### Rationale
+
+- Calculating each geographic interval once avoids repeatedly recalculating overlapping GPS intervals for rolling windows.
+- Cumulative distance and elapsed time allow each rolling-window pace observation to be calculated from two boundary values.
+- Pace is correctly calculated as total elapsed time divided by total distance rather than by averaging individual interval pace values.
+- Persisting the cumulative representation avoids repeating the geographic calculation whenever an existing activity is displayed.
+- Keeping WindowRadius and Stride out of persisted PaceData allows smoothing parameters to be tuned without invalidating the underlying cumulative data.
+- A track-wide sequence provides explicit deterministic ordering across recording segments.
+- Recording segments represent pauses, so excluding both timestamp gaps and geographic gaps prevents pauses from distorting the activity pace series.
+- Once pause gaps have been removed from the cumulative representation, rolling windows can cross segment boundaries while representing continuous active movement.
+- Lazy generation supports activities imported before PaceData was introduced without requiring a historical-data backfill migration.
+- Derived pace data is inexpensive to regenerate, so deletion and lazy regeneration provide a simpler invalidation strategy than calculation-version metadata.
+- A small JavaScript boundary provides direct access to Chart.js while preserving Blazor ownership of activity data, component lifecycle and application behaviour.

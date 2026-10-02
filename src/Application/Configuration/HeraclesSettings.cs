@@ -8,7 +8,8 @@ public sealed record HeraclesSettings(
     DataProtectionSettings DataProtection,
     MapboxSettings Mapbox,
     ImportSettings Import,
-    WeatherApiSettings WeatherApi)
+    WeatherApiSettings WeatherApi,
+    PaceSettings Pace)
 {
     public static HeraclesSettings Create(IConfiguration configuration) {
         var errors = new List<string>();
@@ -31,6 +32,9 @@ public sealed record HeraclesSettings(
         var weatherApiKey = GetRequiredString(configuration, "WeatherApi:Key", errors);
         var weatherApiUri = GetAbsoluteUri(configuration, "WeatherApi:Uri", errors);
         
+        var paceWindowRadius = GetPositiveInt(configuration, "Pace:WindowRadius", errors);
+        var paceStride = GetPositiveInt(configuration, "Pace:Stride", errors);
+        
         if (errors.Count > 0)
             throw new InvalidOperationException(
                 "Invalid Heracles configuration:"
@@ -43,7 +47,8 @@ public sealed record HeraclesSettings(
             new DataProtectionSettings(dpKeyPath!, dpCertificatePath!, dpCertificatePassword!),
             new MapboxSettings(mapboxAccessToken!), 
             new ImportSettings(maximumFileCount!.Value, maximumCombinedSizeMb!.Value),
-            new WeatherApiSettings(weatherApiKey!, weatherApiUri!));
+            new WeatherApiSettings(weatherApiKey!, weatherApiUri!),
+            new PaceSettings(paceWindowRadius!.Value, paceStride!.Value));
     }
 
     private static string? GetRequiredString(IConfiguration configuration, string key, List<string> errors) {
@@ -131,3 +136,7 @@ public sealed record ImportSettings(
 public sealed record WeatherApiSettings(
     string Key,
     Uri Uri);
+    
+public sealed record PaceSettings(
+    int WindowRadius,
+    int Stride);

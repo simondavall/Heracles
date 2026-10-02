@@ -13,12 +13,10 @@ where development should continue.
 
 # Current task
 
-- Add pace chart
+- Add elevation chart
 
 # Remaining milestone tasks
 
-- Add pace chart
-- Add elevation chart
 - Add splits
 - Add ranking listing
 
@@ -254,3 +252,16 @@ where development should continue.
 - Added Activity Type filtering to most-recent-activity retrieval.
 - Preserved explicit `/activity/{id}` routes independently of the persisted Activity Type filter.
 - Reset persisted Activity Type selections to `All` when the selected type is no longer present in activity data.
+- Added a pace chart to Activity Details.
+- Added validated application-wide pace calculation settings for WindowRadius and Stride.
+- Introduced a shared track-point geographic distance calculator using the established Haversine calculation.
+- Reused the shared geographic distance calculation for Activity Map distance markers.
+- Added lazy generation and reuse of persisted pace data through the Application pace service and Infrastructure pace repository.
+- Implemented configurable centred rolling-window pace calculation using cumulative distance and active-time differences.
+- Implemented shrinking calculation windows at the beginning and end of an activity.
+- Preserved the final activity point when the configured stride does not naturally reach it.
+- Added Chart.js pace presentation through a colocated JavaScript ES module.
+- Displayed cumulative activity distance against pace with faster pace higher on the chart.
+- Added pace-chart tooltip formatting and responsive presentation.
+- Added light and dark theme support with live theme updates.
+- Verified pace calculation, persistence, activity navigation and chart presentation.

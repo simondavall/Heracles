@@ -273,7 +273,17 @@ The complete import operation is coordinated through the Application layer, with
     - ✓ Preserve explicit activity routes independently of the Activity Type filter.
     - ✓ Keep Activity Navigation filtering independent of the currently displayed Activity Details.
     - ✓ Reset a persisted Activity Type to `All` when that type is no longer present in activity data.
-- Add pace chart
+- ✓ Add pace chart
+    - ✓ Add configurable pace WindowRadius and Stride settings.
+    - ✓ Persist cumulative distance and active elapsed time as derived activity pace data.
+    - ✓ Generate missing pace data lazily and reuse persisted data.
+    - ✓ Exclude recording pauses and inter-segment geographic distance from cumulative pace data.
+    - ✓ Calculate pace using centred rolling windows over cumulative distance and active time.
+    - ✓ Shrink calculation windows at activity boundaries.
+    - ✓ Render pace against cumulative activity distance using Chart.js.
+    - ✓ Present a continuous pace series across recording segments.
+    - ✓ Support responsive presentation and live light/dark theme changes.
+    - ✓ Verify pace calculation, persistence and chart presentation.
 - Add elevation chart
 - Add splits
 - Add ranking listing
