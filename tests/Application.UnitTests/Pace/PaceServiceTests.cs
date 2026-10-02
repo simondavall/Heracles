@@ -8,8 +8,7 @@ namespace Heracles.Application.UnitTests.Pace;
 public sealed class PaceServiceTests
 {
     [Fact]
-    public async Task GetPaceAsync_CreatesAndPersistsMissingPaceData()
-    {
+    public async Task GetPaceAsync_CreatesAndPersistsMissingPaceData() {
         var repository = new FakePaceRepository();
         var service = new PaceService(repository, new PaceSettings(1, 1));
         var track = CreateTrack();
@@ -24,8 +23,7 @@ public sealed class PaceServiceTests
     }
 
     [Fact]
-    public async Task GetPaceAsync_ReusesCompletePersistedData()
-    {
+    public async Task GetPaceAsync_ReusesCompletePersistedData() {
         var track = CreateTrack();
         var existing = CreateExistingPaceData(track);
         var repository = new FakePaceRepository(existing);
@@ -37,8 +35,7 @@ public sealed class PaceServiceTests
     }
 
     [Fact]
-    public async Task GetPaceAsync_ReplacesIncompletePersistedData()
-    {
+    public async Task GetPaceAsync_ReplacesIncompletePersistedData() {
         var track = CreateTrack();
 
         var existing =
@@ -56,8 +53,7 @@ public sealed class PaceServiceTests
     }
 
     [Fact]
-    public async Task GetPaceAsync_DoesNotAddPauseTimeOrDistanceAcrossSegments()
-    {
+    public async Task GetPaceAsync_DoesNotAddPauseTimeOrDistanceAcrossSegments() {
         var repository = new FakePaceRepository();
         var service = new PaceService(repository, new PaceSettings(1, 1));
         var track = CreateTrack();
@@ -74,23 +70,18 @@ public sealed class PaceServiceTests
     }
 
     [Fact]
-    public async Task GetPaceAsync_UsesTrackWideZeroBasedSequence()
-    {
+    public async Task GetPaceAsync_UsesTrackWideZeroBasedSequence() {
+        var expected = new[] { 0, 1, 2, 3, 4, 5 };
         var repository = new FakePaceRepository();
         var service = new PaceService(repository, new PaceSettings(1, 1));
 
         await service.GetPaceAsync(CreateTrack(), TestContext.Current.CancellationToken);
 
-        Assert.Equal(
-            new[] { 0, 1, 2, 3, 4, 5 },
-            repository.SavedData!
-                .Select(x => x.Seq)
-                .ToArray());
+        Assert.Equal(expected, repository.SavedData!.Select(x => x.Seq).ToArray());
     }
 
     [Fact]
-    public async Task GetPaceAsync_IncludesFinalPointWhenStrideDoesNotLandOnIt()
-    {
+    public async Task GetPaceAsync_IncludesFinalPointWhenStrideDoesNotLandOnIt() {
         var track = CreateSingleSegmentTrack(pointCount: 6);
         var repository = new FakePaceRepository();
         var service = new PaceService(repository, new PaceSettings(WindowRadius: 1, Stride: 2));
@@ -101,8 +92,7 @@ public sealed class PaceServiceTests
     }
 
     [Fact]
-    public async Task GetPaceAsync_WindowCanCrossSegmentBoundary()
-    {
+    public async Task GetPaceAsync_WindowCanCrossSegmentBoundary() {
         var track = CreateTrack();
         var repository = new FakePaceRepository();
         var service = new PaceService(repository, new PaceSettings(WindowRadius: 2, Stride: 1));
@@ -116,61 +106,36 @@ public sealed class PaceServiceTests
         Assert.Contains(result, observation => observation.Distance == boundaryDistance);
     }
 
-    private static Track CreateTrack()
-    {
-        var start =
-            new DateTime(
-                2024,
-                4,
-                22,
-                8,
-                0,
-                0,
-                DateTimeKind.Utc);
+    private static Track CreateTrack() {
+        var start = new DateTime(2024, 4, 22, 8, 0, 0, DateTimeKind.Utc);
 
         var firstSegment =
-            new TrackSegment
-            {
+            new TrackSegment {
                 Seq = 0,
-                TrackPoints =
-                [
-                    Point(1, 0, 51.5000, -0.1000, start),
-                    Point(2, 1, 51.5009, -0.1000, start.AddSeconds(30)),
+                TrackPoints = [
+                    Point(1, 0, 51.5000, -0.1000, start), Point(2, 1, 51.5009, -0.1000, start.AddSeconds(30)),
                     Point(3, 2, 51.5018, -0.1000, start.AddSeconds(60))
                 ]
             };
 
         var secondSegment =
-            new TrackSegment
-            {
+            new TrackSegment {
                 Seq = 1,
-                TrackPoints =
-                [
-                    Point(4, 0, 51.5018, -0.1000, start.AddMinutes(5)),
-                    Point(5, 1, 51.5027, -0.1000, start.AddMinutes(5).AddSeconds(30)),
+                TrackPoints = [
+                    Point(4, 0, 51.5018, -0.1000, start.AddMinutes(5)), Point(5, 1, 51.5027, -0.1000, start.AddMinutes(5).AddSeconds(30)),
                     Point(6, 2, 51.5036, -0.1000, start.AddMinutes(6))
                 ]
             };
 
-        return new Track
-        {
-            Id = Guid.NewGuid(),
-            Name = "Test",
-            TrackSegments =
-            [
-                firstSegment,
-                secondSegment
-            ]
-        };
+        return new Track { Id = Guid.NewGuid(), Name = "Test", TrackSegments = [firstSegment, secondSegment] };
     }
 
-    private static Track CreateSingleSegmentTrack(
-        int pointCount)
-    {
+    private static Track CreateSingleSegmentTrack(int pointCount) {
         var start = new DateTime(2024, 4, 22, 8, 0, 0, DateTimeKind.Utc);
 
         var points =
-            Enumerable.Range(0, pointCount)
+            Enumerable
+                .Range(0, pointCount)
                 .Select(index =>
                     Point(
                         index + 1,
@@ -180,25 +145,11 @@ public sealed class PaceServiceTests
                         start.AddSeconds(index * 30)))
                 .ToList();
 
-        return new Track
-        {
-            Id = Guid.NewGuid(),
-            Name = "Test",
-            TrackSegments =
-            [
-                new TrackSegment
-                {
-                    Seq = 0,
-                    TrackPoints = points
-                }
-            ]
-        };
+        return new Track { Id = Guid.NewGuid(), Name = "Test", TrackSegments = [new TrackSegment { Seq = 0, TrackPoints = points }] };
     }
 
-    private static TrackPoint Point(int id, int seq, double latitude, double longitude, DateTime time)
-    {
-        return new TrackPoint
-        {
+    private static TrackPoint Point(int id, int seq, double latitude, double longitude, DateTime time) {
+        return new TrackPoint {
             Id = id,
             Seq = seq,
             Latitude = latitude,
@@ -207,18 +158,17 @@ public sealed class PaceServiceTests
         };
     }
 
-    private static IReadOnlyList<PaceData> CreateExistingPaceData(Track track)
-    {
+    private static IReadOnlyList<PaceData> CreateExistingPaceData(Track track) {
         var points =
-            track.TrackSegments
+            track
+                .TrackSegments
                 .OrderBy(segment => segment.Seq)
                 .SelectMany(segment => segment.TrackPoints.OrderBy(point => point.Seq))
                 .ToArray();
 
         return points
             .Select((point, index) =>
-                new PaceData
-                {
+                new PaceData {
                     TrackId = track.Id,
                     TrackPointId = point.Id,
                     Seq = index,
@@ -232,20 +182,17 @@ public sealed class PaceServiceTests
     {
         private readonly IReadOnlyList<PaceData> _existing;
 
-        public FakePaceRepository(IReadOnlyList<PaceData>? existing = null)
-        {
+        public FakePaceRepository(IReadOnlyList<PaceData>? existing = null) {
             _existing = existing ?? Array.Empty<PaceData>();
         }
 
         public IReadOnlyList<PaceData>? SavedData { get; private set; }
 
-        public Task<IReadOnlyList<PaceData>> GetAsync(Guid trackId, CancellationToken cancellationToken = default)
-        {
+        public Task<IReadOnlyList<PaceData>> GetAsync(Guid trackId, CancellationToken cancellationToken = default) {
             return Task.FromResult(_existing);
         }
 
-        public Task ReplaceAsync(Guid trackId, IReadOnlyCollection<PaceData> paceData, CancellationToken cancellationToken = default)
-        {
+        public Task ReplaceAsync(Guid trackId, IReadOnlyCollection<PaceData> paceData, CancellationToken cancellationToken = default) {
             SavedData = paceData.ToArray();
 
             return Task.CompletedTask;

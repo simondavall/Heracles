@@ -205,3 +205,20 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 - Reuse persisted observations rather than repeatedly requesting historical weather.
 - Retain cached observations when changing providers until a different cache policy is explicitly agreed.
 - Select the active weather provider through Infrastructure dependency injection.
+
+# Activity Pace
+
+- Calculate activity pace from recorded GPS track points using cumulative geographic distance and cumulative active elapsed time.
+- Persist derived cumulative pace data and generate it lazily when first required for an activity.
+- Treat persisted pace data as regenerable derived data rather than versioning its calculation. When the persisted-data calculation changes, existing pace data may be deleted and regenerated.
+- Use a zero-based activity-wide sequence for persisted pace data independently of segment-local TrackPoint sequences.
+- Calculate geographic distance only between consecutive points within the same recording segment.
+- Treat recording-segment boundaries as pauses and add neither elapsed time nor geographic distance between segments.
+- Allow pace calculation windows to span recording-segment boundaries after pause time and inter-segment distance have been removed from the cumulative representation.
+- Calculate rolling pace from differences in cumulative distance and cumulative active time rather than averaging individual point-to-point pace values.
+- Configure rolling pace calculation using application-wide WindowRadius and Stride settings.
+- Keep persisted cumulative pace data independent of WindowRadius and Stride so presentation calculations can be tuned without regenerating persisted data.
+- Use shrinking centred windows at the beginning and end of an activity.
+- Ensure the final activity point is represented independently of whether it falls naturally on the configured stride.
+- Integrate Chart.js through a colocated JavaScript ES module owned by the pace-chart Blazor component.
+- Keep Chart.js-specific concerns within Web presentation and keep pace calculation independent of chart presentation.

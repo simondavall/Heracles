@@ -54,6 +54,7 @@ export async function createPaceChart(canvas, data) {
     return {
         update(data) {
             chart.data.datasets[0].data = createPoints(data);
+            chart.options.scales.x.max = getMaximumDistance(data);
             chart.update();
         },
 
@@ -124,6 +125,8 @@ function createConfiguration(data) {
             scales: {
                 x: {
                     type: "linear",
+                    min: 0,
+                    max: getMaximumDistance(data),
 
                     title: {
                         display: true,
@@ -165,6 +168,13 @@ function createPoints(data) {
         x: point.distance,
         y: point.pace
     }));
+}
+
+function getMaximumDistance(data) {
+    if (data.points.length === 0)
+        return 0;
+
+    return data.points[data.points.length - 1].distance;
 }
 
 function formatDistance(distance) {
