@@ -1,4 +1,5 @@
-﻿using Heracles.Application.Data;
+﻿using Heracles.Application.Configuration;
+using Heracles.Application.Data;
 using Heracles.Application.TrackPoints;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -11,6 +12,8 @@ public partial class ActivityElevationChart : IAsyncDisposable
     private IJSRuntime JsRuntime { get; set; } = null!;
     [Inject]
     private ITrackPointDataService TrackPointDataService { get; set; } = null!;
+    [Inject]
+    private ElevationSettings ElevationSettings { get; set; } = null!;
 
     [Parameter]
     public Track Track { get; set; } = null!;
@@ -31,28 +34,27 @@ public partial class ActivityElevationChart : IAsyncDisposable
         if (_loadedTrackId == Track.Id)
             return;
 
-        var trackPointData =
-            await TrackPointDataService.GetAsync(Track);
+        var trackPointData = await TrackPointDataService.GetAsync(Track);
 
         if (_disposed)
             return;
 
-        _chartData =
-            new ElevationChartData(
-                trackPointData
-                    .Select(data =>
-                        new ElevationChartPoint(
-                            data.CumulativeDistance,
-                            data.Elevation))
-                    .ToArray());
+        var points =
+            trackPointData
+                .Select(data => new ElevationChartPoint(data.CumulativeDistance, data.Elevation))
+                .ToArray();
+
+        var (minimumElevation, maximumElevation) = CalculateElevationRange(points);
+
+        _chartData = new ElevationChartData(points, minimumElevation, maximumElevation);
 
         _loadedTrackId = Track.Id;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
-        if (_disposed || _chartData is null || _renderedTrackId == _loadedTrackId) {
+        if (_disposed || _chartData is null || _renderedTrackId == _loadedTrackId)
             return;
-        }
+        
 
         _module ??=
             await JsRuntime.InvokeAsync<IJSObjectReference>(
@@ -62,13 +64,11 @@ public partial class ActivityElevationChart : IAsyncDisposable
         if (_disposed)
             return;
 
-        if (_chart is null) {
+        if (_chart is null) 
             _chart = await _module.InvokeAsync<IJSObjectReference>("createElevationChart", _chartContainer, _chartData);
-        }
-        else {
+        else 
             await _chart.InvokeVoidAsync("update", _chartData);
-        }
-
+        
         _renderedTrackId = _loadedTrackId;
     }
 
@@ -88,5 +88,29 @@ public partial class ActivityElevationChart : IAsyncDisposable
         catch (JSDisconnectedException) {
             // The browser connection has already been terminated.
         }
+    }
+    
+    private (double? Minimum, double? Maximum) CalculateElevationRange(IReadOnlyList<ElevationChartPoint> points) {
+        if (points.Count == 0)
+            return (null, null);
+
+        var minimum = points.Min(point => point.Elevation);
+        var maximum = points.Max(point => point.Elevation);
+
+        var actualRange = maximum - minimum;
+
+        if (actualRange >= ElevationSettings.MinimumChartRange)
+            return (minimum, maximum);
+
+        var midpoint = (minimum + maximum) / 2;
+
+        var halfRange = ElevationSettings.MinimumChartRange / 2.0;
+
+        var low = midpoint - halfRange;
+        var high = midpoint + halfRange;
+
+        return (Math.Floor(low / 10) * 10, Math.Ceiling(high / 10) * 10);
+        
+        //return (midpoint - halfRange, midpoint + halfRange);
     }
 }

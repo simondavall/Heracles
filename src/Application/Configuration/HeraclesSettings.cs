@@ -10,7 +10,8 @@ public sealed record HeraclesSettings(
     ImportSettings Import,
     WeatherApiSettings WeatherApi,
     PaceSettings Pace,
-    SpeedSettings Speed)
+    SpeedSettings Speed,
+    ElevationSettings Elevation)
 {
     public static HeraclesSettings Create(IConfiguration configuration) {
         var errors = new List<string>();
@@ -39,6 +40,8 @@ public sealed record HeraclesSettings(
         var speedWindowRadius = GetPositiveInt(configuration, "Speed:WindowRadius", errors);
         var speedStride = GetPositiveInt(configuration, "Speed:Stride", errors);
         
+        var elevationMinimumChartRange = GetPositiveInt(configuration, "Elevation:MinimumChartRange", errors);
+        
         if (errors.Count > 0)
             throw new InvalidOperationException(
                 "Invalid Heracles configuration:"
@@ -53,7 +56,8 @@ public sealed record HeraclesSettings(
             new ImportSettings(maximumFileCount!.Value, maximumCombinedSizeMb!.Value),
             new WeatherApiSettings(weatherApiKey!, weatherApiUri!),
             new PaceSettings(paceWindowRadius!.Value, paceStride!.Value),
-            new SpeedSettings(speedWindowRadius!.Value, speedStride!.Value));
+            new SpeedSettings(speedWindowRadius!.Value, speedStride!.Value),
+            new ElevationSettings(elevationMinimumChartRange!.Value));
     }
 
     private static string? GetRequiredString(IConfiguration configuration, string key, List<string> errors) {
@@ -149,3 +153,6 @@ public sealed record PaceSettings(
 public sealed record SpeedSettings(
     int WindowRadius,
     int Stride);
+    
+public sealed record ElevationSettings(
+    int MinimumChartRange);
