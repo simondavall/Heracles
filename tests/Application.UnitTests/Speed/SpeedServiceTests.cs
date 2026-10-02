@@ -11,7 +11,7 @@ public sealed class SpeedServiceTests
     [Fact]
     public async Task GetSpeedAsync_ReturnsEmptyWhenFewerThanTwoPoints() {
         var dataService = new FakeTrackPointDataService([Data(0, 0, 0)]);
-        var service = new SpeedService(dataService, new SpeedSettings(1, 1));
+        var service = new SpeedService(dataService, new SpeedSettings(1));
 
         var result = await service.GetSpeedAsync(CreateTrack(), TestContext.Current.CancellationToken);
 
@@ -21,7 +21,7 @@ public sealed class SpeedServiceTests
     [Fact]
     public async Task GetSpeedAsync_CalculatesSpeedFromTrackPointData() {
         var dataService = new FakeTrackPointDataService([Data(0, 0, 0), Data(1, 0.1, 30), Data(2, 0.2, 60)]);
-        var service = new SpeedService(dataService, new SpeedSettings(WindowRadius: 1, Stride: 1));
+        var service = new SpeedService(dataService, new SpeedSettings(WindowRadius: 1));
 
         var result = await service.GetSpeedAsync(CreateTrack(), TestContext.Current.CancellationToken);
 
@@ -36,27 +36,7 @@ public sealed class SpeedServiceTests
         Assert.Equal(0.2, result[2].Distance);
         Assert.Equal(12, result[2].KilometresPerHour, 6);
     }
-
-    [Fact]
-    public async Task GetSpeedAsync_IncludesFinalPointWhenStrideDoesNotLandOnIt() {
-        var dataService =
-            new FakeTrackPointDataService(
-                [
-                    Data(0, 0, 0),
-                    Data(1, 0.1, 30),
-                    Data(2, 0.2, 60),
-                    Data(3, 0.3, 90),
-                    Data(4, 0.4, 120),
-                    Data(5, 0.5, 150)
-                ]);
-
-        var service = new SpeedService(dataService, new SpeedSettings(WindowRadius: 1, Stride: 2));
-
-        var result = await service.GetSpeedAsync(CreateTrack(), TestContext.Current.CancellationToken);
-
-        Assert.Equal(0.5, result[^1].Distance);
-    }
-
+    
     [Fact]
     public async Task GetSpeedAsync_WindowCanCrossSegmentBoundary() {
         var dataService =
@@ -70,7 +50,7 @@ public sealed class SpeedServiceTests
                     Data(5, 0.4, 120)
                 ]);
 
-        var service = new SpeedService(dataService, new SpeedSettings(WindowRadius: 2, Stride: 1));
+        var service = new SpeedService(dataService, new SpeedSettings(WindowRadius: 2));
 
         var result = await service.GetSpeedAsync(CreateTrack(), TestContext.Current.CancellationToken);
 
@@ -80,7 +60,7 @@ public sealed class SpeedServiceTests
     [Fact]
     public async Task GetSpeedAsync_SkipsObservationWhenWindowHasNoDistance() {
         var dataService = new FakeTrackPointDataService([Data(0, 0, 0), Data(1, 0, 30)]);
-        var service = new SpeedService(dataService, new SpeedSettings(WindowRadius: 1, Stride: 1));
+        var service = new SpeedService(dataService, new SpeedSettings(WindowRadius: 1));
 
         var result = await service.GetSpeedAsync(CreateTrack(), TestContext.Current.CancellationToken);
 
@@ -90,13 +70,39 @@ public sealed class SpeedServiceTests
     [Fact]
     public async Task GetSpeedAsync_SkipsObservationWhenWindowHasNoElapsedTime() {
         var dataService = new FakeTrackPointDataService([Data(0, 0, 0), Data(1, 0.1, 0)]);
-        var service = new SpeedService(dataService, new SpeedSettings(WindowRadius: 1, Stride: 1));
+        var service = new SpeedService(dataService, new SpeedSettings(WindowRadius: 1));
 
         var result = await service.GetSpeedAsync(CreateTrack(), TestContext.Current.CancellationToken);
 
         Assert.Empty(result);
     }
 
+    [Fact]
+    public async Task GetSpeedAsync_CalculatesObservationForEveryEligiblePoint() {
+        var dataService =
+            new FakeTrackPointDataService(
+            [
+                Data(0, 0, 0),
+                Data(1, 0.1, 30),
+                Data(2, 0.2, 60),
+                Data(3, 0.3, 90),
+                Data(4, 0.4, 120),
+                Data(5, 0.5, 150)
+            ]);
+
+        var service = new SpeedService(dataService, new SpeedSettings(WindowRadius: 1));
+
+        var result = await service.GetSpeedAsync(CreateTrack(), TestContext.Current.CancellationToken);
+
+        Assert.Equal(6, result.Count);
+
+        Assert.Equal(
+            [1, 2, 3, 4, 5, 6],
+            result
+                .Select(observation => observation.TrackPointId)
+                .ToArray());
+    }
+    
     private static TrackPointData Data(int seq, double cumulativeDistance, int cumulativeTime) {
         return new TrackPointData {
             TrackId = Guid.NewGuid(),

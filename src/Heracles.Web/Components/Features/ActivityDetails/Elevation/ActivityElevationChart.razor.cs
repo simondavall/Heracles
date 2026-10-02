@@ -14,6 +14,8 @@ public partial class ActivityElevationChart : IAsyncDisposable
     private ITrackPointDataService TrackPointDataService { get; set; } = null!;
     [Inject]
     private ElevationSettings ElevationSettings { get; set; } = null!;
+    [Inject]
+    private ActivityDetailsInteractionService InteractionService { get; set; } = null!;
 
     [Parameter]
     public Track Track { get; set; } = null!;
@@ -24,12 +26,17 @@ public partial class ActivityElevationChart : IAsyncDisposable
     private IJSObjectReference? _chart;
 
     private ElevationChartData? _chartData;
+    private DotNetObjectReference<ActivityElevationChart>? _dotNetReference;
 
     private Guid? _loadedTrackId;
     private Guid? _renderedTrackId;
 
     private bool _disposed;
 
+    protected override void OnInitialized() {
+        InteractionService.TrackPointChanged += OnTrackPointChanged;
+    }
+    
     protected override async Task OnParametersSetAsync() {
         if (_loadedTrackId == Track.Id)
             return;
@@ -41,7 +48,12 @@ public partial class ActivityElevationChart : IAsyncDisposable
 
         var points =
             trackPointData
-                .Select(data => new ElevationChartPoint(data.CumulativeDistance, data.Elevation))
+                .Select(
+                    data =>
+                        new ElevationChartPoint(
+                            data.TrackPointId,
+                            data.CumulativeDistance,
+                            data.Elevation))
                 .ToArray();
 
         var (minimumElevation, maximumElevation) = CalculateElevationRange(points);
@@ -64,17 +76,42 @@ public partial class ActivityElevationChart : IAsyncDisposable
         if (_disposed)
             return;
 
-        if (_chart is null) 
-            _chart = await _module.InvokeAsync<IJSObjectReference>("createElevationChart", _chartContainer, _chartData);
-        else 
+        if (_chart is null) {
+            _dotNetReference ??= DotNetObjectReference.Create(this);
+            
+            _chart = await _module.InvokeAsync<IJSObjectReference>(
+                "createElevationChart",
+                _chartContainer,
+                _chartData,
+                _dotNetReference);
+        }
+        else {
             await _chart.InvokeVoidAsync("update", _chartData);
+        }
+        
+        await _chart.InvokeVoidAsync("selectTrackPoint", InteractionService.TrackPointId);
         
         _renderedTrackId = _loadedTrackId;
     }
 
+    [JSInvokable]
+    public void SelectTrackPoint(int trackPointId) {
+        InteractionService.Select(trackPointId);
+    }
+
+    [JSInvokable]
+    public void ClearTrackPoint() {
+        InteractionService.Clear();
+    }
+    
     public async ValueTask DisposeAsync() {
         _disposed = true;
 
+        InteractionService.TrackPointChanged -= OnTrackPointChanged;
+
+        _dotNetReference?.Dispose();
+        _dotNetReference = null;
+        
         try {
             if (_chart is not null)
                 await _chart.InvokeVoidAsync("dispose");
@@ -88,6 +125,23 @@ public partial class ActivityElevationChart : IAsyncDisposable
         catch (JSDisconnectedException) {
             // The browser connection has already been terminated.
         }
+    }
+
+    private void OnTrackPointChanged(int? trackPointId) {
+        if (_disposed)
+            return;
+
+        _ = InvokeAsync(async () => {
+            if (_disposed || _chart is null)
+                return;
+
+            try {
+                await _chart.InvokeVoidAsync("selectTrackPoint", trackPointId);
+            }
+            catch (JSDisconnectedException) {
+                // The browser connection has already been terminated.
+            }
+        });
     }
     
     private (double? Minimum, double? Maximum) CalculateElevationRange(IReadOnlyList<ElevationChartPoint> points) {

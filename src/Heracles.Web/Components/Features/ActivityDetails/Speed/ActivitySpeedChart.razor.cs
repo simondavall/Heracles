@@ -11,7 +11,9 @@ public partial class ActivitySpeedChart : IAsyncDisposable
     private IJSRuntime JsRuntime { get; set; } = null!;
     [Inject]
     private ISpeedService SpeedService { get; set; } = null!;
-
+    [Inject]
+    private ActivityDetailsInteractionService InteractionService { get; set; } = null!;
+    
     [Parameter]
     public Track Track { get; set; } = null!;
 
@@ -21,12 +23,17 @@ public partial class ActivitySpeedChart : IAsyncDisposable
     private IJSObjectReference? _chart;
 
     private SpeedChartData? _chartData;
+    private DotNetObjectReference<ActivitySpeedChart>? _dotNetReference;
 
     private Guid? _loadedTrackId;
     private Guid? _renderedTrackId;
 
     private bool _disposed;
 
+    protected override void OnInitialized() {
+        InteractionService.TrackPointChanged += OnTrackPointChanged;
+    }
+    
     protected override async Task OnParametersSetAsync() {
         if (_loadedTrackId == Track.Id)
             return;
@@ -43,6 +50,7 @@ public partial class ActivitySpeedChart : IAsyncDisposable
                     .Select(
                         observation =>
                             new SpeedChartPoint(
+                                observation.TrackPointId,
                                 observation.Distance,
                                 observation.KilometresPerHour))
                     .ToArray());
@@ -63,18 +71,41 @@ public partial class ActivitySpeedChart : IAsyncDisposable
             return;
 
         if (_chart is null) {
-            _chart = await _module.InvokeAsync<IJSObjectReference>("createSpeedChart", _chartContainer, _chartData);
+            _dotNetReference ??= DotNetObjectReference.Create(this);
+
+            _chart = await _module.InvokeAsync<IJSObjectReference>(
+                "createSpeedChart",
+                _chartContainer,
+                _chartData,
+                _dotNetReference);
         }
         else {
             await _chart.InvokeVoidAsync("update", _chartData);
         }
 
+        await _chart.InvokeVoidAsync("selectTrackPoint", InteractionService.TrackPointId);
+        
         _renderedTrackId = _loadedTrackId;
     }
 
+    [JSInvokable]
+    public void SelectTrackPoint(int trackPointId) {
+        InteractionService.Select(trackPointId);
+    }
+
+    [JSInvokable]
+    public void ClearTrackPoint() {
+        InteractionService.Clear();
+    }
+    
     public async ValueTask DisposeAsync() {
         _disposed = true;
 
+        InteractionService.TrackPointChanged -= OnTrackPointChanged;
+
+        _dotNetReference?.Dispose();
+        _dotNetReference = null;
+        
         try {
             if (_chart is not null)
                 await _chart.InvokeVoidAsync("dispose");
@@ -88,5 +119,22 @@ public partial class ActivitySpeedChart : IAsyncDisposable
         catch (JSDisconnectedException) {
             // The browser connection has already been terminated.
         }
+    }
+
+    private void OnTrackPointChanged(int? trackPointId) {
+        if (_disposed)
+            return;
+
+        _ = InvokeAsync(async () => {
+            if (_disposed || _chart is null)
+                return;
+
+            try {
+                await _chart.InvokeVoidAsync("selectTrackPoint", trackPointId);
+            }
+            catch (JSDisconnectedException) {
+                // The browser connection has already been terminated.
+            }
+        });
     }
 }

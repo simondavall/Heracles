@@ -36,6 +36,7 @@ export function createMap(container, accessToken, data) {
     );
 
     let markers = [];
+    let selectionMarker = null;
     let currentData = data;
     let disposed = false;
 
@@ -154,9 +155,52 @@ export function createMap(container, accessToken, data) {
         fitActivity(map, data);
     }
 
+    function showSelection(longitude, latitude) {
+        if (disposed)
+            return;
+
+        if (selectionMarker === null) {
+            const element = document.createElement("div");
+            element.className = "activity-map-marker activity-map-marker-selection";
+            element.setAttribute("aria-label", "Selected activity position");
+
+            selectionMarker =
+                new mapboxgl.Marker({
+                    element,
+                    anchor: "center"
+                })
+                    .setLngLat([longitude, latitude])
+                    .addTo(map);
+
+            return;
+        }
+
+        selectionMarker.setLngLat([longitude, latitude]);
+    }
+
+    function clearSelection() {
+        if (selectionMarker === null)
+            return;
+
+        selectionMarker.remove();
+        selectionMarker = null;
+    }
+
     return {
         update(data) {
+            clearSelection();
             transitionToActivity(data);
+        },
+
+        showSelection(longitude, latitude) {
+            showSelection(
+                longitude,
+                latitude
+            );
+        },
+
+        clearSelection() {
+            clearSelection();
         },
 
         dispose() {
@@ -168,6 +212,8 @@ export function createMap(container, accessToken, data) {
 
             clearTimeout(transitionTimer);
             themeObserver.disconnect();
+
+            clearSelection();
 
             removeMarkers(markers);
             markers = [];
