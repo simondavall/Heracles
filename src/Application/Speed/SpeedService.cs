@@ -12,9 +12,9 @@ public interface ISpeedService
 public sealed class SpeedService : ISpeedService
 {
     private readonly ITrackPointDataService _trackPointDataService;
-    private readonly PaceSettings _settings;
+    private readonly SpeedSettings _settings;
 
-    public SpeedService(ITrackPointDataService trackPointDataService, PaceSettings settings) {
+    public SpeedService(ITrackPointDataService trackPointDataService, SpeedSettings settings) {
         _trackPointDataService = trackPointDataService;
         _settings = settings;
     }

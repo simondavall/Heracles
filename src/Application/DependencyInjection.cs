@@ -1,4 +1,5 @@
 ﻿using Heracles.Application.Activities;
+using Heracles.Application.Configuration;
 using Heracles.Application.Import;
 using Heracles.Application.Pace;
 using Heracles.Application.Speed;
@@ -10,7 +11,7 @@ namespace Heracles.Application
 {
     public static class DependencyInjection
     {
-        public static void AddApplication(this IServiceCollection services)
+        public static void AddApplication(this IServiceCollection services, HeraclesSettings settings)
         {
             services.AddScoped<IImportService, ImportService>();
             services.AddScoped<IActivityService, ActivityService>();
@@ -18,6 +19,12 @@ namespace Heracles.Application
             services.AddScoped<ITrackPointDataService, TrackPointDataService>();
             services.AddScoped<IPaceService, PaceService>();
             services.AddScoped<ISpeedService, SpeedService>();
+            
+            services.AddSingleton(settings.Mapbox);
+            services.AddSingleton(settings.Import);
+            services.AddSingleton(settings.WeatherApi);
+            services.AddSingleton(settings.Pace);
+            services.AddSingleton(settings.Speed);
         }
     }
 }

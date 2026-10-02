@@ -17,9 +17,9 @@ namespace Heracles.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static void AddInfrastructure(this IServiceCollection services, HeraclesSettings settings) {
+        public static void AddInfrastructure(this IServiceCollection services, DatabaseSettings settings) {
             var connectionString = new SqliteConnectionStringBuilder {
-                DataSource = settings.DatabaseSettings.DatabasePath, 
+                DataSource = settings.DatabasePath, 
                 Mode = SqliteOpenMode.ReadWriteCreate, 
                 ForeignKeys = true
             }.ToString();

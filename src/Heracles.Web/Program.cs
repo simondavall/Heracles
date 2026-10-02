@@ -30,13 +30,8 @@ builder.Services.AddSerilog((services, configuration) => configuration
 
 var settings = HeraclesSettings.Create(builder.Configuration);
 
-builder.Services.AddSingleton(settings.Mapbox);
-builder.Services.AddSingleton(settings.Import);
-builder.Services.AddSingleton(settings.WeatherApi);
-builder.Services.AddSingleton(settings.Pace);
-
-builder.Services.AddInfrastructure(settings);
-builder.Services.AddApplication();
+builder.Services.AddInfrastructure(settings.DatabaseSettings);
+builder.Services.AddApplication(settings);
 
 builder.Services.AddHeraclesDataProtection(settings.DataProtection);
 builder.Services.AddHeraclesAuthentication(settings.OpenIdConnect);
