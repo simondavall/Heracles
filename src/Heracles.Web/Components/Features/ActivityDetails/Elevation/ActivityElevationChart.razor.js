@@ -54,6 +54,8 @@ export async function createElevationChart(canvas, data) {
         update(data) {
             chart.data.datasets[0].data = createPoints(data);
             chart.options.scales.x.max = getMaximumDistance(data);
+            chart.options.scales.y.min = data.minimumElevation;
+            chart.options.scales.y.max = data.maximumElevation;
             chart.update();
         },
 
@@ -140,6 +142,9 @@ function createConfiguration(data) {
                 },
 
                 y: {
+                    min: data.minimumElevation,
+                    max: data.maximumElevation,
+
                     title: {
                         display: true,
                         text: "Elevation (m)"

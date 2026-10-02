@@ -20,11 +20,13 @@ namespace Heracles.Application
             services.AddScoped<IPaceService, PaceService>();
             services.AddScoped<ISpeedService, SpeedService>();
             
-            services.AddSingleton(settings.Mapbox);
+
+            services.AddSingleton(settings.Elevation);
             services.AddSingleton(settings.Import);
-            services.AddSingleton(settings.WeatherApi);
+            services.AddSingleton(settings.Mapbox);
             services.AddSingleton(settings.Pace);
             services.AddSingleton(settings.Speed);
+            services.AddSingleton(settings.WeatherApi);
         }
     }
 }
