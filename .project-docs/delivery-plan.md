@@ -275,16 +275,26 @@ The complete import operation is coordinated through the Application layer, with
     - ✓ Reset a persisted Activity Type to `All` when that type is no longer present in activity data.
 - ✓ Add pace chart
     - ✓ Add configurable pace WindowRadius and Stride settings.
-    - ✓ Persist cumulative distance and active elapsed time as derived activity pace data.
-    - ✓ Generate missing pace data lazily and reuse persisted data.
-    - ✓ Exclude recording pauses and inter-segment geographic distance from cumulative pace data.
+    - ✓ Persist cumulative distance and active elapsed time as derived activity data.
+    - ✓ Generate missing cumulative track-point data lazily and reuse persisted data.
+    - ✓ Exclude recording pauses and inter-segment geographic distance from cumulative track-point data.
     - ✓ Calculate pace using centred rolling windows over cumulative distance and active time.
     - ✓ Shrink calculation windows at activity boundaries.
     - ✓ Render pace against cumulative activity distance using Chart.js.
     - ✓ Present a continuous pace series across recording segments.
     - ✓ Support responsive presentation and live light/dark theme changes.
     - ✓ Verify pace calculation, persistence and chart presentation.
-- Add elevation chart
+- ✓ Add elevation chart
+    - ✓ Generalise persisted cumulative pace data into reusable TrackPointData.
+    - ✓ Introduce Application track-point data service and Infrastructure repository responsibilities.
+    - ✓ Persist elevation alongside cumulative distance and active elapsed time.
+    - ✓ Reuse existing TrackPointData when available and lazily generate it when absent.
+    - ✓ Refactor pace calculation to consume shared TrackPointData.
+    - ✓ Render recorded elevation against cumulative activity distance using Chart.js.
+    - ✓ Display elevation in metres and cumulative activity distance in kilometres.
+    - ✓ Support responsive presentation and live light/dark theme changes.
+    - ✓ Verify track-point data generation and persistence, existing pace behaviour and elevation-chart presentation.
+- Add speed chart
 - Add splits
 - Add ranking listing
 
