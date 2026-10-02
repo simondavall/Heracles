@@ -382,3 +382,40 @@ Render the pace series using Chart.js behind a colocated JavaScript ES module ow
 - Lazy generation supports activities imported before PaceData was introduced without requiring a historical-data backfill migration.
 - Derived pace data is inexpensive to regenerate, so deletion and lazy regeneration provide a simpler invalidation strategy than calculation-version metadata.
 - A small JavaScript boundary provides direct access to Chart.js while preserving Blazor ownership of activity data, component lifecycle and application behaviour.
+
+## Generalise persisted cumulative data as reusable TrackPointData
+(02-10-2026)
+
+### Decision
+
+Generalise the cumulative point-level data introduced for pace calculation into reusable TrackPointData.
+
+Persist one TrackPointData row for each source TrackPoint. Retain TrackPointId as the unique relationship to the immutable source point and use `(TrackId, Seq)` as the primary key, where Seq is a zero-based activity-wide sequence.
+
+Store cumulative geographic distance, cumulative active elapsed time and recorded elevation in TrackPointData.
+
+Move responsibility for lazy generation and reuse of this data from PaceService and PaceRepository into an Application TrackPointDataService and Infrastructure TrackPointDataRepository.
+
+Treat imported TrackPoint data as immutable. When TrackPointData already exists for an activity, reuse it without comparing it against the source points for completeness. When no TrackPointData exists, generate and persist the complete series using SaveAsync.
+
+Retain TrackPointData as regenerable derived data. Changes to its calculation or representation may be handled by deleting existing derived data and allowing it to be regenerated lazily.
+
+Retain PaceService as a pace-specific calculation service. PaceService consumes TrackPointData and applies the configured rolling WindowRadius and Stride without owning cumulative-data generation or persistence.
+
+Use TrackPointData as the source for the Activity Elevation chart. Plot cumulative activity distance in kilometres against recorded elevation in metres.
+
+Retain the established recording-segment behaviour: add neither geographic distance nor elapsed time between recording segments.
+
+Render the elevation series using Chart.js behind a colocated JavaScript ES module owned by the ActivityElevationChart Blazor component.
+
+### Rationale
+
+- Cumulative activity distance is useful beyond pace calculation and should not be owned by the pace feature.
+- Elevation presentation requires the same activity-wide distance representation, so sharing TrackPointData avoids independently recalculating cumulative distance.
+- Recorded elevation belongs naturally to the point-level derived representation and allows consumers to use TrackPointData without loading an Entity Framework navigation graph.
+- Imported activity track points are immutable, so repeatedly validating persisted derived data against the source points does not protect against a legitimate application state.
+- Create-once SaveAsync persistence more accurately represents the lifecycle of derived TrackPointData than replacement semantics.
+- Separating TrackPointData generation from PaceService gives the pace service a focused responsibility: deriving pace observations from cumulative activity data.
+- Keeping TrackPointData independent of pace-specific WindowRadius and Stride allows other activity-detail features to consume the same persisted representation.
+- Preserving the existing segment-boundary rules keeps pace and elevation distance semantics consistent.
+- The elevation chart establishes a second Chart.js activity-detail component, but the chart implementations remain separate until further implementation demonstrates that a shared abstraction is justified.

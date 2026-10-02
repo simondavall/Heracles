@@ -13,7 +13,7 @@ where development should continue.
 
 # Current task
 
-- Add elevation chart
+- Add speed chart
 
 # Remaining milestone tasks
 
@@ -265,3 +265,22 @@ where development should continue.
 - Added pace-chart tooltip formatting and responsive presentation.
 - Added light and dark theme support with live theme updates.
 - Verified pace calculation, persistence, activity navigation and chart presentation.
+- Generalised the persisted cumulative data originally introduced for pace calculation into reusable TrackPointData.
+- Replaced the pace-specific Application pace-data persistence responsibility with TrackPointDataService and ITrackPointDataRepository.
+- Replaced the Infrastructure pace repository with TrackPointDataRepository.
+- Moved lazy generation and reuse of cumulative track-point data from PaceService into TrackPointDataService.
+- Changed derived track-point persistence from replacement semantics to create-once SaveAsync semantics.
+- Established imported TrackPoint data as immutable after persistence and removed completeness checking of existing derived track-point data.
+- Retained TrackPointData as regenerable derived data that may be deleted and reconstructed when its calculation or representation changes.
+- Persisted recorded elevation alongside activity-wide sequence, cumulative geographic distance and cumulative active elapsed time in TrackPointData.
+- Retained the established cumulative-distance and active-time behaviour across recording segments, with neither elapsed time nor geographic distance added between segments.
+- Refactored PaceService to consume shared TrackPointData while retaining responsibility for pace-specific rolling-window calculation.
+- Updated pace service automated tests to reflect the separation between shared track-point data generation and pace calculation.
+- Added focused automated tests for TrackPointDataService, including persistence, activity-wide sequencing, segment-boundary behaviour, source TrackPoint identity and elevation.
+- Added an elevation chart below the pace chart in Activity Details.
+- Displayed recorded elevation in metres against cumulative activity distance in kilometres.
+- Reused persisted TrackPointData for elevation presentation rather than independently recalculating cumulative activity distance.
+- Added Chart.js elevation presentation through a colocated JavaScript ES module.
+- Added elevation-chart tooltip formatting and responsive presentation.
+- Added light and dark theme support to the elevation chart with live theme updates.
+- Verified TrackPointData generation and persistence, existing pace behaviour, elevation-chart presentation, activity navigation and light/dark theme behaviour.

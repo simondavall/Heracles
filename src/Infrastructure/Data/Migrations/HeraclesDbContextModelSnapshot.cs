@@ -119,7 +119,7 @@ namespace Heracles.Infrastructure.Data.Migrations
                     b.ToTable("TrackSegments");
                 });
 
-            modelBuilder.Entity("Heracles.Application.Pace.PaceData", b =>
+            modelBuilder.Entity("Heracles.Application.TrackPoints.TrackPointData", b =>
                 {
                     b.Property<Guid>("TrackId")
                         .HasColumnType("TEXT");
@@ -133,6 +133,9 @@ namespace Heracles.Infrastructure.Data.Migrations
                     b.Property<int>("CumulativeTime")
                         .HasColumnType("INTEGER");
 
+                    b.Property<double>("Elevation")
+                        .HasColumnType("REAL");
+
                     b.Property<int>("TrackPointId")
                         .HasColumnType("INTEGER");
 
@@ -141,7 +144,7 @@ namespace Heracles.Infrastructure.Data.Migrations
                     b.HasIndex("TrackPointId")
                         .IsUnique();
 
-                    b.ToTable("PaceData", (string)null);
+                    b.ToTable("TrackPointData", (string)null);
                 });
 
             modelBuilder.Entity("Heracles.Application.Weather.ActivityWeather", b =>
@@ -188,23 +191,19 @@ namespace Heracles.Infrastructure.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Heracles.Application.Pace.PaceData", b =>
+            modelBuilder.Entity("Heracles.Application.TrackPoints.TrackPointData", b =>
                 {
-                    b.HasOne("Heracles.Application.Data.Track", "Track")
+                    b.HasOne("Heracles.Application.Data.Track", null)
                         .WithMany()
                         .HasForeignKey("TrackId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Heracles.Application.Data.TrackPoint", "TrackPoint")
+                    b.HasOne("Heracles.Application.Data.TrackPoint", null)
                         .WithOne()
-                        .HasForeignKey("Heracles.Application.Pace.PaceData", "TrackPointId")
+                        .HasForeignKey("Heracles.Application.TrackPoints.TrackPointData", "TrackPointId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Track");
-
-                    b.Navigation("TrackPoint");
                 });
 
             modelBuilder.Entity("Heracles.Application.Weather.ActivityWeather", b =>

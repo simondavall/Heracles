@@ -206,19 +206,38 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 - Retain cached observations when changing providers until a different cache policy is explicitly agreed.
 - Select the active weather provider through Infrastructure dependency injection.
 
-# Activity Pace
+# Activity Track-Point Data
 
-- Calculate activity pace from recorded GPS track points using cumulative geographic distance and cumulative active elapsed time.
-- Persist derived cumulative pace data and generate it lazily when first required for an activity.
-- Treat persisted pace data as regenerable derived data rather than versioning its calculation. When the persisted-data calculation changes, existing pace data may be deleted and regenerated.
-- Use a zero-based activity-wide sequence for persisted pace data independently of segment-local TrackPoint sequences.
+- Treat imported TrackPoint data as immutable after persistence.
+- Maintain reusable derived TrackPointData independently of individual presentation features.
+- Persist one TrackPointData row for each source TrackPoint.
+- Store the source TrackPointId, zero-based activity-wide sequence, cumulative geographic distance, cumulative active elapsed time and recorded elevation.
+- Generate TrackPointData lazily when first required for an activity.
+- Reuse persisted TrackPointData when present without completeness checking or replacement.
+- Treat TrackPointData as regenerable derived data. When its calculation or representation changes, existing data may be deleted and regenerated.
 - Calculate geographic distance only between consecutive points within the same recording segment.
 - Treat recording-segment boundaries as pauses and add neither elapsed time nor geographic distance between segments.
+- Keep cumulative track-point data independent of feature-specific calculation and presentation settings.
+- Use the Application track-point data service to own generation and reuse of TrackPointData.
+- Use the Infrastructure track-point data repository to own persistence of TrackPointData.
+
+# Activity Pace
+
+- Calculate activity pace from shared TrackPointData using cumulative geographic distance and cumulative active elapsed time.
 - Allow pace calculation windows to span recording-segment boundaries after pause time and inter-segment distance have been removed from the cumulative representation.
 - Calculate rolling pace from differences in cumulative distance and cumulative active time rather than averaging individual point-to-point pace values.
 - Configure rolling pace calculation using application-wide WindowRadius and Stride settings.
-- Keep persisted cumulative pace data independent of WindowRadius and Stride so presentation calculations can be tuned without regenerating persisted data.
+- Keep WindowRadius and Stride independent of persisted TrackPointData so presentation calculations can be tuned without regenerating persisted data.
 - Use shrinking centred windows at the beginning and end of an activity.
 - Ensure the final activity point is represented independently of whether it falls naturally on the configured stride.
 - Integrate Chart.js through a colocated JavaScript ES module owned by the pace-chart Blazor component.
 - Keep Chart.js-specific concerns within Web presentation and keep pace calculation independent of chart presentation.
+
+# Activity Elevation
+
+- Display recorded TrackPoint elevation against cumulative activity distance.
+- Reuse shared TrackPointData rather than independently recalculating cumulative distance for elevation presentation.
+- Display cumulative activity distance in kilometres and elevation in metres.
+- Represent every recorded track point in the elevation series.
+- Integrate Chart.js through a colocated JavaScript ES module owned by the elevation-chart Blazor component.
+- Keep Chart.js-specific concerns within Web presentation and keep elevation data preparation independent of chart presentation.

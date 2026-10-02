@@ -1,6 +1,7 @@
 ﻿using Heracles.Application.Activities;
 using Heracles.Application.Import;
 using Heracles.Application.Pace;
+using Heracles.Application.TrackPoints;
 using Heracles.Application.Weather;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +14,7 @@ namespace Heracles.Application
             services.AddScoped<IImportService, ImportService>();
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<IWeatherService, WeatherService>();
+            services.AddScoped<ITrackPointDataService, TrackPointDataService>();
             services.AddScoped<IPaceService, PaceService>();
         }
     }
