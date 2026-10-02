@@ -1,6 +1,7 @@
 ﻿using Heracles.Application.Configuration;
 using Heracles.Application.Data;
 using Heracles.Application.Import;
+using Heracles.Application.Pace;
 using Heracles.Application.Weather;
 using Heracles.Infrastructure.Data;
 using Heracles.Infrastructure.Gpx;
@@ -27,6 +28,7 @@ namespace Heracles.Infrastructure
 
             services.AddScoped<ITrackRepository, TrackRepository>();
             services.AddTransient<IGpxService, GpxService>();
+            services.AddScoped<IPaceRepository, PaceRepository>();
             
             services.AddScoped<IWeatherRepository, WeatherRepository>();
             services.AddHttpClient<IWeatherProvider, VisualCrossingWeatherProvider>();

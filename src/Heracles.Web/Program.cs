@@ -33,6 +33,7 @@ var settings = HeraclesSettings.Create(builder.Configuration);
 builder.Services.AddSingleton(settings.Mapbox);
 builder.Services.AddSingleton(settings.Import);
 builder.Services.AddSingleton(settings.WeatherApi);
+builder.Services.AddSingleton(settings.Pace);
 
 builder.Services.AddInfrastructure(settings);
 builder.Services.AddApplication();
