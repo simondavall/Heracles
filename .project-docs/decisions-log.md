@@ -419,3 +419,41 @@ Render the elevation series using Chart.js behind a colocated JavaScript ES modu
 - Keeping TrackPointData independent of pace-specific WindowRadius and Stride allows other activity-detail features to consume the same persisted representation.
 - Preserving the existing segment-boundary rules keeps pace and elevation distance semantics consistent.
 - The elevation chart establishes a second Chart.js activity-detail component, but the chart implementations remain separate until further implementation demonstrates that a shared abstraction is justified.
+
+## Synchronise Activity Details interaction using TrackPoint identity
+(02-10-2026)
+
+### Decision
+
+Use source TrackPointId as the common interaction identity between the Pace, Speed and Elevation charts and the Activity Map.
+
+Retain TrackPointId on calculated Pace and Speed observations and carry TrackPointId from TrackPointData into all chart presentation points.
+
+Coordinate synchronized Activity Details interaction through scoped presentation state in Heracles.Web. Chart hover publishes the selected TrackPointId, and other visible Activity Details components respond to that identity.
+
+Synchronize chart presentation using exact TrackPointId matching. When a selected TrackPoint has no valid Pace or Speed observation, display no synchronized selection on that chart rather than selecting a neighbouring observation.
+
+Display synchronized chart selection using the corresponding tooltip and a vertical crosshair.
+
+Resolve map selection directly from the source TrackPoint identified by TrackPointId and display a temporary marker at its recorded longitude and latitude. Do not calculate or interpolate a geographic position for synchronized selection.
+
+Keep the Activity Map passive for this interaction. Chart hover drives map selection; map interaction does not drive chart selection.
+
+Clear synchronized interaction state when chart hover ends and when the selected activity changes.
+
+Remove Stride from Pace and Speed calculation configuration. Calculate rolling Pace and Speed observations at every eligible TrackPointData centre while retaining the existing configurable WindowRadius and shrinking centred-window behaviour.
+
+The earlier Stride and explicit final-point decisions recorded in "Persist cumulative activity data for rolling pace calculation" and "Generalise persisted cumulative data as reusable TrackPointData" are superseded by this decision.
+
+### Rationale
+
+- Persisted TrackPointData means cumulative distance and active elapsed time are already available for every source TrackPoint, so stride-based sampling no longer avoids repeated geographic distance calculation.
+- Calculating Pace and Speed at every eligible track point simplifies their calculation loops and provides a higher-resolution series for synchronized interaction.
+- TrackPointId provides an exact identity shared by TrackPointData, calculated chart observations and the original geographic TrackPoint.
+- Using TrackPointId avoids approximate chart-to-chart matching based on cumulative distance.
+- Direct TrackPoint lookup allows the map marker to use the exact recorded geographic position without introducing distance interpolation.
+- A Pace or Speed observation can legitimately be absent when its rolling window has no positive distance or elapsed time. Leaving that chart unselected preserves exact identity rather than presenting a different point as equivalent.
+- Synchronized hover is presentation behaviour and therefore belongs in Heracles.Web rather than Application.
+- Scoped interaction state allows sibling Blazor components to coordinate without introducing a global JavaScript event bus.
+- Keeping Chart.js and Mapbox mechanics inside their existing colocated JavaScript modules preserves the established JavaScript ownership and lifecycle boundaries.
+- Making the map passive keeps the initial interaction model focused and avoids introducing additional map hit-testing and interaction behaviour without a demonstrated requirement.

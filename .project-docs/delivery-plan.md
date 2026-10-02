@@ -274,11 +274,12 @@ The complete import operation is coordinated through the Application layer, with
     - ✓ Keep Activity Navigation filtering independent of the currently displayed Activity Details.
     - ✓ Reset a persisted Activity Type to `All` when that type is no longer present in activity data.
 - ✓ Add pace chart
-    - ✓ Add configurable pace WindowRadius and Stride settings.
+    - ✓ Add configurable pace WindowRadius setting.
     - ✓ Persist cumulative distance and active elapsed time as derived activity data.
     - ✓ Generate missing cumulative track-point data lazily and reuse persisted data.
     - ✓ Exclude recording pauses and inter-segment geographic distance from cumulative track-point data.
     - ✓ Calculate pace using centred rolling windows over cumulative distance and active time.
+    - ✓ Calculate pace observations at every eligible track point.
     - ✓ Shrink calculation windows at activity boundaries.
     - ✓ Render pace against cumulative activity distance using Chart.js.
     - ✓ Present a continuous pace series across recording segments.
@@ -298,14 +299,24 @@ The complete import operation is coordinated through the Application layer, with
     - ✓ Reuse shared TrackPointData without changing its persisted representation.
     - ✓ Calculate speed from cumulative geographic distance and cumulative active elapsed time.
     - ✓ Apply the established centred rolling-window calculation behaviour.
+    - ✓ Calculate speed observations at every eligible track point.
     - ✓ Preserve shrinking calculation windows at activity boundaries.
-    - ✓ Preserve explicit inclusion of the final activity point.
     - ✓ Render speed against cumulative activity distance using Chart.js.
     - ✓ Display speed in kilometres per hour.
     - ✓ Display the Speed chart for Cycling activities instead of the Pace chart.
     - ✓ Retain the Pace chart for non-Cycling activities.
     - ✓ Support responsive presentation and live light/dark theme changes.
     - ✓ Verify speed calculation and conditional Pace/Speed chart presentation.
+- ✓ Synchronise Activity Details chart and map interaction.
+    - ✓ Use TrackPointId as the common interaction identity for Pace, Speed, Elevation and Activity Map.
+    - ✓ Remove Pace and Speed Stride configuration and calculate observations at every eligible track point.
+    - ✓ Synchronise chart hover state between the visible Pace/Speed chart and Elevation chart.
+    - ✓ Display synchronized chart tooltips and crosshairs.
+    - ✓ Display the corresponding recorded TrackPoint location on the Activity Map.
+    - ✓ Clear synchronized interaction state when chart hover ends or the selected activity changes.
+    - ✓ Leave Pace/Speed unselected when the synchronized TrackPoint has no valid Pace/Speed observation.
+    - ✓ Preserve existing chart responsiveness, theme behaviour and Activity Map presentation.
+    - ✓ Verify synchronized interaction for Pace, Speed, Elevation and Activity Map.
 - Add splits
 - Add ranking listing
 
