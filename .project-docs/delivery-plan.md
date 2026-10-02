@@ -294,7 +294,18 @@ The complete import operation is coordinated through the Application layer, with
     - ✓ Display elevation in metres and cumulative activity distance in kilometres.
     - ✓ Support responsive presentation and live light/dark theme changes.
     - ✓ Verify track-point data generation and persistence, existing pace behaviour and elevation-chart presentation.
-- Add speed chart
+- ✓ Add speed chart
+    - ✓ Reuse shared TrackPointData without changing its persisted representation.
+    - ✓ Calculate speed from cumulative geographic distance and cumulative active elapsed time.
+    - ✓ Apply the established centred rolling-window calculation behaviour.
+    - ✓ Preserve shrinking calculation windows at activity boundaries.
+    - ✓ Preserve explicit inclusion of the final activity point.
+    - ✓ Render speed against cumulative activity distance using Chart.js.
+    - ✓ Display speed in kilometres per hour.
+    - ✓ Display the Speed chart for Cycling activities instead of the Pace chart.
+    - ✓ Retain the Pace chart for non-Cycling activities.
+    - ✓ Support responsive presentation and live light/dark theme changes.
+    - ✓ Verify speed calculation and conditional Pace/Speed chart presentation.
 - Add splits
 - Add ranking listing
 

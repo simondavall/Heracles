@@ -13,11 +13,10 @@ where development should continue.
 
 # Current task
 
-- Add speed chart
+- Add splits
 
 # Remaining milestone tasks
 
-- Add splits
 - Add ranking listing
 
 # Completed work
@@ -284,3 +283,15 @@ where development should continue.
 - Added elevation-chart tooltip formatting and responsive presentation.
 - Added light and dark theme support to the elevation chart with live theme updates.
 - Verified TrackPointData generation and persistence, existing pace behaviour, elevation-chart presentation, activity navigation and light/dark theme behaviour.
+- Added a speed chart for Cycling activities in Activity Details.
+- Added SpeedService to calculate speed from the existing shared TrackPointData.
+- Reused the existing cumulative geographic distance and cumulative active elapsed time without changing TrackPointData persistence.
+- Implemented centred rolling-window speed calculation using cumulative distance and active-time differences.
+- Added Chart.js speed presentation through a colocated JavaScript ES module.
+- Displayed cumulative activity distance in kilometres against speed in kilometres per hour.
+- Added speed-chart tooltip formatting and responsive presentation.
+- Added light and dark theme support to the speed chart with live theme updates.
+- Changed Activity Details composition so Cycling activities display the Speed chart instead of the Pace chart.
+- Retained the Pace chart for all non-Cycling activities.
+- Added focused automated tests for SpeedService covering calculation, calculation boundaries, final-point inclusion and invalid calculation windows.
+- Verified speed calculation, conditional Pace/Speed presentation, activity navigation, Elevation presentation, responsive presentation and live light/dark theme behaviour.
