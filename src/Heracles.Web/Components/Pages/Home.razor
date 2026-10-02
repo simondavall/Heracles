@@ -2,6 +2,7 @@
 @page "/activity/{ActivityId:guid}"
 
 @using Heracles.Web.Components.Features.ActivityDetails
+@using Heracles.Web.Components.Features.ActivityDetails.Elevation
 @using Heracles.Web.Components.Features.ActivityDetails.Map
 @using Heracles.Web.Components.Features.ActivityDetails.Pace
 
@@ -17,6 +18,7 @@
             <MetricsBar Track="@_activity" />
             <ActivityMap Track="@_activity" />
             <ActivityPaceChart Track="@_activity" />
+            <ActivityElevationChart Track="@_activity" />
         }
     </main>
 </div>

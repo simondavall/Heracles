@@ -1,6 +1,5 @@
-﻿using System.Reflection;
-using Heracles.Application.Data;
-using Heracles.Application.Pace;
+﻿using Heracles.Application.Data;
+using Heracles.Application.TrackPoints;
 using Heracles.Application.Weather;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +14,7 @@ namespace Heracles.Infrastructure.Data
         public DbSet<TrackSegment> TrackSegments { get; set; }
         public DbSet<TrackPoint> TrackPoints { get; set; }
         public DbSet<ActivityWeather> ActivityWeather { get; set; }
-        public DbSet<PaceData> PaceData { get; set; }
+        public DbSet<TrackPointData> TrackPointData { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken()) {
             return await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
@@ -41,28 +40,28 @@ namespace Heracles.Infrastructure.Data
                     .OnDelete(DeleteBehavior.Cascade);
             });
             
-            modelBuilder.Entity<PaceData>(entity =>
+            modelBuilder.Entity<TrackPointData>(entity =>
             {
-                entity.ToTable("PaceData");
+                entity.ToTable("TrackPointData");
 
-                entity.HasKey(pace =>
+                entity.HasKey(data =>
                     new
                     {
-                        pace.TrackId,
-                        pace.Seq
+                        data.TrackId,
+                        data.Seq
                     });
 
-                entity.HasIndex(pace => pace.TrackPointId)
+                entity.HasIndex(data => data.TrackPointId)
                     .IsUnique();
 
-                entity.HasOne(pace => pace.Track)
+                entity.HasOne<Track>()
                     .WithMany()
-                    .HasForeignKey(pace => pace.TrackId)
+                    .HasForeignKey(data => data.TrackId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasOne(pace => pace.TrackPoint)
+                entity.HasOne<TrackPoint>()
                     .WithOne()
-                    .HasForeignKey<PaceData>(pace => pace.TrackPointId)
+                    .HasForeignKey<TrackPointData>(data => data.TrackPointId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
         }
