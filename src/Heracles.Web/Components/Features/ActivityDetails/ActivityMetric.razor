@@ -1,7 +1,18 @@
-﻿<div class="activity-metric">
+﻿<div class="@CssClass"
+     role="@Role"
+     tabindex="@TabIndex"
+     @onclick="OnClick"
+     @onkeydown="OnKeyDown">
     <MudText Typo="Typo.caption"
              Class="activity-metric-title">
         @Title
+
+        @if (IsActionable)
+        {
+            <MudIcon Icon="@Icons.Material.Filled.OpenInNew"
+                     Size="Size.Small"
+                     Class="activity-metric-action-icon" />
+        }
     </MudText>
 
     <div class="activity-metric-content">
@@ -23,13 +34,34 @@
 @code {
     [Parameter]
     public string Title { get; set; } = string.Empty;
-
     [Parameter]
     public string ImagePath { get; set; } = string.Empty;
-
     [Parameter]
     public string Value { get; set; } = string.Empty;
-
     [Parameter]
     public string? SecondaryValue { get; set; }
+    [Parameter]
+    public EventCallback Clicked { get; set; }
+
+    private bool IsActionable => Clicked.HasDelegate;
+
+    private string CssClass => IsActionable
+        ? "activity-metric activity-metric-actionable"
+        : "activity-metric";
+
+    private string? Role => IsActionable ? "button" : null;
+
+    private int? TabIndex => IsActionable ? 0 : null;
+
+    private async Task OnClick() {
+        if (IsActionable)
+            await Clicked.InvokeAsync();
+    }
+
+    private async Task OnKeyDown(KeyboardEventArgs args) {
+        if (!IsActionable || args.Key is not ("Enter" or " "))
+            return;
+
+        await Clicked.InvokeAsync();
+    }
 }

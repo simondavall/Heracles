@@ -3,6 +3,7 @@ using Heracles.Application.Configuration;
 using Heracles.Application.Import;
 using Heracles.Application.Pace;
 using Heracles.Application.Speed;
+using Heracles.Application.Splits;
 using Heracles.Application.TrackPoints;
 using Heracles.Application.Weather;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +20,7 @@ namespace Heracles.Application
             services.AddScoped<ITrackPointDataService, TrackPointDataService>();
             services.AddScoped<IPaceService, PaceService>();
             services.AddScoped<ISpeedService, SpeedService>();
+            services.AddScoped<ISplitService, SplitService>();
             
 
             services.AddSingleton(settings.Elevation);

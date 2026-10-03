@@ -7,6 +7,30 @@
     user-select: none;
 }
 
+.activity-metric-actionable {
+    cursor: pointer;
+    transition: background-color 120ms ease;
+}
+
+.activity-metric-actionable:hover {
+    background-color: color-mix(in srgb, var(--mud-palette-primary) 8%, transparent);
+}
+
+.activity-metric-actionable:focus-visible {
+    outline: 2px solid var(--mud-palette-primary);
+    outline-offset: -2px;
+}
+
+.activity-metric-actionable .activity-metric-title {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.activity-metric-action-icon {
+    opacity: 0.65;
+}
+
 .activity-metric-title {
     display: block;
     margin-bottom: 6px;
