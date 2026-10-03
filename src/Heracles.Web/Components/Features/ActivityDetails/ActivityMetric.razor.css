@@ -5,6 +5,7 @@
     border-right: 1px solid var(--mud-palette-divider);
     cursor: default;
     user-select: none;
+    position: relative;
 }
 
 .activity-metric-actionable {
@@ -21,13 +22,10 @@
     outline-offset: -2px;
 }
 
-.activity-metric-actionable .activity-metric-title {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.activity-metric-action-icon {
+.activity-metric ::deep .activity-metric-action-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
     opacity: 0.65;
 }
 
