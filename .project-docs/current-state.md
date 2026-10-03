@@ -5,19 +5,26 @@ where development should continue.
 
 # Current phase
 
-- Phase 4 – Activity Details Modules
+- Phase 5 – Dashboard and Reporting
 
 # Current milestone
 
-- Milestone 4.1 – Modules
+- Milestone 5.1 – Reports
 
 # Current task
 
-- Add ranking listing
+- Inventory existing reports
 
 # Remaining milestone tasks
 
-- None
+- Establish shared report components.
+- Migrate report selection.
+- Migrate report filtering.
+- Migrate report visualisations.
+- Migrate report tables.
+- Preserve existing calculations.
+- Verify report results against the existing application.
+- Verify responsive report presentation.
 
 # Completed work
 
@@ -323,17 +330,23 @@ where development should continue.
 - Added explicit pointer-move and pointer-leave lifecycle handling to Pace, Speed and Elevation chart JavaScript modules.
 - Verified smooth horizontal TrackPoint selection across the full plotting area for Pace, Speed and Elevation, including synchronized chart tooltips, crosshairs and Activity Map position.
 - Added Activity Splits accessible through the Average Pace metric.
-- Extended the reusable Activity Metric component with optional actionable behaviour and a lightweight visual indicator.
-- Added an Open Splits tooltip to the Average Pace action indicator.
-- Reused shared TrackPointData for split calculation without changing its persisted representation.
-- Calculated split boundaries at whole-kilometre intervals using linear interpolation of cumulative active time and elevation.
+- Extended Activity Metric with optional actionable behaviour and a lightweight visual indicator.
+- Reused shared TrackPointData for split calculation.
+- Calculated whole-kilometre split boundaries using linear interpolation of cumulative active time and elevation.
 - Calculated the final partial split using its actual remaining distance and normalized its split time to a comparable per-kilometre value.
 - Displayed cumulative distance, split time and net elevation difference for each split.
 - Added a compact non-modal Splits panel while retaining interaction with the underlying Activity Details page.
-- Added explicit close behaviour through the Splits panel close action.
-- Added draggable Splits panel positioning constrained to the browser viewport.
-- Added user-resizable Splits panel presentation without persisting panel size.
-- Limited the initial split-list presentation to approximately ten rows with vertical scrolling for longer activities.
-- Allowed additional split rows to become visible when the user enlarges the Splits panel.
-- Preserved compact content-sized presentation for shorter activities.
-- Verified split data, Average Pace interaction, Splits presentation, dragging, resizing, scrolling and continued Activity Details interaction.
+- Added draggable and resizable Splits panel behaviour with viewport constraints.
+- Limited the initial Splits presentation to approximately ten rows with scrolling for longer activities.
+- Verified split calculation, presentation, dragging, resizing, scrolling and Activity Details interaction.
+- Generalised actionable Activity Metric tooltip text for feature-specific actions.
+- Added a ranked activity list accessible through the Rank metric.
+- Reused the existing Application activity ranking calculation and ordered activity data.
+- Displayed the ranking distance range and rank, pace, date and distance for each ranked activity.
+- Highlighted the current activity within the ranked list.
+- Centred the initial ranked-list scroll position on the current activity where list boundaries permit.
+- Added direct navigation from ranked activities to their Activity Details pages.
+- Limited the initial ranked-list presentation to 30 activities while sizing shorter lists to their content.
+- Added draggable and resizable Ranked List panel behaviour with viewport constraints.
+- Verified ranking values, equal-pace ranking behaviour, current-activity highlighting, initial positioning, navigation, scrolling, dragging and resizing.
+- Completed Phase 4 – Activity Details Modules.
