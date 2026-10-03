@@ -17,7 +17,25 @@ public partial class MetricsBar
 
     private string Duration => ToFormattedString(Track.Duration);
 
+    private string Pace => ToFormattedString(Track.Pace);
+
     private bool _showSplits;
+    private bool _showRanking;
+
+    private ActivityRank? _activityRank;
+
+    private string Rank { get; set; } = string.Empty;
+    private string RankCount { get; set; } = string.Empty;
+
+    protected override async Task OnParametersSetAsync() {
+        _showSplits = false;
+        _showRanking = false;
+
+        _activityRank = await ActivityService.GetActivityRankAsync(Track);
+
+        Rank = _activityRank.Rank.ToString(CultureInfo.InvariantCulture);
+        RankCount = $"/{_activityRank.Count.ToString(CultureInfo.InvariantCulture)}";
+    }
 
     private void ShowSplits() {
         _showSplits = true;
@@ -26,20 +44,13 @@ public partial class MetricsBar
     private void CloseSplits() {
         _showSplits = false;
     }
-    
-    private string Pace => ToFormattedString(Track.Pace);
 
-    private string Rank { get; set; } = string.Empty;
+    private void ShowRanking() {
+        _showRanking = true;
+    }
 
-    private string RankCount { get; set; } = string.Empty;
-
-    protected override async Task OnParametersSetAsync() {
-        _showSplits = false;
-
-        var activityRank = await ActivityService.GetActivityRankAsync(Track);
-
-        Rank = activityRank.Rank.ToString(CultureInfo.InvariantCulture);
-        RankCount = $"/{activityRank.Count.ToString(CultureInfo.InvariantCulture)}";
+    private void CloseRanking() {
+        _showRanking = false;
     }
 
     private static string ToFormattedString(TimeSpan span) {

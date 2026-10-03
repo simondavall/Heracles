@@ -1,4 +1,6 @@
-﻿@using Heracles.Web.Components.Features.ActivityDetails.Splits
+﻿@using Heracles.Web.Components.Features.ActivityDetails.Ranking
+@using Heracles.Web.Components.Features.ActivityDetails.Splits
+
 <div class="metrics-bar">
     <ActivityMetric Title="km"
                     ImagePath="/images/metrics/distance.png"
@@ -11,16 +13,26 @@
     <ActivityMetric Title="Average Pace"
                     ImagePath="/images/metrics/pace_speed.png"
                     Value="@Pace"
+                    ActionTooltip="Open Splits"
                     Clicked="ShowSplits" />
 
     <ActivityMetric Title="Rank"
                     ImagePath="/images/metrics/rank.png"
                     Value="@Rank"
-                    SecondaryValue="@RankCount" />
+                    SecondaryValue="@RankCount"
+                    ActionTooltip="Open Ranked List"
+                    Clicked="ShowRanking" />
 </div>
 
 @if (_showSplits)
 {
     <ActivitySplits Track="@Track"
                     Closed="CloseSplits" />
+}
+
+@if (_showRanking && _activityRank is not null)
+{
+    <ActivityRanking Track="@Track"
+                     ActivityRank="@_activityRank"
+                     Closed="CloseRanking" />
 }

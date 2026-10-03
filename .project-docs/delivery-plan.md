@@ -330,7 +330,18 @@ The complete import operation is coordinated through the Application layer, with
     - ✓ Limit the initial list height and scroll longer split lists.
     - ✓ Close Splits explicitly through its close action.
     - ✓ Verify split calculation and Splits panel presentation and interaction.
-- Add ranking listing
+- ✓ Add ranking listing
+    - ✓ Make Rank an actionable Activity Metric using the established interaction pattern.
+    - ✓ Reuse the existing activity ranking calculation and ordered ranking data.
+    - ✓ Preserve equal ranking for activities with identical pace.
+    - ✓ Display the ranking distance range in kilometres.
+    - ✓ Display rank, pace, date and distance for ranked activities.
+    - ✓ Highlight the current activity in the ranked list.
+    - ✓ Centre the initial ranked-list scroll position on the current activity where possible.
+    - ✓ Link ranked activities directly to their Activity Details pages.
+    - ✓ Initially display up to 30 activities and scroll longer ranking lists.
+    - ✓ Support panel dragging and resizing within the viewport.
+    - ✓ Verify ranking data, navigation and ranking-list presentation and interaction.
 
 # Phase 5 – Dashboard and Reporting
 

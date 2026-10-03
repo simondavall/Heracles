@@ -1,0 +1,47 @@
+﻿@namespace Heracles.Web.Components.Features.ActivityDetails.Ranking
+
+<div @ref="_panel"
+     class="activity-ranking">
+    <header class="activity-ranking-header"
+            data-drag-handle>
+        <MudText Typo="Typo.h6">
+            @Title
+        </MudText>
+
+        <MudIconButton Icon="@Icons.Material.Filled.Close"
+                       Size="Size.Small"
+                       aria-label="Close ranked list"
+                       OnClick="Close" />
+    </header>
+
+    <div class="activity-ranking-table">
+        <div class="activity-ranking-row activity-ranking-column-header">
+            <span>Rank</span>
+            <span>Pace</span>
+            <span>Date</span>
+            <span>Distance</span>
+        </div>
+
+        <div class="activity-ranking-list"
+             data-ranking-list>
+            @for (var index = 0; index < ActivityRank.OrderedTracksInRange.Count; index++)
+            {
+                var rankedTrack = ActivityRank.OrderedTracksInRange[index];
+                var isCurrent = rankedTrack.Id == Track.Id;
+
+                <a href="@($"/activity/{rankedTrack.Id}")"
+                   class="@GetRowCssClass(isCurrent)"
+                   data-current-activity="@isCurrent.ToString().ToLowerInvariant()">
+                    <span>@(index + 1)</span>
+                    <span>@FormatPace(rankedTrack.Pace)</span>
+                    <span>@FormatDate(rankedTrack.Time)</span>
+                    <span>@FormatDistance(rankedTrack.Distance)</span>
+                </a>
+            }
+        </div>
+    </div>
+
+    <div class="activity-ranking-resize-handle"
+         data-resize-handle
+         aria-hidden="true"></div>
+</div>

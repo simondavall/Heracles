@@ -10,7 +10,7 @@
 
     @if (IsActionable)
     {
-        <MudTooltip Text="Open Splits">
+        <MudTooltip Text="@ActionTooltip">
             <MudIcon Icon="@Icons.Material.Filled.OpenInNew"
                      Size="Size.Small"
                      Class="activity-metric-action-icon" />
@@ -36,12 +36,19 @@
 @code {
     [Parameter]
     public string Title { get; set; } = string.Empty;
+
     [Parameter]
     public string ImagePath { get; set; } = string.Empty;
+
     [Parameter]
     public string Value { get; set; } = string.Empty;
+
     [Parameter]
     public string? SecondaryValue { get; set; }
+
+    [Parameter]
+    public string? ActionTooltip { get; set; }
+
     [Parameter]
     public EventCallback Clicked { get; set; }
 
