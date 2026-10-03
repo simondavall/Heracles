@@ -13,11 +13,11 @@ where development should continue.
 
 # Current task
 
-- Add splits
+- Add ranking listing
 
 # Remaining milestone tasks
 
-- Add ranking listing
+- None
 
 # Completed work
 
@@ -322,3 +322,18 @@ where development should continue.
 - Retained vertical pointer position only for determining whether the pointer is inside the chart plotting area; vertical proximity to the plotted line does not influence TrackPoint selection.
 - Added explicit pointer-move and pointer-leave lifecycle handling to Pace, Speed and Elevation chart JavaScript modules.
 - Verified smooth horizontal TrackPoint selection across the full plotting area for Pace, Speed and Elevation, including synchronized chart tooltips, crosshairs and Activity Map position.
+- Added Activity Splits accessible through the Average Pace metric.
+- Extended the reusable Activity Metric component with optional actionable behaviour and a lightweight visual indicator.
+- Added an Open Splits tooltip to the Average Pace action indicator.
+- Reused shared TrackPointData for split calculation without changing its persisted representation.
+- Calculated split boundaries at whole-kilometre intervals using linear interpolation of cumulative active time and elevation.
+- Calculated the final partial split using its actual remaining distance and normalized its split time to a comparable per-kilometre value.
+- Displayed cumulative distance, split time and net elevation difference for each split.
+- Added a compact non-modal Splits panel while retaining interaction with the underlying Activity Details page.
+- Added explicit close behaviour through the Splits panel close action.
+- Added draggable Splits panel positioning constrained to the browser viewport.
+- Added user-resizable Splits panel presentation without persisting panel size.
+- Limited the initial split-list presentation to approximately ten rows with vertical scrolling for longer activities.
+- Allowed additional split rows to become visible when the user enlarges the Splits panel.
+- Preserved compact content-sized presentation for shorter activities.
+- Verified split data, Average Pace interaction, Splits presentation, dragging, resizing, scrolling and continued Activity Details interaction.

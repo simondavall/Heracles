@@ -17,6 +17,16 @@ public partial class MetricsBar
 
     private string Duration => ToFormattedString(Track.Duration);
 
+    private bool _showSplits;
+
+    private void ShowSplits() {
+        _showSplits = true;
+    }
+
+    private void CloseSplits() {
+        _showSplits = false;
+    }
+    
     private string Pace => ToFormattedString(Track.Pace);
 
     private string Rank { get; set; } = string.Empty;
@@ -24,6 +34,8 @@ public partial class MetricsBar
     private string RankCount { get; set; } = string.Empty;
 
     protected override async Task OnParametersSetAsync() {
+        _showSplits = false;
+
         var (rank, count) = await ActivityService.GetActivityRankAsync(Track);
 
         Rank = rank.ToString(CultureInfo.InvariantCulture);

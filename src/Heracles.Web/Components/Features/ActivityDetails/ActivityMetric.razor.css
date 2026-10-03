@@ -5,6 +5,28 @@
     border-right: 1px solid var(--mud-palette-divider);
     cursor: default;
     user-select: none;
+    position: relative;
+}
+
+.activity-metric-actionable {
+    cursor: pointer;
+    transition: background-color 120ms ease;
+}
+
+.activity-metric-actionable:hover {
+    background-color: color-mix(in srgb, var(--mud-palette-primary) 8%, transparent);
+}
+
+.activity-metric-actionable:focus-visible {
+    outline: 2px solid var(--mud-palette-primary);
+    outline-offset: -2px;
+}
+
+.activity-metric ::deep .activity-metric-action-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    opacity: 0.65;
 }
 
 .activity-metric-title {

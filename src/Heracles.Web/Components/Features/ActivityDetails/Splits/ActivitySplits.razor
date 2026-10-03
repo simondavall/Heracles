@@ -1,0 +1,58 @@
+﻿@namespace Heracles.Web.Components.Features.ActivityDetails.Splits
+
+<div @ref="_panel"
+     class="activity-splits">
+    <header class="activity-splits-header"
+            data-drag-handle>
+        <MudText Typo="Typo.h6">
+            Splits
+        </MudText>
+
+        <MudIconButton Icon="@Icons.Material.Filled.Close"
+                       Size="Size.Small"
+                       aria-label="Close splits"
+                       OnClick="Close" />
+    </header>
+
+    @if (_splits is null)
+    {
+        <div class="activity-splits-status">
+            <MudProgressCircular Indeterminate="true"
+                                 Size="Size.Small" />
+        </div>
+    }
+    else if (_splits.Count == 0)
+    {
+        <div class="activity-splits-status">
+            <MudText Typo="Typo.body2">
+                No split data available.
+            </MudText>
+        </div>
+    }
+    else
+    {
+        <div class="activity-splits-table">
+            <div class="activity-splits-row activity-splits-column-header">
+                <span>Distance</span>
+                <span>Split Time</span>
+                <span>Elevation</span>
+            </div>
+
+            <div class="activity-splits-list">
+                @foreach (var split in _splits)
+                {
+                    <div class="activity-splits-row">
+                        <span>@FormatDistance(split.Distance)</span>
+                        <span>@FormatSplitTime(split.SecondsPerKilometre)</span>
+                        <span>@FormatElevation(split.ElevationDifference)</span>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    
+    <div class="activity-splits-resize-handle"
+         data-resize-handle
+         aria-hidden="true"></div>
+    
+</div>
