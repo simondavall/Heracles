@@ -268,12 +268,16 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 - Use source TrackPointId as the common interaction identity between Activity Details charts and the Activity Map.
 - Keep synchronized interaction state within Heracles.Web because it is presentation state rather than application-domain state.
 - Use scoped Activity Details interaction state to coordinate sibling presentation components.
-- Publish chart hover selection as TrackPointId rather than cumulative distance.
+- Treat the full chart plotting area as the Activity Details chart interaction surface.
+- Resolve source-chart pointer selection solely from horizontal cumulative-distance position by selecting the chart point whose distance is closest to the pointer's X-axis value.
+- Do not use vertical proximity to the plotted line when determining the selected TrackPoint.
+- Publish the resulting TrackPointId as the synchronized selection rather than cumulative distance.
+- Use the same selected TrackPointId for the source chart's point, tooltip and crosshair.
 - Synchronize Pace/Speed and Elevation chart selection using exact TrackPointId matching.
 - Do not substitute a neighbouring Pace/Speed observation when the selected TrackPointId has no valid Pace/Speed observation.
 - Display synchronized chart selection using the chart tooltip and a vertical crosshair.
 - Resolve Activity Map selection directly from the source TrackPointId and use the recorded longitude and latitude.
 - Do not calculate or interpolate geographic position for synchronized map selection.
 - Keep the Activity Map passive; chart interaction drives map selection, while map interaction does not drive chart selection.
-- Clear synchronized interaction when chart hover ends or the selected activity changes.
+- Clear synchronized interaction when the pointer leaves the chart or the selected activity changes.
 - Keep Chart.js and Mapbox-specific synchronized presentation behaviour within their owning Web components and colocated JavaScript modules.

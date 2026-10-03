@@ -310,8 +310,9 @@ The complete import operation is coordinated through the Application layer, with
 - ✓ Synchronise Activity Details chart and map interaction.
     - ✓ Use TrackPointId as the common interaction identity for Pace, Speed, Elevation and Activity Map.
     - ✓ Remove Pace and Speed Stride configuration and calculate observations at every eligible track point.
-    - ✓ Synchronise chart hover state between the visible Pace/Speed chart and Elevation chart.
-    - ✓ Display synchronized chart tooltips and crosshairs.
+    - ✓ Synchronise chart pointer state between the visible Pace/Speed chart and Elevation chart using the nearest TrackPoint by horizontal activity distance.
+    - ✓ Use the full chart plotting area as the interaction surface without requiring the pointer to be close to the plotted line.
+    - ✓ Display synchronized chart tooltips and crosshairs at the selected TrackPoint.
     - ✓ Display the corresponding recorded TrackPoint location on the Activity Map.
     - ✓ Clear synchronized interaction state when chart hover ends or the selected activity changes.
     - ✓ Leave Pace/Speed unselected when the synchronized TrackPoint has no valid Pace/Speed observation.

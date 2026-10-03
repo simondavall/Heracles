@@ -46,14 +46,65 @@ export async function createPaceChart(canvas, data, dotNetReference) {
 
     const chart = new Chart(
         canvas,
-        createConfiguration(
-            data,
-            dotNetReference,
-            () => disposed,
-            trackPointId => { hoveredTrackPointId = trackPointId; },
-            () => hoveredTrackPointId
-        )
+        createConfiguration(data)
     );
+
+    const onPointerMove = event => {
+        if (disposed)
+            return;
+
+        const rect = canvas.getBoundingClientRect();
+
+        const mouseX = event.clientX - rect.left;
+
+        if (
+            mouseX < chart.chartArea.left
+            || mouseX > chart.chartArea.right
+            || event.clientY - rect.top < chart.chartArea.top 
+            || event.clientY - rect.top > chart.chartArea.bottom
+        )
+            return;
+
+        const distance = chart.scales.x.getValueForPixel(mouseX);
+        const points = chart.data.datasets[0].data;
+
+        if (points.length === 0)
+            return;
+
+        let nearestPoint = points[0];
+        let nearestDistance = Math.abs(points[0].x - distance);
+
+        for (let index = 1; index < points.length; index++) {
+            const candidateDistance = Math.abs(points[index].x - distance);
+
+            if (candidateDistance >= nearestDistance)
+                continue;
+
+            nearestPoint = points[index];
+            nearestDistance = candidateDistance;
+        }
+
+        if (nearestPoint.trackPointId === hoveredTrackPointId)
+            return;
+
+        hoveredTrackPointId = nearestPoint.trackPointId;
+        selectTrackPoint(chart, nearestPoint.trackPointId);
+
+        void dotNetReference.invokeMethodAsync("SelectTrackPoint", nearestPoint.trackPointId);
+    };
+
+    const onPointerLeave = () => {
+        if (disposed || hoveredTrackPointId === null)
+            return;
+
+        hoveredTrackPointId = null;
+        selectTrackPoint(chart, null);
+
+        void dotNetReference.invokeMethodAsync("ClearTrackPoint");
+    };
+
+    canvas.addEventListener("pointermove", onPointerMove);
+    canvas.addEventListener("pointerleave", onPointerLeave);
     
     let darkTheme = isDarkTheme();
 
@@ -99,20 +150,25 @@ export async function createPaceChart(canvas, data, dotNetReference) {
         update(data) {
             chart.data.datasets[0].data = createPoints(data);
             chart.options.scales.x.max = getMaximumDistance(data);
+
+            chart.update("none");
+
             selectTrackPoint(chart, selectedTrackPointId);
-            chart.update();
         },
 
         selectTrackPoint(trackPointId) {
             selectedTrackPointId = trackPointId;
             selectTrackPoint(chart, trackPointId);
         },
-        
+
         dispose() {
             if (disposed)
                 return;
 
             disposed = true;
+
+            canvas.removeEventListener("pointermove", onPointerMove);
+            canvas.removeEventListener("pointerleave", onPointerLeave);
 
             themeObserver.disconnect();
             chart.destroy();
@@ -120,12 +176,7 @@ export async function createPaceChart(canvas, data, dotNetReference) {
     };
 }
 
-function createConfiguration(
-    data,
-    dotNetReference,
-    isDisposed,
-    setHoveredTrackPointId,
-    getHoveredTrackPointId) {
+function createConfiguration(data) {
     
     const configuration = {
         type: "line",
@@ -153,40 +204,9 @@ function createConfiguration(
             animation: false,
 
             interaction: {
-                mode: "nearest",
+                mode: "index",
+                axis: "x",
                 intersect: false
-            },
-            
-            onHover(event, activeElements, chart) {
-                if (isDisposed())
-                    return;
-
-                if (activeElements.length === 0) {
-                    if (getHoveredTrackPointId() !== null) {
-                        setHoveredTrackPointId(null);
-                        void dotNetReference.invokeMethodAsync("ClearTrackPoint");
-                    }
-
-                    return;
-                }
-
-                const point = chart.data.datasets[0].data[activeElements[0].index];
-
-                if (point.trackPointId === getHoveredTrackPointId())
-                    return;
-
-                setHoveredTrackPointId(point.trackPointId);
-
-                void dotNetReference.invokeMethodAsync("SelectTrackPoint", point.trackPointId);
-            },
-
-            onLeave() {
-                if (isDisposed() || getHoveredTrackPointId() === null)
-                    return;
-
-                setHoveredTrackPointId(null);
-
-                void dotNetReference.invokeMethodAsync("ClearTrackPoint");
             },
             
             plugins: {
