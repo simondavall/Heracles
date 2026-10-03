@@ -3,8 +3,10 @@ using Heracles.Application;
 using Heracles.Application.Configuration;
 using Heracles.Infrastructure;
 using Heracles.Web.Components;
+using Heracles.Web.Components.Features.ActivityDetails;
 using Heracles.Web.Components.Features.Authentication;
 using Heracles.Web.Components.Features.DataProtection;
+using Heracles.Web.Components.Features.HostApplicationLifetime;
 using Heracles.Web.Components.Features.UserState;
 using Microsoft.AspNetCore.Authorization;
 using MudBlazor.Services;
@@ -28,16 +30,15 @@ builder.Services.AddSerilog((services, configuration) => configuration
     .ReadFrom.Services(services));
 
 var settings = HeraclesSettings.Create(builder.Configuration);
-builder.Services.AddSingleton(settings.Mapbox);
-builder.Services.AddSingleton(settings.Import);
 
-builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddApplication();
+builder.Services.AddInfrastructure(settings.Database);
+builder.Services.AddApplication(settings);
 
 builder.Services.AddHeraclesDataProtection(settings.DataProtection);
 builder.Services.AddHeraclesAuthentication(settings.OpenIdConnect);
 
 builder.Services.AddScoped<UserStateService>();
+builder.Services.AddScoped<ActivityDetailsInteractionService>();
 
 builder.Services.AddMudServices();
 
@@ -45,6 +46,10 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 var app = builder.Build();
+
+app.UseHostApplicationLifetime();
+
+await app.UseMigrationsAsync();
 
 if (!app.Environment.IsDevelopment()) {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);

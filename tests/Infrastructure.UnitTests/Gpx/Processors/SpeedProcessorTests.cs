@@ -1,6 +1,5 @@
-﻿using System;
-using FluentAssertions;
-using Heracles.Application.TrackAggregate;
+﻿using FluentAssertions;
+using Heracles.Application.Data;
 using Heracles.Infrastructure.Gpx.Processors;
 using NUnit.Framework;
 
@@ -9,13 +8,14 @@ namespace Heracles.Infrastructure.UnitTests.Gpx.Processors
     [TestFixture]
     public class SpeedProcessorTests
     {
-        private Track _track;
+        private Track _track = new() {Name = string.Empty};
 
         [SetUp]
         public void BeforeEachTest()
         {
             _track = new Track
             {
+                Name = string.Empty,
                 Duration = new TimeSpan(0, 0, 30, 0),
                 Distance = 6
             };

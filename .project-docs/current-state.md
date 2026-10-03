@@ -5,19 +5,26 @@ where development should continue.
 
 # Current phase
 
-- Phase 4 – Dashboard and Reporting
+- Phase 5 – Dashboard and Reporting
 
 # Current milestone
 
-- Milestone 4.1 – Reports
+- Milestone 5.1 – Reports
 
 # Current task
 
-- Inventory existing reports.
+- Inventory existing reports
 
 # Remaining milestone tasks
 
-- None
+- Establish shared report components.
+- Migrate report selection.
+- Migrate report filtering.
+- Migrate report visualisations.
+- Migrate report tables.
+- Preserve existing calculations.
+- Verify report results against the existing application.
+- Verify responsive report presentation.
 
 # Completed work
 
@@ -218,3 +225,128 @@ where development should continue.
 - Implemented operation-level error reporting for persistence failures.
 - Implemented theme-aware import presentation using MudBlazor and isolated CSS.
 - Successfully verified an import containing 180 files in a single operation.
+- Replaced SQL Server with SQLite as the exclusive activity database provider.
+- Removed SQL Server provider dependencies and obsolete SQL Server migrations.
+- Generated a new initial SQLite migration.
+- Updated Infrastructure registration to consume validated HeraclesSettings instead of IConfiguration.
+- Removed the obsolete HeraclesAuthDb configuration.
+- Introduced an EF Core design-time context factory for migration generation.
+- Created and verified the SQLite database.
+- Successfully reimported GPX activity data.
+- Implemented historical weather retrieval for activities.
+- Integrated weather information into the Activity Title component.
+- Added weather condition icons and apparent-temperature presentation.
+- Introduced the Application weather service and provider abstraction.
+- Implemented historical weather retrieval through Visual Crossing.
+- Implemented an alternative historical weather provider using Open-Meteo.
+- Introduced a provider-independent WeatherCode enumeration.
+- Implemented provider-specific translation into the common weather model.
+- Selected the first recorded GPS point as the weather lookup location.
+- Selected the activity midpoint as the weather lookup timestamp.
+- Added persistent activity weather storage using SQLite.
+- Implemented retrieval of previously cached activity weather.
+- Established provider selection through Infrastructure dependency injection.
+- Added focused automated tests for WeatherService, OpenMeteoWeatherProvider and VisualCrossingWeatherProvider.
+- Successfully executed the weather unit tests.
+- Verified the Visual Crossing historical hourly response against actual activity data.
+- Added a set of weather images.
+- Added Activity Type filtering to Activity Navigation.
+- Added a persisted Activity Type preference to the existing browser-local UserState.
+- Added an Activity Type selector with `All` representing the unfiltered activity view.
+- Populated available Activity Types dynamically from the distinct types present in activity data.
+- Added Activity Type filtering to activity year counts, month counts and activity lists.
+- Added Activity Type filtering to most-recent-activity retrieval.
+- Preserved explicit `/activity/{id}` routes independently of the persisted Activity Type filter.
+- Reset persisted Activity Type selections to `All` when the selected type is no longer present in activity data.
+- Added a pace chart to Activity Details.
+- Added validated application-wide pace calculation settings for WindowRadius and Stride.
+- Introduced a shared track-point geographic distance calculator using the established Haversine calculation.
+- Reused the shared geographic distance calculation for Activity Map distance markers.
+- Added lazy generation and reuse of persisted pace data through the Application pace service and Infrastructure pace repository.
+- Implemented configurable centred rolling-window pace calculation using cumulative distance and active-time differences.
+- Implemented shrinking calculation windows at the beginning and end of an activity.
+- Preserved the final activity point when the configured stride does not naturally reach it.
+- Added Chart.js pace presentation through a colocated JavaScript ES module.
+- Displayed cumulative activity distance against pace with faster pace higher on the chart.
+- Added pace-chart tooltip formatting and responsive presentation.
+- Added light and dark theme support with live theme updates.
+- Verified pace calculation, persistence, activity navigation and chart presentation.
+- Generalised the persisted cumulative data originally introduced for pace calculation into reusable TrackPointData.
+- Replaced the pace-specific Application pace-data persistence responsibility with TrackPointDataService and ITrackPointDataRepository.
+- Replaced the Infrastructure pace repository with TrackPointDataRepository.
+- Moved lazy generation and reuse of cumulative track-point data from PaceService into TrackPointDataService.
+- Changed derived track-point persistence from replacement semantics to create-once SaveAsync semantics.
+- Established imported TrackPoint data as immutable after persistence and removed completeness checking of existing derived track-point data.
+- Retained TrackPointData as regenerable derived data that may be deleted and reconstructed when its calculation or representation changes.
+- Persisted recorded elevation alongside activity-wide sequence, cumulative geographic distance and cumulative active elapsed time in TrackPointData.
+- Retained the established cumulative-distance and active-time behaviour across recording segments, with neither elapsed time nor geographic distance added between segments.
+- Refactored PaceService to consume shared TrackPointData while retaining responsibility for pace-specific rolling-window calculation.
+- Updated pace service automated tests to reflect the separation between shared track-point data generation and pace calculation.
+- Added focused automated tests for TrackPointDataService, including persistence, activity-wide sequencing, segment-boundary behaviour, source TrackPoint identity and elevation.
+- Added an elevation chart below the pace chart in Activity Details.
+- Displayed recorded elevation in metres against cumulative activity distance in kilometres.
+- Reused persisted TrackPointData for elevation presentation rather than independently recalculating cumulative activity distance.
+- Added Chart.js elevation presentation through a colocated JavaScript ES module.
+- Added elevation-chart tooltip formatting and responsive presentation.
+- Added light and dark theme support to the elevation chart with live theme updates.
+- Verified TrackPointData generation and persistence, existing pace behaviour, elevation-chart presentation, activity navigation and light/dark theme behaviour.
+- Added a speed chart for Cycling activities in Activity Details.
+- Added SpeedService to calculate speed from the existing shared TrackPointData.
+- Reused the existing cumulative geographic distance and cumulative active elapsed time without changing TrackPointData persistence.
+- Implemented centred rolling-window speed calculation using cumulative distance and active-time differences.
+- Added Chart.js speed presentation through a colocated JavaScript ES module.
+- Displayed cumulative activity distance in kilometres against speed in kilometres per hour.
+- Added speed-chart tooltip formatting and responsive presentation.
+- Added light and dark theme support to the speed chart with live theme updates.
+- Changed Activity Details composition so Cycling activities display the Speed chart instead of the Pace chart.
+- Retained the Pace chart for all non-Cycling activities.
+- Added focused automated tests for SpeedService covering calculation, calculation boundaries, final-point inclusion and invalid calculation windows.
+- Verified speed calculation, conditional Pace/Speed presentation, activity navigation, Elevation presentation, responsive presentation and live light/dark theme behaviour.
+- Added configurable minimum elevation-chart range through ElevationSettings.
+- Applied the configured minimum range when an activity's recorded elevation variation is smaller than the minimum.
+- Centred the minimum elevation range around the midpoint of the activity's recorded elevation range.
+- Added synchronized interaction between Activity Details charts and the Activity Map.
+- Established source TrackPointId as the common presentation interaction identity across Pace, Speed, Elevation and Activity Map.
+- Added TrackPointId to Pace and Speed observations and to Pace, Speed and Elevation chart points.
+- Removed the Pace and Speed Stride settings because persisted TrackPointData removes the need to reduce rolling-calculation sampling.
+- Changed PaceService and SpeedService to calculate observations at every eligible TrackPointData centre while retaining their existing configurable WindowRadius values.
+- Removed the obsolete special handling that explicitly included the final Pace/Speed observation when stride sampling did not reach it.
+- Retained the existing behaviour of omitting Pace/Speed observations when their rolling calculation window has no valid distance or elapsed time.
+- Added scoped Activity Details interaction state in Heracles.Web to coordinate presentation components without introducing interaction concerns into Application.
+- Added synchronized Pace/Speed and Elevation chart hover state using exact TrackPointId matching.
+- Added synchronized Chart.js tooltips and vertical crosshairs.
+- Kept missing synchronized Pace/Speed observations unselected rather than substituting a neighbouring chart point.
+- Added a temporary Activity Map selection marker at the exact recorded longitude and latitude of the synchronized TrackPoint.
+- Kept the Activity Map passive so chart interaction drives the map without introducing map-to-chart interaction.
+- Cleared synchronized interaction state when chart hover ends and when the selected activity changes.
+- Preserved existing Activity Map route, distance-marker, start/finish/pause/resume marker and transition behaviour.
+- Preserved existing chart responsive presentation and live light/dark theme behaviour.
+- Updated PaceService and SpeedService tests for per-track-point observation generation and TrackPointId propagation.
+- Verified synchronized interaction for non-Cycling Pace activities and Cycling Speed activities, including Elevation and Activity Map synchronization, missing observations, activity navigation, responsive presentation and theme changes.
+- Refined Activity Details chart interaction so the full chart plotting area acts as the pointer interaction surface.
+- Changed Pace, Speed and Elevation chart pointer selection to resolve the nearest chart point solely from horizontal cumulative-distance position rather than two-dimensional proximity to the plotted line.
+- Made the locally displayed chart point, tooltip and crosshair use the same TrackPointId selected by the synchronized interaction.
+- Retained vertical pointer position only for determining whether the pointer is inside the chart plotting area; vertical proximity to the plotted line does not influence TrackPoint selection.
+- Added explicit pointer-move and pointer-leave lifecycle handling to Pace, Speed and Elevation chart JavaScript modules.
+- Verified smooth horizontal TrackPoint selection across the full plotting area for Pace, Speed and Elevation, including synchronized chart tooltips, crosshairs and Activity Map position.
+- Added Activity Splits accessible through the Average Pace metric.
+- Extended Activity Metric with optional actionable behaviour and a lightweight visual indicator.
+- Reused shared TrackPointData for split calculation.
+- Calculated whole-kilometre split boundaries using linear interpolation of cumulative active time and elevation.
+- Calculated the final partial split using its actual remaining distance and normalized its split time to a comparable per-kilometre value.
+- Displayed cumulative distance, split time and net elevation difference for each split.
+- Added a compact non-modal Splits panel while retaining interaction with the underlying Activity Details page.
+- Added draggable and resizable Splits panel behaviour with viewport constraints.
+- Limited the initial Splits presentation to approximately ten rows with scrolling for longer activities.
+- Verified split calculation, presentation, dragging, resizing, scrolling and Activity Details interaction.
+- Generalised actionable Activity Metric tooltip text for feature-specific actions.
+- Added a ranked activity list accessible through the Rank metric.
+- Reused the existing Application activity ranking calculation and ordered activity data.
+- Displayed the ranking distance range and rank, pace, date and distance for each ranked activity.
+- Highlighted the current activity within the ranked list.
+- Centred the initial ranked-list scroll position on the current activity where list boundaries permit.
+- Added direct navigation from ranked activities to their Activity Details pages.
+- Limited the initial ranked-list presentation to 30 activities while sizing shorter lists to their content.
+- Added draggable and resizable Ranked List panel behaviour with viewport constraints.
+- Verified ranking values, equal-pace ranking behaviour, current-activity highlighting, initial positioning, navigation, scrolling, dragging and resizing.
+- Completed Phase 4 – Activity Details Modules.

@@ -1,4 +1,12 @@
-﻿# Phase 1 – Application Foundation
+﻿# Heracles.Web Roadmap
+
+This roadmap describes the high-level delivery phases for Heracles.Web.
+
+The delivery plan defines the milestones, implementation tasks and delivery sequence within each phase.
+
+---
+
+# Phase 1 – Application Foundation
 
 **Goal**
 
@@ -6,18 +14,20 @@ Establish the technical, architectural and presentation foundation for Heracles.
 
 **Includes**
 
-- Establish the Blazor application structure.
+- Establish the .NET 10 Blazor application structure.
 - Configure MudBlazor.
+- Integrate existing Application and Infrastructure functionality.
+- Establish application configuration and logging.
+- Integrate authentication and Data Protection.
+- Establish browser-local user state.
 - Establish the Heracles design system.
-- Establish the shared application layout.
-- Establish responsive design.
-- Integrate authentication and user context.
-- Integrate the existing Heracles application functionality.
-- Establish project documentation and implementation patterns.
+- Implement theme switching.
+- Create the responsive application shell and primary navigation.
+- Establish the staging environment.
 
 **Deliverable**
 
-A runnable Heracles.Web application with the shared application foundation required for feature development.
+A runnable Heracles.Web application with the technical and presentation foundation required for feature development.
 
 ---
 
@@ -30,14 +40,16 @@ Provide the core Heracles activity browsing and viewing experience.
 **Includes**
 
 - Activity navigation.
-- Activity details.
+- Activity title.
 - Activity metrics.
-- Activity maps.
-- Activity management.
+- Activity Map.
+- Recorded activity routes.
+- Geographic event markers.
+- Activity distance markers.
 
 **Deliverable**
 
-Users can browse, view and manage their activities through Heracles.Web.
+Users can browse existing activities and view their principal activity information and recorded routes.
 
 ---
 
@@ -49,19 +61,41 @@ Provide the Heracles activity import experience.
 
 **Includes**
 
-- GPX file import.
-- TCX file import.
-- FIT file import.
-- Multiple-file import.
-- Import progress and results.
+- Multiple-file GPX import.
+- File selection and drag-and-drop.
+- Import validation and duplicate detection.
+- Transactional persistence.
+- Import progress and cancellation.
+- Import results and error reporting.
 
 **Deliverable**
 
-Users can import supported activity files through Heracles.Web.
+Users can import multiple GPX activity files directly through Heracles.Web.
 
 ---
 
-# Phase 4 – Dashboard and Reporting
+# Phase 4 – Activity Details Modules
+
+**Goal**
+
+Complete the additional activity detail modules.
+
+**Includes**
+
+- Weather details.
+- Activity Type filtering.
+- Pace chart.
+- Elevation chart.
+- Splits.
+- Ranking listing.
+
+**Deliverable**
+
+Users can view the additional information and visualisations associated with their activities.
+
+---
+
+# Phase 5 – Dashboard and Reporting
 
 **Goal**
 
@@ -69,11 +103,14 @@ Provide the Heracles dashboard and reporting experience.
 
 **Includes**
 
-- Dashboard.
-- Activity summaries.
-- Reports.
-- Report filtering.
-- Report visualisations.
+- Inventory and migrate existing reports.
+- Establish shared reporting components.
+- Implement report selection and filtering.
+- Migrate report visualisations and tables.
+- Preserve existing calculations.
+- Implement the dashboard.
+- Display activity summaries.
+- Provide responsive presentation.
 
 **Deliverable**
 
@@ -81,69 +118,28 @@ Users can view their activity information, summaries and reports through Heracle
 
 ---
 
-# Phase 5 – User Experience
-
-**Goal**
-
-Provide a polished and responsive Heracles experience across supported devices.
-
-**Includes**
-
-- Responsive layouts.
-- Navigation improvements.
-- Accessibility improvements.
-- Loading feedback.
-- Validation and error presentation.
-- Visual refinement.
-- Performance refinement.
-
-**Deliverable**
-
-Heracles.Web provides a consistent, responsive and accessible experience across supported devices.
-
----
-
 # Phase 6 – User Preferences and Settings
 
 **Goal**
 
-Provide user preferences and existing Heracles settings functionality.
+Provide user preferences and required application settings functionality.
 
 **Includes**
 
-- Theme preferences.
-- Preference persistence.
-- User-interface preferences.
-- Application settings.
+- Preserve existing theme preference functionality.
+- Identify additional user-interface preferences.
+- Establish the required preference storage strategy.
+- Inventory existing application settings.
+- Migrate required settings screens.
+- Preserve existing settings behaviour.
+- Verify settings validation and persistence.
 
 **Deliverable**
 
-Users can configure Heracles.Web and retain their application preferences.
-
----
-
-# Phase 7 – Production Readiness
-
-**Goal**
-
-Prepare Heracles.Web to replace the existing Heracles Web UI in production.
-
-**Includes**
-
-- Feature parity.
-- Application hardening.
-- Security review.
-- Performance review.
-- Browser and device testing.
-- Accessibility testing.
-- Production deployment and cutover.
-
-**Deliverable**
-
-Heracles.Web is deployed and provides the Web UI for the Heracles application.
+Users can personalise Heracles.Web and manage the required application settings.
 
 ---
 
 # Future Enhancements
 
-Future enhancements outside the planned implementation phases will be recorded here as the project evolves.
+Future enhancements outside the planned implementation phases are recorded in `backlog.md`.

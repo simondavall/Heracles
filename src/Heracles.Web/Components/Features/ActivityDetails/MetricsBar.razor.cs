@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
-using Heracles.Application.Interfaces;
-using Heracles.Application.TrackAggregate;
+using Heracles.Application.Activities;
+using Heracles.Application.Data;
 using Microsoft.AspNetCore.Components;
 
 namespace Heracles.Web.Components.Features.ActivityDetails;
@@ -19,15 +19,38 @@ public partial class MetricsBar
 
     private string Pace => ToFormattedString(Track.Pace);
 
-    private string Rank { get; set; } = string.Empty;
+    private bool _showSplits;
+    private bool _showRanking;
 
+    private ActivityRank? _activityRank;
+
+    private string Rank { get; set; } = string.Empty;
     private string RankCount { get; set; } = string.Empty;
 
     protected override async Task OnParametersSetAsync() {
-        var (rank, count) = await ActivityService.GetActivityRankAsync(Track);
+        _showSplits = false;
+        _showRanking = false;
 
-        Rank = rank.ToString(CultureInfo.InvariantCulture);
-        RankCount = $"/{count.ToString(CultureInfo.InvariantCulture)}";
+        _activityRank = await ActivityService.GetActivityRankAsync(Track);
+
+        Rank = _activityRank.Rank.ToString(CultureInfo.InvariantCulture);
+        RankCount = $"/{_activityRank.Count.ToString(CultureInfo.InvariantCulture)}";
+    }
+
+    private void ShowSplits() {
+        _showSplits = true;
+    }
+
+    private void CloseSplits() {
+        _showSplits = false;
+    }
+
+    private void ShowRanking() {
+        _showRanking = true;
+    }
+
+    private void CloseRanking() {
+        _showRanking = false;
     }
 
     private static string ToFormattedString(TimeSpan span) {

@@ -1,7 +1,6 @@
-﻿using System;
-using FluentAssertions;
-using Heracles.Application.Enums;
-using Heracles.Application.TrackAggregate;
+﻿using FluentAssertions;
+using Heracles.Application.Activities;
+using Heracles.Application.Data;
 using Heracles.Infrastructure.Gpx.Processors;
 using NUnit.Framework;
 
@@ -14,6 +13,7 @@ namespace Heracles.Infrastructure.UnitTests.Gpx.Processors
         {
             var track = new Track
             {
+                Name = string.Empty,
                 ActivityType = ActivityType.Running,
                 Duration = TimeSpan.FromMinutes(30)
             };
@@ -28,6 +28,7 @@ namespace Heracles.Infrastructure.UnitTests.Gpx.Processors
         {
             var track = new Track
             {
+                Name = string.Empty,
                 ActivityType = ActivityType.Running,
                 Duration = TimeSpan.Zero
             };
@@ -42,6 +43,7 @@ namespace Heracles.Infrastructure.UnitTests.Gpx.Processors
         {
             var track = new Track
             {
+                Name = string.Empty,
                 ActivityType = ActivityType.Running,
                 Duration = TimeSpan.MinValue
             };
@@ -59,11 +61,13 @@ namespace Heracles.Infrastructure.UnitTests.Gpx.Processors
             //  Need to change the values to depend on work rate.
             var trackRunning = new Track
             {
+                Name = string.Empty,
                 ActivityType = ActivityType.Running,
                 Duration = TimeSpan.FromMinutes(30)
             };
             var trackCycling = new Track
             {
+                Name = string.Empty,
                 ActivityType = ActivityType.Cycling,
                 Duration = TimeSpan.FromMinutes(30)
             };

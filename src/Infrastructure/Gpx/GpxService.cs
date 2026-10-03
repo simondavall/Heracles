@@ -1,27 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using Dlg.Krakow.Gpx;
-using Heracles.Application.Exceptions;
-using Heracles.Application.Interfaces;
-using Heracles.Application.TrackAggregate;
+﻿using Dlg.Krakow.Gpx;
+using Heracles.Application.Data;
+using Heracles.Application.Import;
+using Heracles.Infrastructure.Gpx.Exceptions;
 using Heracles.Infrastructure.Gpx.Processors;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.Extensions.Logging;
 
 namespace Heracles.Infrastructure.Gpx
 {
     public class GpxService : IGpxService
     {
-        private readonly ILogger<GpxService> _logger;
-
-        public GpxService(ILogger<GpxService> logger) {
-            _logger = logger;
-        }
-
-        public async Task<Track> LoadContentsOfGpxFileAsync(IBrowserFile file, long maxAllowedSize, CancellationToken cancellationToken = default) {
+        public async Task<Track?> LoadContentsOfGpxFileAsync(IBrowserFile file, long maxAllowedSize, CancellationToken cancellationToken = default) {
             try {
                 await using var browserStream = file.OpenReadStream(maxAllowedSize, cancellationToken);
 
@@ -32,7 +20,7 @@ namespace Heracles.Infrastructure.Gpx
 
                 stream.Position = 0;
                 
-                var gpxTrack = GpxEngine.GetGpxTrackFromStream(stream);
+                var gpxTrack = GetGpxTrackFromStream(stream);
 
                 return gpxTrack is null ? null : CreateTrackAggregate(gpxTrack);
             }
@@ -44,6 +32,12 @@ namespace Heracles.Infrastructure.Gpx
             }
         }
 
+        private static GpxTrack? GetGpxTrackFromStream(Stream fileStream) {
+            using var reader = new GpxReader(fileStream);
+            reader.Read();
+            return reader.Track;
+        }
+        
         private static Track CreateTrackAggregate(GpxTrack gpxTrack) {
             var track = new Track() { Name = gpxTrack.Name, Time = gpxTrack.Time ?? DateTime.Now };
 

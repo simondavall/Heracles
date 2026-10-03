@@ -29,7 +29,7 @@ Domain / Infrastructure
   |
   | Persists and retrieves Heracles data
   v
-SQL Server
+SQLite
 ```
 
 Heracles.Web is responsible for the user-facing application while the existing application layers continue to provide the underlying Heracles functionality.
@@ -150,3 +150,9 @@ Generic UI controls are provided directly by MudBlazor.
 ## Authentication
 
 Heracles.Web authenticates users through Soteria which is a self-hosted IAM system using OpenID Connect.
+
+## Persistence
+
+Heracles uses SQLite as its exclusive database provider for activity storage.
+
+The database contains tracks, track segments and track points. Persistence is implemented in Infrastructure using Entity Framework Core.

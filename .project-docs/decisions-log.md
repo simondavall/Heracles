@@ -107,6 +107,16 @@ Infrastructure database registration continues to receive `IConfiguration` while
 - Reporting all detected configuration failures together provides more useful startup diagnostics than failing on the first invalid value.
 - Retaining the existing Infrastructure registration contract avoids changes to the legacy Web application during the Heracles.Web migration.
 
+### Subsequent development
+
+On 26-09-2026, the legacy MVC Web application was decommissioned and SQL Server was replaced with SQLite.
+
+Infrastructure registration was subsequently updated to consume validated `HeraclesSettings` instead of`IConfiguration`.
+
+The original compatibility requirement documented above is therefore superseded.
+
+See "Replace SQL Server with SQLite" (26-09-2026).
+
 ## Persist lightweight user state in browser LocalStorage
 (17-09-2026)
 
@@ -210,39 +220,6 @@ Distance markers are deferred to a separate task within the same milestone.
 - JavaScript isolation keeps third-party integration contained within the owning component.
 - Separating distance markers allows their calculation and presentation requirements to be addressed independently.
 
-## Integrate Mapbox through an isolated Activity Map component
-
-(24-09-2026)
-
-### Decision
-
-Integrate Mapbox GL JS through a dedicated Activity Map component within the Activity Details feature.
-
-Use colocated JavaScript and CSS for component-specific functionality and presentation.
-
-The component receives the selected activity directly and transforms its existing geographic data into a focused map presentation contract.
-
-Represent independent recording segments using GeoJSON MultiLineString geometry.
-
-Maintain separate geographic markers for activity start, finish, pause and resume events.
-
-Retain the Mapbox instance when navigating between activities, updating its geographic data and viewport rather than recreating it.
-
-Apply fade transitions when switching activities.
-
-Manage Mapbox initialisation, updates and disposal explicitly.
-
-### Rationale
-
-- Preserve the existing Application service integration.
-- Avoid introducing unnecessary HTTP requests.
-- Keep Mapbox-specific integration isolated from other components.
-- Prevent artificial geographic connections across recording pauses.
-- Separate route presentation from geographic event markers.
-- Avoid unnecessary map recreation during activity navigation.
-- Preserve a consistent visual experience when switching activities.
-- Maintain explicit ownership of JavaScript resources and lifecycle.
-
 ## Calculate and render activity distance markers within the Activity Map feature
 
 (24-09-2026)
@@ -288,3 +265,222 @@ Defer configurable map presentation and distance units to a separate application
 - Generating complete marker images simplifies the presentation of distance values and unit labels.
 - SVG generation provides a straightforward path to future user-configurable marker colours.
 - Fixed defaults avoid introducing application-wide settings infrastructure before it is required.
+
+## Replace SQL Server with SQLite
+(26-09-2026)
+
+### Decision
+
+Replace SQL Server with SQLite as the exclusive database provider for Heracles activity storage.
+
+The existing MVC Web application has been decommissioned. Backward compatibility with its database configuration and Infrastructure registration contract is no longer required.
+
+Infrastructure registration now consumes validated HeraclesSettings rather than IConfiguration.
+
+Configure the SQLite database location through DatabaseSettings.DatabasePath. Require a fully qualified filesystem path, including the database filename.
+
+Remove the obsolete HeraclesAuthDb configuration and SQL Server provider dependencies.
+
+Replace the existing SQL Server migrations with a new initial SQLite migration. Existing SQL Server data is not migrated; activity data is reimported from the original GPX files.
+
+Retain IDbContextFactory<HeraclesDbContext> and the existing Application repository interfaces.
+
+Retain transactional bulk persistence using EFCore.BulkExtensions, including existing import progress reporting and cancellation behaviour.
+
+Use entity data annotations for straightforward property constraints. Remove the redundant TrackConfiguration class.
+
+Introduce an EF Core design-time context factory to support migration generation independently of Heracles.Web application startup.
+
+### Rationale
+
+- SQLite provides portable file-based activity storage and simplifies deployment.
+- Decommissioning the legacy MVC application removes the need to maintain its database-provider and configuration compatibility.
+- Strongly typed configuration maintains the established application configuration pattern.
+- An explicitly configured absolute database path provides predictable database placement across environments.
+- Reimporting the original GPX files avoids unnecessary database migration complexity.
+- Retaining the existing repository interfaces and database-context factory preserves the established application architecture.
+- Retaining bulk insertion preserves the existing efficient import approach.
+- Data annotations place straightforward constraints alongside the properties they describe.
+- A dedicated design-time factory allows EF Core migrations to be generated without requiring unrelated application configuration.
+
+## Implement historical weather through interchangeable providers
+
+(28-09-2026)
+
+### Decision
+
+Implement historical weather retrieval through an Application weather
+service and a provider abstraction.
+
+Provide two Infrastructure implementations:
+
+- Visual Crossing.
+- Open-Meteo.
+
+Use a common Application weather observation contract and WeatherCode enumeration. Each provider translates 
+its external response and weather classifications into these common representations.
+
+Select the active provider through Infrastructure dependency injection at application startup.
+
+Use the first recorded GPS point as the lookup location and the activity midpoint as the lookup timestamp.
+
+Persist retrieved weather observations against their activities and reuse previously retrieved observations.
+
+Retain existing cached observations when changing providers.
+
+Display weather conditions and apparent temperature through the Activity Title component.
+
+### Rationale
+
+- Historical weather provides useful contextual information about recorded activities.
+- The weather information is approximate and does not require the precision of a dedicated meteorological 
+observation system.
+- The first recorded GPS point provides a suitable representative location for the activities currently 
+recorded in Heracles.
+- The activity midpoint provides a representative observation time and handles activities that cross hourly 
+observation boundaries.
+- Separating the provider contract from its implementations allows alternative weather services to be 
+evaluated without changing the Application service or Web presentation.
+- A common WeatherCode enumeration prevents provider-specific weather classifications from leaking into the 
+presentation layer.
+- Persisting retrieved observations reduces external API requests and allows previously retrieved weather to 
+be displayed without contacting the external provider.
+
+## Persist cumulative activity data for rolling pace calculation
+(02-10-2026)
+
+### Decision
+
+Calculate activity pace from cumulative geographic distance and cumulative active elapsed time derived from the recorded GPS track points.
+
+Persist one PaceData row for each source TrackPoint. Use `(TrackId, Seq)` as the primary key, where Seq is a zero-based activity-wide sequence independent of the segment-local TrackPoint sequence. Retain TrackPointId as the unique relationship to the source point.
+
+Store cumulative distance at full calculation precision and cumulative active elapsed time in whole seconds, matching the precision of the imported GPX timestamps.
+
+Generate PaceData lazily through the Application pace service. Reuse a complete persisted data set when available; otherwise calculate and persist the complete derived series through the Infrastructure pace repository.
+
+Treat recording-segment boundaries as pauses. Do not add geographic distance or elapsed time between the final point of one segment and the first point of the next. The cumulative series therefore remains continuous while excluding the pause.
+
+Calculate displayed pace using configurable centred rolling windows over the persisted cumulative series. Calculate each observation from the difference in cumulative distance and cumulative active time between the window boundaries.
+
+Use WindowRadius and Stride as application-wide pace calculation settings. Shrink the calculation window at the beginning and end of an activity and explicitly include the final activity point when it does not fall naturally on the configured stride.
+
+Treat persisted PaceData as regenerable derived data. If the cumulative-data calculation changes in future, delete the existing derived rows and regenerate them lazily rather than introducing calculation-version metadata.
+
+Render the pace series using Chart.js behind a colocated JavaScript ES module owned by the ActivityPaceChart Blazor component. Keep chart-library concerns within Web presentation.
+
+### Rationale
+
+- Calculating each geographic interval once avoids repeatedly recalculating overlapping GPS intervals for rolling windows.
+- Cumulative distance and elapsed time allow each rolling-window pace observation to be calculated from two boundary values.
+- Pace is correctly calculated as total elapsed time divided by total distance rather than by averaging individual interval pace values.
+- Persisting the cumulative representation avoids repeating the geographic calculation whenever an existing activity is displayed.
+- Keeping WindowRadius and Stride out of persisted PaceData allows smoothing parameters to be tuned without invalidating the underlying cumulative data.
+- A track-wide sequence provides explicit deterministic ordering across recording segments.
+- Recording segments represent pauses, so excluding both timestamp gaps and geographic gaps prevents pauses from distorting the activity pace series.
+- Once pause gaps have been removed from the cumulative representation, rolling windows can cross segment boundaries while representing continuous active movement.
+- Lazy generation supports activities imported before PaceData was introduced without requiring a historical-data backfill migration.
+- Derived pace data is inexpensive to regenerate, so deletion and lazy regeneration provide a simpler invalidation strategy than calculation-version metadata.
+- A small JavaScript boundary provides direct access to Chart.js while preserving Blazor ownership of activity data, component lifecycle and application behaviour.
+
+## Generalise persisted cumulative data as reusable TrackPointData
+(02-10-2026)
+
+### Decision
+
+Generalise the cumulative point-level data introduced for pace calculation into reusable TrackPointData.
+
+Persist one TrackPointData row for each source TrackPoint. Retain TrackPointId as the unique relationship to the immutable source point and use `(TrackId, Seq)` as the primary key, where Seq is a zero-based activity-wide sequence.
+
+Store cumulative geographic distance, cumulative active elapsed time and recorded elevation in TrackPointData.
+
+Move responsibility for lazy generation and reuse of this data from PaceService and PaceRepository into an Application TrackPointDataService and Infrastructure TrackPointDataRepository.
+
+Treat imported TrackPoint data as immutable. When TrackPointData already exists for an activity, reuse it without comparing it against the source points for completeness. When no TrackPointData exists, generate and persist the complete series using SaveAsync.
+
+Retain TrackPointData as regenerable derived data. Changes to its calculation or representation may be handled by deleting existing derived data and allowing it to be regenerated lazily.
+
+Retain PaceService as a pace-specific calculation service. PaceService consumes TrackPointData and applies the configured rolling WindowRadius and Stride without owning cumulative-data generation or persistence.
+
+Use TrackPointData as the source for the Activity Elevation chart. Plot cumulative activity distance in kilometres against recorded elevation in metres.
+
+Retain the established recording-segment behaviour: add neither geographic distance nor elapsed time between recording segments.
+
+Render the elevation series using Chart.js behind a colocated JavaScript ES module owned by the ActivityElevationChart Blazor component.
+
+### Rationale
+
+- Cumulative activity distance is useful beyond pace calculation and should not be owned by the pace feature.
+- Elevation presentation requires the same activity-wide distance representation, so sharing TrackPointData avoids independently recalculating cumulative distance.
+- Recorded elevation belongs naturally to the point-level derived representation and allows consumers to use TrackPointData without loading an Entity Framework navigation graph.
+- Imported activity track points are immutable, so repeatedly validating persisted derived data against the source points does not protect against a legitimate application state.
+- Create-once SaveAsync persistence more accurately represents the lifecycle of derived TrackPointData than replacement semantics.
+- Separating TrackPointData generation from PaceService gives the pace service a focused responsibility: deriving pace observations from cumulative activity data.
+- Keeping TrackPointData independent of pace-specific WindowRadius and Stride allows other activity-detail features to consume the same persisted representation.
+- Preserving the existing segment-boundary rules keeps pace and elevation distance semantics consistent.
+- The elevation chart establishes a second Chart.js activity-detail component, but the chart implementations remain separate until further implementation demonstrates that a shared abstraction is justified.
+
+## Synchronise Activity Details interaction using TrackPoint identity
+(02-10-2026)
+
+### Decision
+
+Use source TrackPointId as the common interaction identity between the Pace, Speed and Elevation charts and the Activity Map.
+
+Retain TrackPointId on calculated Pace and Speed observations and carry TrackPointId from TrackPointData into all chart presentation points.
+
+Coordinate synchronized Activity Details interaction through scoped presentation state in Heracles.Web. Chart hover publishes the selected TrackPointId, and other visible Activity Details components respond to that identity.
+
+Synchronize chart presentation using exact TrackPointId matching. When a selected TrackPoint has no valid Pace or Speed observation, display no synchronized selection on that chart rather than selecting a neighbouring observation.
+
+Display synchronized chart selection using the corresponding tooltip and a vertical crosshair.
+
+Resolve map selection directly from the source TrackPoint identified by TrackPointId and display a temporary marker at its recorded longitude and latitude. Do not calculate or interpolate a geographic position for synchronized selection.
+
+Keep the Activity Map passive for this interaction. Chart hover drives map selection; map interaction does not drive chart selection.
+
+Clear synchronized interaction state when chart hover ends and when the selected activity changes.
+
+Remove Stride from Pace and Speed calculation configuration. Calculate rolling Pace and Speed observations at every eligible TrackPointData centre while retaining the existing configurable WindowRadius and shrinking centred-window behaviour.
+
+The earlier Stride and explicit final-point decisions recorded in "Persist cumulative activity data for rolling pace calculation" and "Generalise persisted cumulative data as reusable TrackPointData" are superseded by this decision.
+
+### Rationale
+
+- Persisted TrackPointData means cumulative distance and active elapsed time are already available for every source TrackPoint, so stride-based sampling no longer avoids repeated geographic distance calculation.
+- Calculating Pace and Speed at every eligible track point simplifies their calculation loops and provides a higher-resolution series for synchronized interaction.
+- TrackPointId provides an exact identity shared by TrackPointData, calculated chart observations and the original geographic TrackPoint.
+- Using TrackPointId avoids approximate chart-to-chart matching based on cumulative distance.
+- Direct TrackPoint lookup allows the map marker to use the exact recorded geographic position without introducing distance interpolation.
+- A Pace or Speed observation can legitimately be absent when its rolling window has no positive distance or elapsed time. Leaving that chart unselected preserves exact identity rather than presenting a different point as equivalent.
+- Synchronized hover is presentation behaviour and therefore belongs in Heracles.Web rather than Application.
+- Scoped interaction state allows sibling Blazor components to coordinate without introducing a global JavaScript event bus.
+- Keeping Chart.js and Mapbox mechanics inside their existing colocated JavaScript modules preserves the established JavaScript ownership and lifecycle boundaries.
+- Making the map passive keeps the initial interaction model focused and avoids introducing additional map hit-testing and interaction behaviour without a demonstrated requirement.
+
+## Use horizontal activity distance for Activity Details chart pointer selection
+(03-10-2026)
+
+### Decision
+
+Treat the full plotting area of each Activity Details chart as its pointer interaction surface.
+
+Determine the source chart's selected TrackPoint solely from the pointer's horizontal position. Convert the pointer's X position through the chart's cumulative-distance scale and select the chart point whose cumulative distance is closest to that value.
+
+Do not use the pointer's vertical distance from the plotted line when selecting a TrackPoint.
+
+Use the resulting TrackPointId as the authoritative selection for the source chart's point, tooltip and crosshair and for synchronization with the other Activity Details chart and Activity Map.
+
+Clear the selection when the pointer leaves the chart plotting interaction.
+
+Apply the same interaction behaviour to Pace, Speed and Elevation charts.
+
+### Rationale
+
+- Requiring the pointer to remain close to the plotted line made chart interaction unnecessarily difficult, particularly when moving quickly across an activity.
+- Two-dimensional nearest-point selection could move the selected TrackPoint forwards or backwards along the activity when the pointer moved vertically, even though its horizontal position had not materially changed.
+- Cumulative activity distance is the X axis shared by all Activity Details charts and therefore provides the natural basis for navigating an activity horizontally.
+- Explicit X-axis selection gives deterministic behaviour: moving horizontally changes the selected activity position, while moving vertically at the same horizontal position does not.
+- Using the resulting TrackPointId for both the source chart and synchronized components ensures the chart tooltip, crosshair, sibling chart and Activity Map all represent the same recorded TrackPoint.
+- Keeping the pointer handling within each chart's colocated JavaScript module preserves the existing presentation and JavaScript lifecycle boundaries.
+

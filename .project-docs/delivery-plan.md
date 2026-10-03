@@ -250,9 +250,102 @@ The complete import operation is coordinated through the Application layer, with
 
 ---
 
-# Phase 4 – Dashboard and Reporting
+# Phase 4 – Activity Details Modules
 
-## Milestone 4.1 – Reports
+## Milestone 4.1 – Modules
+
+- ✓ Add weather details.
+    - ✓ Integrate historical weather into Activity Title.
+    - ✓ Implement the Application weather service.
+    - ✓ Implement historical weather retrieval through Visual Crossing.
+    - ✓ Implement historical weather retrieval through Open-Meteo.
+    - ✓ Establish a provider-independent weather observation model.
+    - ✓ Persist and reuse retrieved activity weather.
+    - ✓ Implement weather condition and apparent-temperature presentation.
+    - ✓ Verify weather retrieval and persistence through automated tests.
+- ✓ Add Activity Type filtering to Activity Navigation.
+    - ✓ Add an Activity Type selector to Activity Navigation.
+    - ✓ Populate available Activity Types from distinct types present in activity data.
+    - ✓ Include `All` as the unfiltered selection.
+    - ✓ Persist the selected Activity Type through the existing browser-local UserState.
+    - ✓ Filter activity year, month and activity-list queries by Activity Type.
+    - ✓ Use the persisted Activity Type when selecting the most recent activity on application entry.
+    - ✓ Preserve explicit activity routes independently of the Activity Type filter.
+    - ✓ Keep Activity Navigation filtering independent of the currently displayed Activity Details.
+    - ✓ Reset a persisted Activity Type to `All` when that type is no longer present in activity data.
+- ✓ Add pace chart
+    - ✓ Add configurable pace WindowRadius setting.
+    - ✓ Persist cumulative distance and active elapsed time as derived activity data.
+    - ✓ Generate missing cumulative track-point data lazily and reuse persisted data.
+    - ✓ Exclude recording pauses and inter-segment geographic distance from cumulative track-point data.
+    - ✓ Calculate pace using centred rolling windows over cumulative distance and active time.
+    - ✓ Calculate pace observations at every eligible track point.
+    - ✓ Shrink calculation windows at activity boundaries.
+    - ✓ Render pace against cumulative activity distance using Chart.js.
+    - ✓ Present a continuous pace series across recording segments.
+    - ✓ Support responsive presentation and live light/dark theme changes.
+    - ✓ Verify pace calculation, persistence and chart presentation.
+- ✓ Add elevation chart
+    - ✓ Generalise persisted cumulative pace data into reusable TrackPointData.
+    - ✓ Introduce Application track-point data service and Infrastructure repository responsibilities.
+    - ✓ Persist elevation alongside cumulative distance and active elapsed time.
+    - ✓ Reuse existing TrackPointData when available and lazily generate it when absent.
+    - ✓ Refactor pace calculation to consume shared TrackPointData.
+    - ✓ Render recorded elevation against cumulative activity distance using Chart.js.
+    - ✓ Display elevation in metres and cumulative activity distance in kilometres.
+    - ✓ Support responsive presentation and live light/dark theme changes.
+    - ✓ Verify track-point data generation and persistence, existing pace behaviour and elevation-chart presentation.
+- ✓ Add speed chart
+    - ✓ Reuse shared TrackPointData without changing its persisted representation.
+    - ✓ Calculate speed from cumulative geographic distance and cumulative active elapsed time.
+    - ✓ Apply the established centred rolling-window calculation behaviour.
+    - ✓ Calculate speed observations at every eligible track point.
+    - ✓ Preserve shrinking calculation windows at activity boundaries.
+    - ✓ Render speed against cumulative activity distance using Chart.js.
+    - ✓ Display speed in kilometres per hour.
+    - ✓ Display the Speed chart for Cycling activities instead of the Pace chart.
+    - ✓ Retain the Pace chart for non-Cycling activities.
+    - ✓ Support responsive presentation and live light/dark theme changes.
+    - ✓ Verify speed calculation and conditional Pace/Speed chart presentation.
+- ✓ Synchronise Activity Details chart and map interaction.
+    - ✓ Use TrackPointId as the common interaction identity for Pace, Speed, Elevation and Activity Map.
+    - ✓ Remove Pace and Speed Stride configuration and calculate observations at every eligible track point.
+    - ✓ Synchronise chart pointer state between the visible Pace/Speed chart and Elevation chart using the nearest TrackPoint by horizontal activity distance.
+    - ✓ Use the full chart plotting area as the interaction surface without requiring the pointer to be close to the plotted line.
+    - ✓ Display synchronized chart tooltips and crosshairs at the selected TrackPoint.
+    - ✓ Display the corresponding recorded TrackPoint location on the Activity Map.
+    - ✓ Clear synchronized interaction state when chart hover ends or the selected activity changes.
+    - ✓ Leave Pace/Speed unselected when the synchronized TrackPoint has no valid Pace/Speed observation.
+    - ✓ Preserve existing chart responsiveness, theme behaviour and Activity Map presentation.
+    - ✓ Verify synchronized interaction for Pace, Speed, Elevation and Activity Map.
+- ✓ Add splits
+    - ✓ Reuse shared TrackPointData for split calculation.
+    - ✓ Calculate kilometre split boundaries using linear interpolation.
+    - ✓ Normalize the final partial split time to a comparable per-kilometre value.
+    - ✓ Display cumulative distance, split time and net elevation difference.
+    - ✓ Make Average Pace an actionable Activity Metric with a Splits visual indicator.
+    - ✓ Display Splits in a compact non-modal floating panel.
+    - ✓ Keep Activity Details interactive while Splits is open.
+    - ✓ Support panel dragging and resizing within the viewport.
+    - ✓ Limit the initial list height and scroll longer split lists.
+    - ✓ Close Splits explicitly through its close action.
+    - ✓ Verify split calculation and Splits panel presentation and interaction.
+- ✓ Add ranking listing
+    - ✓ Make Rank an actionable Activity Metric using the established interaction pattern.
+    - ✓ Reuse the existing activity ranking calculation and ordered ranking data.
+    - ✓ Preserve equal ranking for activities with identical pace.
+    - ✓ Display the ranking distance range in kilometres.
+    - ✓ Display rank, pace, date and distance for ranked activities.
+    - ✓ Highlight the current activity in the ranked list.
+    - ✓ Centre the initial ranked-list scroll position on the current activity where possible.
+    - ✓ Link ranked activities directly to their Activity Details pages.
+    - ✓ Initially display up to 30 activities and scroll longer ranking lists.
+    - ✓ Support panel dragging and resizing within the viewport.
+    - ✓ Verify ranking data, navigation and ranking-list presentation and interaction.
+
+# Phase 5 – Dashboard and Reporting
+
+## Milestone 5.1 – Reports
 
 - Inventory existing reports.
 - Establish shared report components.
@@ -270,7 +363,7 @@ Existing Heracles reporting capabilities are available through Heracles.Web.
 
 ---
 
-## Milestone 4.2 – Dashboard
+## Milestone 5.2 – Dashboard
 
 - Inventory the existing dashboard functionality.
 - Identify dashboard information to preserve.
@@ -319,5 +412,7 @@ Required Heracles application settings are available through Heracles.Web.
 ---
 
 # Enhancements
+
+- ✓ Change database from SQL Server to sqlite3
 
 Future enhancements outside the planned migration phases will be recorded here as the project evolves.

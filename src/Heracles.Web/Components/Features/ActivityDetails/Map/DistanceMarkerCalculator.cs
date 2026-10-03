@@ -1,10 +1,9 @@
-﻿using Heracles.Application.TrackAggregate;
+﻿using Heracles.Application.Data;
 
 namespace Heracles.Web.Components.Features.ActivityDetails.Map;
 
 internal static class DistanceMarkerCalculator
 {
-    private const double EarthRadiusKm = 6371;
     private const double MarkerIntervalKm = 1;
 
     public static IReadOnlyList<MapDistanceMarker> Calculate(Track track) {
@@ -24,8 +23,8 @@ internal static class DistanceMarkerCalculator
                     previousPoint = point;
                     continue;
                 }
-
-                var distance = CalculateDistance(previousPoint, point);
+                
+                var distance = TrackPointDistanceCalculator.Calculate(previousPoint, point);
 
                 if (distance <= 0) {
                     previousPoint = point;
@@ -57,28 +56,5 @@ internal static class DistanceMarkerCalculator
         }
 
         return markers;
-    }
-
-    private static double CalculateDistance(TrackPoint first, TrackPoint second) {
-        var latitudeDifference = DegreesToRadians(second.Latitude - first.Latitude);
-        var longitudeDifference = DegreesToRadians(second.Longitude - first.Longitude);
-
-        var a =
-            Math.Sin(latitudeDifference / 2) * Math.Sin(latitudeDifference / 2)
-            + Math.Cos(DegreesToRadians(first.Latitude))
-            * Math.Cos(DegreesToRadians(second.Latitude))
-            * Math.Sin(longitudeDifference / 2)
-            * Math.Sin(longitudeDifference / 2);
-
-        // Guard against floating-point rounding at the limits.
-        a = Math.Clamp(a, 0, 1);
-
-        var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-
-        return EarthRadiusKm * c;
-    }
-
-    private static double DegreesToRadians(double degrees) {
-        return degrees * (Math.PI / 180);
     }
 }

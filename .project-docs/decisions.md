@@ -43,13 +43,6 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 
 - Use MudBlazor theming, CSS isolation and application-level styling to implement the Heracles visual design.
 - Use colocated `.razor.css` files for component-specific styling.
-- Keep application-wide styling under `wwwroot`.
-- Define application colours through the Heracles theme and semantic palette rather than feature-specific literal colours where practical.
-
-# Styling
-
-- Use MudBlazor theming, CSS isolation and application-level styling to implement the Heracles visual design.
-- Use colocated `.razor.css` files for component-specific styling.
 - Keep application-wide styling under `wwwroot` for styles genuinely shared by multiple components.
 - Do not move component-specific styling into application-wide CSS solely to work around Blazor CSS isolation.
 - Prefer MudBlazor theme and component APIs when they directly represent the required presentation.
@@ -98,9 +91,8 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 - Explicitly allow anonymous access only where required.
 - Provide authentication state to Blazor components through cascading authentication state.
 - Keep Heracles.Web authentication configuration at the application composition root.
-- Keep legacy ASP.NET Core Identity registration separate from common Infrastructure registration.
-- Require application hosts to explicitly opt into host-specific authentication infrastructure.
-- Retain the existing MVC Web application's legacy Identity implementation while it remains available for reference.
+- Keep authentication registration separate from common Infrastructure registration.
+- Require application hosts to explicitly configure their authentication infrastructure.
 
 # Application Configuration
 
@@ -112,7 +104,6 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 - Collect configuration validation failures and report them together rather than failing on the first invalid setting.
 - Pass focused settings objects to startup registrations rather than passing `IConfiguration` where the consumer has been migrated to the validated configuration model.
 - Do not register settings objects with dependency injection until a runtime consumer requires injection.
-- Keep Infrastructure database registration on `IConfiguration` while compatibility with the legacy Web application requires the existing registration contract.
 
 # Logging
 
@@ -198,3 +189,95 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 - Support cancellation and prevent overlapping operations within the Import page.
 - Report individual file-processing failures separately from operation-level persistence failures.
 - Report successful imports only after persistence has completed successfully.
+
+# Historical Weather
+
+- Retrieve historical weather through the Application weather service.
+- Define the external weather provider contract in Application.
+- Implement external weather integrations in Infrastructure.
+- Keep provider-specific weather codes and response formats within their respective Infrastructure implementations.
+- Translate provider-specific weather conditions into the common Application WeatherCode enumeration.
+- Keep weather presentation independent of the selected provider.
+- Use the first recorded GPS point as the weather lookup location.
+- Use the activity midpoint as the weather lookup timestamp.
+- Treat weather observations as approximate historical information.
+- Persist retrieved weather observations against their activities.
+- Reuse persisted observations rather than repeatedly requesting historical weather.
+- Retain cached observations when changing providers until a different cache policy is explicitly agreed.
+- Select the active weather provider through Infrastructure dependency injection.
+
+# Activity Track-Point Data
+
+- Treat imported TrackPoint data as immutable after persistence.
+- Maintain reusable derived TrackPointData independently of individual presentation features.
+- Persist one TrackPointData row for each source TrackPoint.
+- Store the source TrackPointId, zero-based activity-wide sequence, cumulative geographic distance, cumulative active elapsed time and recorded elevation.
+- Generate TrackPointData lazily when first required for an activity.
+- Reuse persisted TrackPointData when present without completeness checking or replacement.
+- Treat TrackPointData as regenerable derived data. When its calculation or representation changes, existing data may be deleted and regenerated.
+- Calculate geographic distance only between consecutive points within the same recording segment.
+- Treat recording-segment boundaries as pauses and add neither elapsed time nor geographic distance between segments.
+- Keep cumulative track-point data independent of feature-specific calculation and presentation settings.
+- Use the Application track-point data service to own generation and reuse of TrackPointData.
+- Use the Infrastructure track-point data repository to own persistence of TrackPointData.
+
+# Activity Pace
+
+- Calculate activity pace from shared TrackPointData using cumulative geographic distance and cumulative active elapsed time.
+- Allow pace calculation windows to span recording-segment boundaries after pause time and inter-segment distance have been removed from the cumulative representation.
+- Calculate rolling pace from differences in cumulative distance and cumulative active time rather than averaging individual point-to-point pace values.
+- Configure rolling pace calculation using an application-wide WindowRadius setting.
+- Keep WindowRadius independent of persisted TrackPointData so presentation calculations can be tuned without regenerating persisted data.
+- Calculate a pace observation at every eligible TrackPointData centre.
+- Use shrinking centred windows at the beginning and end of an activity.
+- Retain the centre TrackPointId on each calculated pace observation.
+- Omit an observation when its calculation window does not contain positive distance and positive elapsed time.
+- Integrate Chart.js through a colocated JavaScript ES module owned by the pace-chart Blazor component.
+- Keep Chart.js-specific concerns within Web presentation and keep pace calculation independent of chart presentation.
+
+# Activity Elevation
+
+- Display recorded TrackPoint elevation against cumulative activity distance.
+- Reuse shared TrackPointData rather than independently recalculating cumulative distance for elevation presentation.
+- Display cumulative activity distance in kilometres and elevation in metres.
+- Represent every recorded track point in the elevation series.
+- Integrate Chart.js through a colocated JavaScript ES module owned by the elevation-chart Blazor component.
+- Keep Chart.js-specific concerns within Web presentation and keep elevation data preparation independent of chart presentation.
+
+# Activity Speed
+
+- Calculate activity speed from shared TrackPointData using cumulative geographic distance and cumulative active elapsed time.
+- Calculate speed independently from pace rather than converting calculated pace observations into speed observations.
+- Configure rolling speed calculation using its application-wide WindowRadius setting.
+- Calculate a speed observation at every eligible TrackPointData centre.
+- Apply the same centred rolling-window and shrinking-boundary behaviour used for pace calculation.
+- Allow speed calculation windows to span recording-segment boundaries after pause time and inter-segment distance have been removed from TrackPointData.
+- Retain the centre TrackPointId on each calculated speed observation.
+- Omit an observation when its calculation window does not contain positive distance and positive elapsed time.
+- Do not persist calculated speed observations.
+- Do not extend TrackPointData specifically for speed calculation.
+- Display speed in kilometres per hour.
+- Display the Speed chart instead of the Pace chart for Cycling activities.
+- Display the Pace chart for non-Cycling activities.
+- Keep the Elevation chart independent of Pace/Speed selection and display it for all activity types.
+- Integrate Chart.js through a colocated JavaScript ES module owned by the speed-chart Blazor component.
+- Keep Chart.js-specific concerns within Web presentation and keep speed calculation independent of chart presentation.
+
+# Activity Details Interaction
+
+- Use source TrackPointId as the common interaction identity between Activity Details charts and the Activity Map.
+- Keep synchronized interaction state within Heracles.Web because it is presentation state rather than application-domain state.
+- Use scoped Activity Details interaction state to coordinate sibling presentation components.
+- Treat the full chart plotting area as the Activity Details chart interaction surface.
+- Resolve source-chart pointer selection solely from horizontal cumulative-distance position by selecting the chart point whose distance is closest to the pointer's X-axis value.
+- Do not use vertical proximity to the plotted line when determining the selected TrackPoint.
+- Publish the resulting TrackPointId as the synchronized selection rather than cumulative distance.
+- Use the same selected TrackPointId for the source chart's point, tooltip and crosshair.
+- Synchronize Pace/Speed and Elevation chart selection using exact TrackPointId matching.
+- Do not substitute a neighbouring Pace/Speed observation when the selected TrackPointId has no valid Pace/Speed observation.
+- Display synchronized chart selection using the chart tooltip and a vertical crosshair.
+- Resolve Activity Map selection directly from the source TrackPointId and use the recorded longitude and latitude.
+- Do not calculate or interpolate geographic position for synchronized map selection.
+- Keep the Activity Map passive; chart interaction drives map selection, while map interaction does not drive chart selection.
+- Clear synchronized interaction when the pointer leaves the chart or the selected activity changes.
+- Keep Chart.js and Mapbox-specific synchronized presentation behaviour within their owning Web components and colocated JavaScript modules.

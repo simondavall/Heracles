@@ -1,9 +1,11 @@
 ﻿<div class="activity-title">
+
     <img class="activity-title-image"
          src="@ImagePath"
          alt="" />
 
     <div class="activity-title-content">
+
         <MudText Typo="Typo.h6"
                  Class="activity-title-heading">
             @Title
@@ -14,5 +16,32 @@
                  Class="activity-title-date">
             @Date
         </MudText>
+
     </div>
+
+    @if (_weather is not null)
+    {
+        <div class="activity-title-weather">
+
+            <img class="activity-weather-icon"
+                 src="@WeatherImage"
+                 alt="" />
+
+            <div class="activity-weather-details">
+
+                <MudText Typo="Typo.body2"
+                         Class="activity-weather-conditions">
+                    @_weather.Conditions
+                </MudText>
+
+                <MudText Typo="Typo.h6"
+                         Class="activity-weather-temperature">
+                    @Temperature
+                </MudText>
+
+            </div>
+
+        </div>
+    }
+
 </div>

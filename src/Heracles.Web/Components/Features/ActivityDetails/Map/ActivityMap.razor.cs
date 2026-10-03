@@ -1,5 +1,5 @@
 ﻿using Heracles.Application.Configuration;
-using Heracles.Application.TrackAggregate;
+using Heracles.Application.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
@@ -9,9 +9,10 @@ public partial class ActivityMap : IAsyncDisposable
 {
     [Inject]
     private IJSRuntime JsRuntime { get; set; } = null!;
-
     [Inject]
     private MapboxSettings MapboxSettings { get; set; } = null!;
+    [Inject]
+    private ActivityDetailsInteractionService InteractionService { get; set; } = null!;
 
     [Parameter]
     public Track Track { get; set; } = null!;
@@ -28,6 +29,10 @@ public partial class ActivityMap : IAsyncDisposable
     private Guid? _renderedActivityId;
     private bool _mapUpdateRequired;
 
+    protected override void OnInitialized() {
+        InteractionService.TrackPointChanged += OnTrackPointChanged;
+    }
+    
     protected override void OnParametersSet() {
         if (_renderedActivityId == Track.Id)
             return;
@@ -54,6 +59,9 @@ public partial class ActivityMap : IAsyncDisposable
             await _map.InvokeVoidAsync("update", _mapData);
         }
 
+        if (InteractionService.TrackPointId.HasValue)
+            OnTrackPointChanged(InteractionService.TrackPointId);
+        
         _renderedActivityId = Track.Id;
         _mapUpdateRequired = false;
     }
@@ -82,6 +90,8 @@ public partial class ActivityMap : IAsyncDisposable
     public async ValueTask DisposeAsync() {
         _disposed = true;
 
+        InteractionService.TrackPointChanged -= OnTrackPointChanged;
+        
         try {
             if (_map is not null)
                 await _map.InvokeVoidAsync("dispose");
@@ -96,4 +106,37 @@ public partial class ActivityMap : IAsyncDisposable
             // The browser connection has already been terminated.
         }
     }
+    private void OnTrackPointChanged(int? trackPointId) {
+        if (_disposed)
+            return;
+
+        _ = InvokeAsync(async () => {
+            if (_disposed || _map is null)
+                return;
+
+            try {
+                if (!trackPointId.HasValue) {
+                    await _map.InvokeVoidAsync("clearSelection");
+                    return;
+                }
+
+                var trackPoint =
+                    Track
+                        .TrackSegments
+                        .SelectMany(segment => segment.TrackPoints)
+                        .FirstOrDefault(point => point.Id == trackPointId.Value);
+
+                if (trackPoint is null) {
+                    await _map.InvokeVoidAsync("clearSelection");
+                    return;
+                }
+
+                await _map.InvokeVoidAsync("showSelection", trackPoint.Longitude, trackPoint.Latitude);
+            }
+            catch (JSDisconnectedException) {
+                // The browser connection has already been terminated.
+            }
+        });
+    }
+    
 }

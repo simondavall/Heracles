@@ -3,12 +3,13 @@
 # Enhancements
 
 # Technical Debt
-- Change Infrasturcture registration to use Heracles settings when Web is decommissioned. Web currently passes the
-IConfiguration whereas Heracles.Web will send Heracles settings. Heracles.Web will continue to send IConfiguration
-until Web is no longer required.
+
 - Investigate initial theme flash (see Notes below)
-- Remove legacy activity presentation metadata from Application (see Notes)
 - User-configurable Activity Map settings. (see Notes)
+- Review weather cache behaviour when changing providers (see Notes).
+- Review configuration-based weather provider selection (see Notes).
+- Add OpenMeteo attribution before releasing.
+- Review browser-local UserState persistence mechanism (see Notes).
 
 # Nice-to-have
 
@@ -23,20 +24,13 @@ Treat this as an initial rendering/lifecycle concern rather than extending the e
 
 The solution should avoid duplicating theme ownership between startup JavaScript/CSS and MudBlazor.
 
-### Remove legacy activity presentation metadata from Application
+### Review weather cache behaviour when changing providers
 
-`ActivityType` currently retains `ActivityTitleImageAttribute` and `ActivityTitleTextAttribute` because the legacy MVC Web application depends on them.
+Currently cached weather is retained when switching between Open-Meteo and Visual Crossing. Review whether provider changes should invalidate previously cached observations. Preserve the existing cache behaviour until an explicit decision is made.
 
-Heracles.Web does not consume this presentation metadata and owns its own activity title presentation mapping.
+### Review configuration-based weather provider selection
 
-When the legacy Web application is decommissioned, remove:
-
-- `ActivityTitleImageAttribute`;
-- `ActivityTitleTextAttribute`;
-- the corresponding attributes from `ActivityType`;
-- any legacy extension methods or other code used solely to consume those attributes.
-
-Do not perform this cleanup while the legacy Web application remains dependent on the metadata.
+Currently changing the active weather provider requires changing the Infrastructure DI registration and redeploying. Review selecting the provider through configuration at application startup, with provider-specific settings. Runtime switching and provider factories are not required by the current use case.
 
 ## User-configurable Activity Map settings
 
@@ -61,3 +55,26 @@ Determine the appropriate settings model and persistence mechanism
 as part of the application-wide settings implementation.
 
 This work is deferred and is not part of Milestone 2.3.
+
+### Review browser-local UserState persistence mechanism
+
+Review whether the existing custom JavaScript/localStorage UserState
+implementation should be replaced with a service-oriented implementation
+using Blazor ProtectedLocalStorage.
+
+The current UserState implementation remains the established mechanism and
+should continue to be used by new features until this review is undertaken.
+
+The review should consider:
+
+- removal of the custom JavaScript storage module;
+- encapsulating individual preferences behind an `IUserStateService`;
+- integration with the existing Data Protection infrastructure;
+- browser-storage availability during Blazor prerendering and initial render;
+- preservation of existing theme preference behaviour;
+- migration or compatibility of existing persisted UserState;
+- handling of missing, invalid and obsolete persisted values.
+
+Do not assume that ProtectedLocalStorage makes browser state available during
+server-side application startup. The Blazor rendering lifecycle and initial
+state-loading strategy must be considered as part of the task.
