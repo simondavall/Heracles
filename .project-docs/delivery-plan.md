@@ -318,7 +318,18 @@ The complete import operation is coordinated through the Application layer, with
     - ✓ Leave Pace/Speed unselected when the synchronized TrackPoint has no valid Pace/Speed observation.
     - ✓ Preserve existing chart responsiveness, theme behaviour and Activity Map presentation.
     - ✓ Verify synchronized interaction for Pace, Speed, Elevation and Activity Map.
-- Add splits
+- ✓ Add splits
+    - ✓ Reuse shared TrackPointData for split calculation.
+    - ✓ Calculate kilometre split boundaries using linear interpolation.
+    - ✓ Normalize the final partial split time to a comparable per-kilometre value.
+    - ✓ Display cumulative distance, split time and net elevation difference.
+    - ✓ Make Average Pace an actionable Activity Metric with a Splits visual indicator.
+    - ✓ Display Splits in a compact non-modal floating panel.
+    - ✓ Keep Activity Details interactive while Splits is open.
+    - ✓ Support panel dragging and resizing within the viewport.
+    - ✓ Limit the initial list height and scroll longer split lists.
+    - ✓ Close Splits explicitly through its close action.
+    - ✓ Verify split calculation and Splits panel presentation and interaction.
 - Add ranking listing
 
 # Phase 5 – Dashboard and Reporting
