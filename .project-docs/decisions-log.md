@@ -457,3 +457,30 @@ The earlier Stride and explicit final-point decisions recorded in "Persist cumul
 - Scoped interaction state allows sibling Blazor components to coordinate without introducing a global JavaScript event bus.
 - Keeping Chart.js and Mapbox mechanics inside their existing colocated JavaScript modules preserves the established JavaScript ownership and lifecycle boundaries.
 - Making the map passive keeps the initial interaction model focused and avoids introducing additional map hit-testing and interaction behaviour without a demonstrated requirement.
+
+## Use horizontal activity distance for Activity Details chart pointer selection
+(03-10-2026)
+
+### Decision
+
+Treat the full plotting area of each Activity Details chart as its pointer interaction surface.
+
+Determine the source chart's selected TrackPoint solely from the pointer's horizontal position. Convert the pointer's X position through the chart's cumulative-distance scale and select the chart point whose cumulative distance is closest to that value.
+
+Do not use the pointer's vertical distance from the plotted line when selecting a TrackPoint.
+
+Use the resulting TrackPointId as the authoritative selection for the source chart's point, tooltip and crosshair and for synchronization with the other Activity Details chart and Activity Map.
+
+Clear the selection when the pointer leaves the chart plotting interaction.
+
+Apply the same interaction behaviour to Pace, Speed and Elevation charts.
+
+### Rationale
+
+- Requiring the pointer to remain close to the plotted line made chart interaction unnecessarily difficult, particularly when moving quickly across an activity.
+- Two-dimensional nearest-point selection could move the selected TrackPoint forwards or backwards along the activity when the pointer moved vertically, even though its horizontal position had not materially changed.
+- Cumulative activity distance is the X axis shared by all Activity Details charts and therefore provides the natural basis for navigating an activity horizontally.
+- Explicit X-axis selection gives deterministic behaviour: moving horizontally changes the selected activity position, while moving vertically at the same horizontal position does not.
+- Using the resulting TrackPointId for both the source chart and synchronized components ensures the chart tooltip, crosshair, sibling chart and Activity Map all represent the same recorded TrackPoint.
+- Keeping the pointer handling within each chart's colocated JavaScript module preserves the existing presentation and JavaScript lifecycle boundaries.
+

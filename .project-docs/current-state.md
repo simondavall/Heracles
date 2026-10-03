@@ -316,3 +316,9 @@ where development should continue.
 - Preserved existing chart responsive presentation and live light/dark theme behaviour.
 - Updated PaceService and SpeedService tests for per-track-point observation generation and TrackPointId propagation.
 - Verified synchronized interaction for non-Cycling Pace activities and Cycling Speed activities, including Elevation and Activity Map synchronization, missing observations, activity navigation, responsive presentation and theme changes.
+- Refined Activity Details chart interaction so the full chart plotting area acts as the pointer interaction surface.
+- Changed Pace, Speed and Elevation chart pointer selection to resolve the nearest chart point solely from horizontal cumulative-distance position rather than two-dimensional proximity to the plotted line.
+- Made the locally displayed chart point, tooltip and crosshair use the same TrackPointId selected by the synchronized interaction.
+- Retained vertical pointer position only for determining whether the pointer is inside the chart plotting area; vertical proximity to the plotted line does not influence TrackPoint selection.
+- Added explicit pointer-move and pointer-leave lifecycle handling to Pace, Speed and Elevation chart JavaScript modules.
+- Verified smooth horizontal TrackPoint selection across the full plotting area for Pace, Speed and Elevation, including synchronized chart tooltips, crosshairs and Activity Map position.
