@@ -36,10 +36,10 @@ public partial class MetricsBar
     protected override async Task OnParametersSetAsync() {
         _showSplits = false;
 
-        var (rank, count) = await ActivityService.GetActivityRankAsync(Track);
+        var activityRank = await ActivityService.GetActivityRankAsync(Track);
 
-        Rank = rank.ToString(CultureInfo.InvariantCulture);
-        RankCount = $"/{count.ToString(CultureInfo.InvariantCulture)}";
+        Rank = activityRank.Rank.ToString(CultureInfo.InvariantCulture);
+        RankCount = $"/{activityRank.Count.ToString(CultureInfo.InvariantCulture)}";
     }
 
     private static string ToFormattedString(TimeSpan span) {

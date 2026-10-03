@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Heracles.Application.Configuration;
 using Heracles.Application.Data;
 
 namespace Heracles.Application.Activities;
@@ -13,23 +14,24 @@ public interface IActivityService
     Task<IList<ActivityListYear>> GetActivitiesSummaryByYearAsync(Track track, ActivityType? activityType = null);
     Task<Track?> GetFirstEverActivityAsync();
     Task<Track?> GetMostRecentActivityAsync(ActivityType? activityType = null);
-    Task<(int rank, int count)> GetActivityRankAsync(Track track);
+    Task<ActivityRank> GetActivityRankAsync(Track track);
 }
 
 public class ActivityService : IActivityService
 {
     private readonly ITrackRepository _trackRepository;
+    private readonly RankSettings _settings;
 
-    public ActivityService(ITrackRepository trackRepository) {
+    public ActivityService(ITrackRepository trackRepository, RankSettings settings) {
         _trackRepository = trackRepository;
+        _settings = settings;
     }
 
     public async Task<bool> DeleteActivityAsync(Guid trackId) {
         return await _trackRepository.DeleteTrackAsync(trackId);
     }
 
-    public async Task<IList<ActivityType>> GetActivityTypesAsync()
-    {
+    public async Task<IList<ActivityType>> GetActivityTypesAsync() {
         return await _trackRepository.GetActivityTypesAsync();
     }
 
@@ -94,13 +96,24 @@ public class ActivityService : IActivityService
         return await _trackRepository.GetMostRecentTrackAsync(activityType);
     }
 
-    public async Task<(int rank, int count)> GetActivityRankAsync(Track track) {
-        var (upperBounds, lowerBounds) = ActivityRanking.GetRankBounds(track);
-        var tracksInRange = await _trackRepository.GetTracksInRangeAsync(upperBounds, lowerBounds, track.ActivityType);
+    public async Task<ActivityRank> GetActivityRankAsync(Track track) {
+        var upperDistance = track.Distance * (1 +  _settings.RangePercentage);
+        var lowerDistance = track.Distance * (1 - _settings.RangePercentage);
+        
+        var tracksInRange = await GetActivitiesInRangeAsync(upperDistance, lowerDistance, track.ActivityType);
 
-        var rank = ActivityRanking.GetRank(track, tracksInRange);
+        var rank = tracksInRange.Count(x => x.Pace < track.Pace) + 1;
 
-        return (rank, tracksInRange.Length);
+        return new ActivityRank(
+            lowerDistance,
+            upperDistance,
+            rank,
+            tracksInRange.Length,
+            tracksInRange.OrderBy(x => x.Pace).ToList());
+    }
+
+    public async Task<Track[]> GetActivitiesInRangeAsync(double upperBounds, double lowerBounds, ActivityType activityType) {
+        return await _trackRepository.GetTracksInRangeAsync(upperBounds, lowerBounds, activityType);
     }
 
     private static string ToFormattedString(TimeSpan span) {
