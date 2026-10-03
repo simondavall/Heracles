@@ -27,6 +27,7 @@ namespace Heracles.Application
             services.AddSingleton(settings.Import);
             services.AddSingleton(settings.Mapbox);
             services.AddSingleton(settings.Pace);
+            services.AddSingleton(settings.Rank);
             services.AddSingleton(settings.Speed);
             services.AddSingleton(settings.WeatherApi);
         }

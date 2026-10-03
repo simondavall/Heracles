@@ -13,6 +13,7 @@ public sealed record HeraclesSettings
     public required PaceSettings Pace { get; init; }
     public required SpeedSettings Speed { get; init; }
     public required ElevationSettings Elevation { get; init; }
+    public required RankSettings Rank { get; init; }
 
     public static HeraclesSettings Create(IConfiguration configuration) {
         var errors = new List<string>();
@@ -38,6 +39,7 @@ public sealed record HeraclesSettings
         var paceWindowRadius = GetPositiveInt(configuration, "Charts:Pace:WindowRadius", errors);
         var speedWindowRadius = GetPositiveInt(configuration, "Charts:Speed:WindowRadius", errors);
         var elevationMinimumChartRange = GetPositiveInt(configuration, "Charts:Elevation:MinimumChartRange", errors);
+        var rankRangePercentage = GetPositivePercentage(configuration, "Charts:Rank:RangePercentage", errors);
 
         if (errors.Count > 0)
             throw new InvalidOperationException(
@@ -64,7 +66,8 @@ public sealed record HeraclesSettings
                 weatherApiUri!),
             Pace = new PaceSettings(paceWindowRadius!.Value),
             Speed = new SpeedSettings(speedWindowRadius!.Value),
-            Elevation = new ElevationSettings(elevationMinimumChartRange!.Value)
+            Elevation = new ElevationSettings(elevationMinimumChartRange!.Value),
+            Rank = new RankSettings(rankRangePercentage!.Value)
         };
     }
 
@@ -126,6 +129,21 @@ public sealed record HeraclesSettings
         errors.Add($"{key} must be a positive integer.");
         return null;
     }
+    
+    private static double? GetPositivePercentage(IConfiguration configuration, string key, List<string> errors) {
+        var value = configuration[key];
+
+        if (string.IsNullOrWhiteSpace(value)) {
+            errors.Add($"{key} is required.");
+            return null;
+        }
+
+        if (double.TryParse(value, out var parsedValue) && parsedValue is > 0 and <= 1)
+            return parsedValue;
+
+        errors.Add($"{key} must be a positive percentage between 0 and 1. 1 represents 100%");
+        return null;
+    }
 }
 
 public sealed record OpenIdConnectSettings(
@@ -155,3 +173,5 @@ public sealed record PaceSettings(int WindowRadius);
 public sealed record SpeedSettings(int WindowRadius);
 
 public sealed record ElevationSettings(int MinimumChartRange);
+
+public sealed record RankSettings(double RangePercentage);
