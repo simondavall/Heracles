@@ -31,7 +31,7 @@ builder.Services.AddSerilog((services, configuration) => configuration
 
 var settings = HeraclesSettings.Create(builder.Configuration);
 
-builder.Services.AddInfrastructure(settings.DatabaseSettings);
+builder.Services.AddInfrastructure(settings.Database);
 builder.Services.AddApplication(settings);
 
 builder.Services.AddHeraclesDataProtection(settings.DataProtection);
