@@ -1,7 +1,6 @@
-﻿using Heracles.Application.Data;
-using Heracles.Application.TrackPoints;
+﻿using Heracles.Application.Tracks;
 
-namespace Heracles.Application.Splits;
+namespace Heracles.Application.Activities.Splits;
 
 public interface ISplitService
 {

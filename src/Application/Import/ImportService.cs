@@ -1,5 +1,5 @@
-﻿using Heracles.Application.Data;
-using Heracles.Application.Import.Progress;
+﻿using Heracles.Application.Import.Progress;
+using Heracles.Application.Tracks;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Logging;
 
@@ -39,7 +39,7 @@ public class ImportService : IImportService
 
         var existingTracks = await ExistingTracks.CreateAsync(_trackRepository);
 
-        var importProgress = new TrackImportProgress(progress);
+        var importProgress = new ImportProgress(progress);
 
         for (var index = 0; index < files.Count; index++) {
             cancellationToken.ThrowIfCancellationRequested();

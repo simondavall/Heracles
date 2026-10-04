@@ -1,4 +1,4 @@
-﻿namespace Heracles.Application.TrackPoints;
+﻿namespace Heracles.Application.Tracks;
 
 public sealed class TrackPointData
 {

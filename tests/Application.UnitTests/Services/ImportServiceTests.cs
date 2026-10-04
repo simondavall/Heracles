@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
-using Heracles.Application.Data;
 using Heracles.Application.Import;
 using Heracles.Application.Import.Progress;
+using Heracles.Application.Tracks;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -37,7 +37,7 @@ public class ImportServiceTests
             .ReturnsAsync(GetNewTrack);
 
         _mockTrackRepository
-            .Setup(x => x.SaveImportedFilesAsync(It.IsAny<ImportFilesResult>(), It.IsAny<TrackImportProgress>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.SaveImportedFilesAsync(It.IsAny<ImportFilesResult>(), It.IsAny<ImportProgress>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         _sut = new ImportService(_mockGpxService.Object, _mockTrackRepository.Object, _mockLogger.Object);
@@ -267,7 +267,7 @@ public class ImportServiceTests
     [Test]
     public async Task ImportTracksFromGpxFiles_PersistenceFailure_PropagatesException() {
         _mockTrackRepository
-            .Setup(x => x.SaveImportedFilesAsync(It.IsAny<ImportFilesResult>(), It.IsAny<TrackImportProgress>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.SaveImportedFilesAsync(It.IsAny<ImportFilesResult>(), It.IsAny<ImportProgress>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new InvalidOperationException("Database persistence failed"));
 
         Func<Task> action = () => ImportAsync(CreateFiles(GoodFilename));
@@ -338,13 +338,13 @@ public class ImportServiceTests
 
     private void VerifyPersistenceCalledOnce() {
         _mockTrackRepository.Verify(x => 
-                x.SaveImportedFilesAsync(It.IsAny<ImportFilesResult>(), It.IsAny<TrackImportProgress>(), It.IsAny<CancellationToken>()),
+                x.SaveImportedFilesAsync(It.IsAny<ImportFilesResult>(), It.IsAny<ImportProgress>(), It.IsAny<CancellationToken>()),
             Times.Once);
     }
 
     private void VerifyPersistenceNeverCalled() {
         _mockTrackRepository.Verify(
-            x => x.SaveImportedFilesAsync(It.IsAny<ImportFilesResult>(), It.IsAny<TrackImportProgress>(), It.IsAny<CancellationToken>()),
+            x => x.SaveImportedFilesAsync(It.IsAny<ImportFilesResult>(), It.IsAny<ImportProgress>(), It.IsAny<CancellationToken>()),
             Times.Never);
     }
 

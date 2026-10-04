@@ -1,7 +1,8 @@
-﻿using Heracles.Application.TrackPoints;
+﻿using Heracles.Application.Tracks;
+using Heracles.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Heracles.Infrastructure.Data;
+namespace Heracles.Infrastructure.Tracks;
 
 public sealed class TrackPointDataRepository : ITrackPointDataRepository
 {

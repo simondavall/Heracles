@@ -25,4 +25,9 @@
       <_ContentIncludedByDefault Remove="Components\Features\Activities\ActivityDetails\ActivityTitle.razor" />
     </ItemGroup>
 
+    <ItemGroup>
+      <AdditionalFiles Include="Components\Features\ActivityDetails\Metrics\ActivityMetric.razor" />
+      <AdditionalFiles Include="Components\Features\ActivityDetails\Metrics\MetricsBar.razor" />
+    </ItemGroup>
+
 </Project>

@@ -1,5 +1,4 @@
-﻿using Heracles.Application.Data;
-using Heracles.Application.TrackPoints;
+﻿using Heracles.Application.Tracks;
 using Xunit;
 
 namespace Heracles.Application.UnitTests.TrackPoints;

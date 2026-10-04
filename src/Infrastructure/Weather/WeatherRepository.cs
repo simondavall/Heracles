@@ -1,8 +1,8 @@
-﻿using Heracles.Application.Data;
-using Heracles.Application.Weather;
+﻿using Heracles.Application.Weather;
+using Heracles.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Heracles.Infrastructure.Data;
+namespace Heracles.Infrastructure.Weather;
 
 public sealed class WeatherRepository : IWeatherRepository
 {

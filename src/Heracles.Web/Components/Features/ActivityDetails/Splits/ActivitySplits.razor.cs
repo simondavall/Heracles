@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
-using Heracles.Application.Data;
-using Heracles.Application.Splits;
+using Heracles.Application.Activities;
+using Heracles.Application.Activities.Splits;
+using Heracles.Application.Tracks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 

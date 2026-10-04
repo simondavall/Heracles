@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using Heracles.Application.Data;
+using Heracles.Application.Tracks;
 using Heracles.Infrastructure.Gpx.Processors;
 using NUnit.Framework;
 

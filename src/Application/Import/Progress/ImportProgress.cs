@@ -1,6 +1,6 @@
 ﻿namespace Heracles.Application.Import.Progress;
 
-public class TrackImportProgress
+public class ImportProgress
 {
     private const decimal ProcessingWeight = 0.2M;
     private const decimal PersistenceWeight = 0.8M;
@@ -14,7 +14,7 @@ public class TrackImportProgress
 
     private decimal _lastProgress;
 
-    public TrackImportProgress(Action<decimal>? progress) {
+    public ImportProgress(Action<decimal>? progress) {
         _progress = progress;
         TrackProgressMethod = ReportFileProgress;
     }
@@ -29,12 +29,12 @@ public class TrackImportProgress
         _totalRecords = _trackCount + _segmentCount + _pointCount;
     }
 
-    public void SetTrackingProgressMethod(TrackImportMethod method) {
-        TrackProgressMethod = method switch {
-            TrackImportMethod.FilesProcessing => ReportFileProgress,
-            TrackImportMethod.TrackImport => ReportTrackProgress,
-            TrackImportMethod.SegmentImport => ReportSegmentProgress,
-            TrackImportMethod.PointsImport => ReportPointProgress,
+    public void SetTrackingProgressMethod(ImportPhase phase) {
+        TrackProgressMethod = phase switch {
+            ImportPhase.FilesProcessing => ReportFileProgress,
+            ImportPhase.TrackImport => ReportTrackProgress,
+            ImportPhase.SegmentImport => ReportSegmentProgress,
+            ImportPhase.PointsImport => ReportPointProgress,
             _ => TrackProgressMethod
         };
     }

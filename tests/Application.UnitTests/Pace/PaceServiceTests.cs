@@ -1,7 +1,7 @@
-﻿using Heracles.Application.Configuration;
-using Heracles.Application.Data;
-using Heracles.Application.Pace;
-using Heracles.Application.TrackPoints;
+﻿using Heracles.Application.Activities;
+using Heracles.Application.Activities.Pace;
+using Heracles.Application.Configuration;
+using Heracles.Application.Tracks;
 using Xunit;
 
 namespace Heracles.Application.UnitTests.Pace;

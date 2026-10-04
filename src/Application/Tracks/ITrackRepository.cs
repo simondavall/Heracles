@@ -2,7 +2,7 @@
 using Heracles.Application.Import;
 using Heracles.Application.Import.Progress;
 
-namespace Heracles.Application.Data
+namespace Heracles.Application.Tracks
 {
     public interface ITrackRepository
     {
@@ -16,6 +16,6 @@ namespace Heracles.Application.Data
         Task<IList<Track>> GetTracksByDateRangeAsync(DateTime startDate, DateTime endDate, ActivityType? activityType = null);
         Task<IList<ActivityListMonth>> GetTrackSummaryByMonthsAsync(ActivityType? activityType = null);
         Task<IList<ActivityListYear>> GetTrackSummaryByYearAsync(ActivityType? activityType = null);
-        Task SaveImportedFilesAsync(ImportFilesResult importFilesResult, TrackImportProgress trackProgress, CancellationToken cancellationToken);
+        Task SaveImportedFilesAsync(ImportFilesResult importFilesResult, ImportProgress progress, CancellationToken cancellationToken);
     }
 }

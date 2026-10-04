@@ -1,4 +1,4 @@
-﻿namespace Heracles.Application.Data;
+﻿namespace Heracles.Application.Tracks;
 
 public static class TrackPointDistanceCalculator
 {

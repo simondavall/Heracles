@@ -1,10 +1,10 @@
 ﻿using Heracles.Application.Activities;
+using Heracles.Application.Activities.Pace;
+using Heracles.Application.Activities.Speed;
+using Heracles.Application.Activities.Splits;
 using Heracles.Application.Configuration;
 using Heracles.Application.Import;
-using Heracles.Application.Pace;
-using Heracles.Application.Speed;
-using Heracles.Application.Splits;
-using Heracles.Application.TrackPoints;
+using Heracles.Application.Tracks;
 using Heracles.Application.Weather;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -1,6 +1,6 @@
 ﻿namespace Heracles.Application.Import.Progress
 {
-    public enum TrackImportMethod
+    public enum ImportPhase
     {
         FilesProcessing,
         TrackImport,

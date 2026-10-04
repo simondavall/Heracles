@@ -1,5 +1,6 @@
-﻿using Heracles.Application.Data;
-using Heracles.Application.Pace;
+﻿using Heracles.Application.Activities;
+using Heracles.Application.Activities.Pace;
+using Heracles.Application.Tracks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
