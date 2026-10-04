@@ -1,6 +1,4 @@
-﻿using Heracles.Application.Data;
-
-namespace Heracles.Application.TrackPoints;
+﻿namespace Heracles.Application.Tracks;
 
 public interface ITrackPointDataService
 {

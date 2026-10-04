@@ -1,36 +1,33 @@
 ﻿using Heracles.Application.Configuration;
-using Heracles.Application.Data;
-using Heracles.Application.TrackPoints;
+using Heracles.Application.Tracks;
 
-namespace Heracles.Application.Speed;
+namespace Heracles.Application.Activities.Pace;
 
-public interface ISpeedService
+public interface IPaceService
 {
-    Task<IReadOnlyList<SpeedObservation>> GetSpeedAsync(Track track, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<PaceObservation>> GetPaceAsync(Track track, CancellationToken cancellationToken = default);
 }
 
-public sealed class SpeedService : ISpeedService
+public sealed class PaceService : IPaceService
 {
     private readonly ITrackPointDataService _trackPointDataService;
-    private readonly SpeedSettings _settings;
+    private readonly PaceSettings _settings;
 
-    public SpeedService(ITrackPointDataService trackPointDataService, SpeedSettings settings) {
+    public PaceService(ITrackPointDataService trackPointDataService, PaceSettings settings) {
         _trackPointDataService = trackPointDataService;
         _settings = settings;
     }
 
-    public async Task<IReadOnlyList<SpeedObservation>> GetSpeedAsync(Track track, CancellationToken cancellationToken = default) {
+    public async Task<IReadOnlyList<PaceObservation>> GetPaceAsync(Track track, CancellationToken cancellationToken = default) {
         var trackPointData = await _trackPointDataService.GetAsync(track, cancellationToken);
-
         if (trackPointData.Count < 2)
             return [];
 
         return CalculateObservations(trackPointData);
     }
 
-    private IReadOnlyList<SpeedObservation> CalculateObservations(
-        IReadOnlyList<TrackPointData> trackPointData) {
-        var observations = new List<SpeedObservation>();
+    private IReadOnlyList<PaceObservation> CalculateObservations(IReadOnlyList<TrackPointData> trackPointData) {
+        var observations = new List<PaceObservation>();
 
         for (var centre = 0; centre < trackPointData.Count; centre++)
             AddObservation(trackPointData, centre, observations);
@@ -38,27 +35,24 @@ public sealed class SpeedService : ISpeedService
         return observations;
     }
 
-    private void AddObservation(IReadOnlyList<TrackPointData> trackPointData, int centre, ICollection<SpeedObservation> observations) {
+    private void AddObservation(IReadOnlyList<TrackPointData> trackPointData, int centre, ICollection<PaceObservation> observations) {
         var start = Math.Max(0, centre - _settings.WindowRadius);
         var end = Math.Min(trackPointData.Count - 1, centre + _settings.WindowRadius);
+
         var distance = trackPointData[end].CumulativeDistance - trackPointData[start].CumulativeDistance;
         var elapsedSeconds = trackPointData[end].CumulativeTime - trackPointData[start].CumulativeTime;
-
         if (distance <= 0 || elapsedSeconds <= 0)
             return;
-
-        const int secondsPerHour = 3600;
-        var kilometresPerHour = distance / elapsedSeconds * secondsPerHour;
-
+        
         observations.Add(
-            new SpeedObservation(
+            new PaceObservation(
                 trackPointData[centre].TrackPointId,
                 trackPointData[centre].CumulativeDistance,
-                kilometresPerHour));
+                elapsedSeconds / distance));
     }
 }
 
-public sealed record SpeedObservation(
+public sealed record PaceObservation(
     int TrackPointId,
     double Distance,
-    double KilometresPerHour);
+    double SecondsPerKilometre);

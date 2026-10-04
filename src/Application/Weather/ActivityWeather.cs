@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Heracles.Application.Data;
+using Heracles.Application.Tracks;
 
 namespace Heracles.Application.Weather;
 

@@ -1,5 +1,5 @@
 ﻿using Heracles.Application.Activities;
-using Heracles.Application.Data;
+using Heracles.Application.Tracks;
 
 namespace Heracles.Infrastructure.Gpx.Processors
 {

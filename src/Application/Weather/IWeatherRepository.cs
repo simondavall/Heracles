@@ -1,6 +1,4 @@
-﻿using Heracles.Application.Data;
-
-namespace Heracles.Application.Weather;
+﻿namespace Heracles.Application.Weather;
 
 public interface IWeatherRepository
 {

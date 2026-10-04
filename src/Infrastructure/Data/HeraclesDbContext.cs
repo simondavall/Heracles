@@ -1,5 +1,4 @@
-﻿using Heracles.Application.Data;
-using Heracles.Application.TrackPoints;
+﻿using Heracles.Application.Tracks;
 using Heracles.Application.Weather;
 using Microsoft.EntityFrameworkCore;
 

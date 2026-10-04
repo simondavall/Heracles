@@ -1,7 +1,7 @@
-﻿using Heracles.Application.Configuration;
-using Heracles.Application.Data;
-using Heracles.Application.Speed;
-using Heracles.Application.TrackPoints;
+﻿using Heracles.Application.Activities;
+using Heracles.Application.Activities.Speed;
+using Heracles.Application.Configuration;
+using Heracles.Application.Tracks;
 using Xunit;
 
 namespace Heracles.Application.UnitTests.Speed;
