@@ -350,3 +350,10 @@ where development should continue.
 - Added draggable and resizable Ranked List panel behaviour with viewport constraints.
 - Verified ranking values, equal-pace ranking behaviour, current-activity highlighting, initial positioning, navigation, scrolling, dragging and resizing.
 - Completed Phase 4 – Activity Details Modules.
+- Added configurable iterative cleaning of cumulative geographic distance during TrackPointData generation.
+- Applied distance cleaning after the initial cumulative-distance calculation while preserving the first and final cumulative distances.
+- Each cleaning iteration adjusts interior cumulative distances using time-weighted interpolation between the surrounding points, with each iteration operating on the complete result of the previous iteration.
+- Configured TrackPointData distance cleaning through DataSettings.CleaningIterations.
+- Retained the existing cumulative active-time and recording-segment behaviour.
+- Added focused TrackPointDataService tests covering iterative distance cleaning and preservation of total activity distance.
+- Verified TrackPointData generation, iterative distance cleaning, existing pace presentation and affected Activity Details behaviour.

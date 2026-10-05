@@ -484,3 +484,34 @@ Apply the same interaction behaviour to Pace, Speed and Elevation charts.
 - Using the resulting TrackPointId for both the source chart and synchronized components ensures the chart tooltip, crosshair, sibling chart and Activity Map all represent the same recorded TrackPoint.
 - Keeping the pointer handling within each chart's colocated JavaScript module preserves the existing presentation and JavaScript lifecycle boundaries.
 
+## Apply iterative cleaning to TrackPointData cumulative distance
+(05-10-2026)
+
+### Decision
+
+Apply iterative cleaning to cumulative geographic distance as part of TrackPointData generation.
+
+First calculate cumulative geographic distance from the ordered source TrackPoints using the established geographic-distance and recording-segment rules.
+
+After the initial cumulative-distance series has been calculated, clean its interior cumulative distances using time-weighted interpolation between each point's surrounding cumulative distances.
+
+Perform the configured number of cleaning iterations through DataSettings.CleaningIterations.
+
+Each iteration operates on the complete cumulative-distance series produced by the previous iteration rather than consuming values modified earlier within the same iteration.
+
+Preserve the first and final cumulative distances throughout cleaning. Cleaning therefore redistributes intermediate cumulative distance without changing the calculated total activity distance.
+
+Persist the resulting cleaned cumulative distances as TrackPointData.CumulativeDistance.
+
+Retain the existing cumulative active-time calculation and recording-segment behaviour.
+
+### Rationale
+
+- Short GPS intervals contain sufficient positional variation to produce visually implausible short-term pace variation even when whole-activity distance remains credible.
+- Prototype testing against known real-world activities showed that iterative cleaning of cumulative distance produced a more representative pace series.
+- Ten cleaning iterations provided the preferred result during prototype evaluation; making the iteration count configurable allows the calculation to be tuned explicitly.
+- Cleaning cumulative distance addresses the underlying shared distance representation rather than introducing pace-specific correction.
+- Pace, speed, elevation, splits and other consumers can continue to consume TrackPointData without requiring knowledge of the cleaning algorithm.
+- Operating each iteration on the complete previous result gives deterministic pass-based cleaning without ordering effects within an iteration.
+- Preserving the first and final cumulative distances ensures cleaning does not alter the calculated total activity distance.
+- TrackPointData is regenerable derived data, so existing persisted data can be deleted and regenerated when this calculation changes.
