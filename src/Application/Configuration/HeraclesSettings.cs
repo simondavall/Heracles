@@ -14,6 +14,7 @@ public sealed record HeraclesSettings
     public required SpeedSettings Speed { get; init; }
     public required ElevationSettings Elevation { get; init; }
     public required RankSettings Rank { get; init; }
+    public required DataSettings Data { get; init; }
 
     public static HeraclesSettings Create(IConfiguration configuration) {
         var errors = new List<string>();
@@ -41,6 +42,8 @@ public sealed record HeraclesSettings
         var elevationMinimumChartRange = GetPositiveInt(configuration, "Charts:Elevation:MinimumChartRange", errors);
         var rankRangePercentage = GetPositivePercentage(configuration, "Charts:Rank:RangePercentage", errors);
 
+        var cleaningIterations = GetPositiveInt(configuration, "Charts:Data:CleaningIterations", errors);
+
         if (errors.Count > 0)
             throw new InvalidOperationException(
                 "Invalid Heracles configuration:"
@@ -67,7 +70,8 @@ public sealed record HeraclesSettings
             Pace = new PaceSettings(paceWindowRadius!.Value),
             Speed = new SpeedSettings(speedWindowRadius!.Value),
             Elevation = new ElevationSettings(elevationMinimumChartRange!.Value),
-            Rank = new RankSettings(rankRangePercentage!.Value)
+            Rank = new RankSettings(rankRangePercentage!.Value),
+            Data = new DataSettings(cleaningIterations!.Value)
         };
     }
 
@@ -129,7 +133,7 @@ public sealed record HeraclesSettings
         errors.Add($"{key} must be a positive integer.");
         return null;
     }
-    
+
     private static double? GetPositivePercentage(IConfiguration configuration, string key, List<string> errors) {
         var value = configuration[key];
 
@@ -175,3 +179,5 @@ public sealed record SpeedSettings(int WindowRadius);
 public sealed record ElevationSettings(int MinimumChartRange);
 
 public sealed record RankSettings(double RangePercentage);
+
+public sealed record DataSettings(int CleaningIterations);

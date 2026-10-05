@@ -211,11 +211,15 @@ The decisions primarily govern Heracles.Web. Existing Heracles projects are desc
 - Treat imported TrackPoint data as immutable after persistence.
 - Maintain reusable derived TrackPointData independently of individual presentation features.
 - Persist one TrackPointData row for each source TrackPoint.
-- Store the source TrackPointId, zero-based activity-wide sequence, cumulative geographic distance, cumulative active elapsed time and recorded elevation.
+- Store the source TrackPointId, zero-based activity-wide sequence, cleaned cumulative geographic distance, cumulative active elapsed time and recorded elevation.
 - Generate TrackPointData lazily when first required for an activity.
 - Reuse persisted TrackPointData when present without completeness checking or replacement.
 - Treat TrackPointData as regenerable derived data. When its calculation or representation changes, existing data may be deleted and regenerated.
 - Calculate geographic distance only between consecutive points within the same recording segment.
+- After calculating the initial cumulative geographic-distance series, iteratively clean its interior values using time-weighted interpolation between each point's surrounding cumulative distances.
+- Configure the number of cleaning iterations through application-wide DataSettings.
+- Each cleaning iteration operates on the complete result of the previous iteration.
+- Preserve the first and final cumulative distances during cleaning so that cleaning redistributes intermediate distance without changing the calculated total activity distance.
 - Treat recording-segment boundaries as pauses and add neither elapsed time nor geographic distance between segments.
 - Keep cumulative track-point data independent of feature-specific calculation and presentation settings.
 - Use the Application track-point data service to own generation and reuse of TrackPointData.
