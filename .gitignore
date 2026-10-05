@@ -3,13 +3,15 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-.idea
-.data
-.publish
-.env
-.data-protection
-.staging
 .archive
+.data
+.data-protection
+.env
+.idea
+.staging
+
+deploy-production.ps1
+deploy-staging.ps1
 
 # User-specific files
 *.rsuser
