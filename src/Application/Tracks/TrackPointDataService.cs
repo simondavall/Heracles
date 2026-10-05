@@ -1,4 +1,6 @@
-﻿namespace Heracles.Application.Tracks;
+﻿using Heracles.Application.Configuration;
+
+namespace Heracles.Application.Tracks;
 
 public interface ITrackPointDataService
 {
@@ -8,10 +10,12 @@ public interface ITrackPointDataService
 public sealed class TrackPointDataService : ITrackPointDataService
 {
     private readonly ITrackPointDataRepository _repository;
+    private readonly DataSettings _settings;
     private readonly SemaphoreSlim _generationLock = new(1, 1);
 
-    public TrackPointDataService(ITrackPointDataRepository repository) {
+    public TrackPointDataService(ITrackPointDataRepository repository, DataSettings settings) {
         _repository = repository;
+        _settings = settings;
     }
 
     public async Task<IReadOnlyList<TrackPointData>> GetAsync(Track track, CancellationToken cancellationToken = default) {
@@ -40,7 +44,15 @@ public sealed class TrackPointDataService : ITrackPointDataService
         }
     }
 
-    private static IReadOnlyList<TrackPointData> CreateTrackPointData(Track track) {
+    private IReadOnlyList<TrackPointData> CreateTrackPointData(Track track) {
+        var result = CreateRawTrackPointData(track);
+
+        CleanCumulativeDistance(result);
+
+        return result;
+    }
+
+    private static List<TrackPointData> CreateRawTrackPointData(Track track) {
         var result = new List<TrackPointData>();
 
         var cumulativeDistance = 0d;
@@ -57,7 +69,7 @@ public sealed class TrackPointDataService : ITrackPointDataService
                     cumulativeDistance += TrackPointDistanceCalculator.Calculate(previousPoint, point);
 
                     var elapsedSeconds = (int)(point.Time - previousPoint.Time).TotalSeconds;
-                    if (elapsedSeconds > 0) 
+                    if (elapsedSeconds > 0)
                         cumulativeTime += elapsedSeconds;
                 }
 
@@ -78,5 +90,42 @@ public sealed class TrackPointDataService : ITrackPointDataService
         }
 
         return result;
+    }
+
+    private void CleanCumulativeDistance(IReadOnlyList<TrackPointData> trackPointData) {
+        if (trackPointData.Count < 3)
+            return;
+
+        var cumulativeDistances = trackPointData.Select(x => x.CumulativeDistance).ToArray();
+
+        for (var iteration = 0; iteration < _settings.CleaningIterations; iteration++) {
+            cumulativeDistances = CleanCumulativeDistance(trackPointData, cumulativeDistances);
+        }
+
+        for (var index = 0; index < trackPointData.Count; index++) {
+            trackPointData[index].CumulativeDistance = cumulativeDistances[index];
+        }
+    }
+
+    private static double[] CleanCumulativeDistance(IReadOnlyList<TrackPointData> trackPointData, IReadOnlyList<double> sourceDistances) {
+        var cleanedDistances = sourceDistances.ToArray();
+
+        for (var index = 1; index < trackPointData.Count - 1; index++) {
+            var previousTime = trackPointData[index - 1].CumulativeTime;
+            var currentTime = trackPointData[index].CumulativeTime;
+            var nextTime = trackPointData[index + 1].CumulativeTime;
+            var totalTime = nextTime - previousTime;
+            var elapsedTime = currentTime - previousTime;
+
+            if (totalTime <= 0 || elapsedTime <= 0)
+                continue;
+
+            var previousDistance = sourceDistances[index - 1];
+            var nextDistance = sourceDistances[index + 1];
+
+            cleanedDistances[index] = previousDistance + (nextDistance - previousDistance) * elapsedTime / totalTime;
+        }
+
+        return cleanedDistances;
     }
 }

@@ -12,8 +12,7 @@ namespace Heracles.Application
 {
     public static class DependencyInjection
     {
-        public static void AddApplication(this IServiceCollection services, HeraclesSettings settings)
-        {
+        public static void AddApplication(this IServiceCollection services, HeraclesSettings settings) {
             services.AddScoped<IImportService, ImportService>();
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<IWeatherService, WeatherService>();
@@ -21,8 +20,8 @@ namespace Heracles.Application
             services.AddScoped<IPaceService, PaceService>();
             services.AddScoped<ISpeedService, SpeedService>();
             services.AddScoped<ISplitService, SplitService>();
-            
 
+            services.AddSingleton(settings.Data);
             services.AddSingleton(settings.Elevation);
             services.AddSingleton(settings.Import);
             services.AddSingleton(settings.Mapbox);
